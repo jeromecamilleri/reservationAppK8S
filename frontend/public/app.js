@@ -1,5 +1,6 @@
 const eventList = document.querySelector('#event-list');
 const eventStatus = document.querySelector('#event-status');
+const serviceNotice = document.querySelector('#service-notice');
 const searchInput = document.querySelector('#search');
 const authDialog = document.querySelector('#auth-dialog');
 const cartDialog = document.querySelector('#cart-dialog');
@@ -20,6 +21,7 @@ async function api(path, options = {}) {
   if (options.method && !['GET', 'HEAD'].includes(options.method)) headers['X-CSRF-Token'] = csrfToken;
   const response = await fetch(`/api/${path}`, { ...options, headers, credentials: 'same-origin' });
   const body = await response.json().catch(() => ({}));
+  if (path === 'events') serviceNotice.hidden = response.headers.get('X-Service-State') !== 'degraded';
   if (!response.ok) {
     const messages = {
       authentication_required: 'Connectez-vous pour continuer.',
@@ -32,6 +34,7 @@ async function api(path, options = {}) {
       cart_empty: 'Votre panier est vide.',
       invalid_csrf_token: 'Votre session a expiré. Rechargez la page et réessayez.',
       order_not_cancellable: 'Cette commande ne peut plus être annulée.',
+      service_temporarily_unavailable: 'Service momentanément indisponible. Réessayez dans quelques instants.',
     };
     throw new Error(messages[body.error] || 'Une erreur est survenue. Réessayez.');
   }

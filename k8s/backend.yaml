@@ -4,7 +4,7 @@ metadata:
   name: backend-deployment
   namespace: app-reservation
 spec:
-  replicas: 2
+  replicas: 3
   selector:
     matchLabels:
       app: backend-api
@@ -13,6 +13,22 @@ spec:
       labels:
         app: backend-api
     spec:
+      tolerations:
+        - key: node.kubernetes.io/not-ready
+          operator: Exists
+          effect: NoExecute
+          tolerationSeconds: 30
+        - key: node.kubernetes.io/unreachable
+          operator: Exists
+          effect: NoExecute
+          tolerationSeconds: 30
+      topologySpreadConstraints:
+        - maxSkew: 1
+          topologyKey: kubernetes.io/hostname
+          whenUnsatisfiable: ScheduleAnyway
+          labelSelector:
+            matchLabels:
+              app: backend-api
       securityContext:
         seccompProfile:
           type: RuntimeDefault
@@ -27,7 +43,7 @@ spec:
                     app: backend-api
       containers:
         - name: backend
-          image: 192.168.122.10:5000/reservation-backend:2.0
+          image: 192.168.122.10:5000/reservation-backend:2.2
           imagePullPolicy: IfNotPresent
           ports:
             - name: http
@@ -73,7 +89,7 @@ spec:
               cpu: 100m
             limits:
               memory: 192Mi
-              cpu: 300m
+              cpu: 400m
           securityContext:
             runAsNonRoot: true
             runAsUser: 1000
@@ -86,17 +102,20 @@ spec:
               path: /health/live
               port: http
             periodSeconds: 3
+            timeoutSeconds: 3
             failureThreshold: 30
           livenessProbe:
             httpGet:
               path: /health/live
               port: http
             periodSeconds: 10
+            timeoutSeconds: 3
           readinessProbe:
             httpGet:
               path: /health/ready
               port: http
             periodSeconds: 5
+            timeoutSeconds: 3
             failureThreshold: 3
 ---
 apiVersion: v1

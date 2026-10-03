@@ -7,12 +7,16 @@ import rateLimit from 'express-rate-limit';
 import session from 'express-session';
 import pg from 'pg';
 import { createClient } from 'redis';
+import { abortableSleep, retryUntilReady } from './retry.js';
 
 const { Pool } = pg;
 const port = Number(process.env.PORT || 8080);
 const sessionCookie = 'reservation.sid';
 const sessionTtlSeconds = 30 * 60;
 const cartTtlSeconds = 24 * 60 * 60;
+const shutdownController = new AbortController();
+let eventCatalogCache = null;
+let databaseInitialized = false;
 const pool = new Pool({
   host: process.env.DB_HOST || 'postgres-service',
   port: Number(process.env.DB_PORT || 5432),
@@ -22,6 +26,9 @@ const pool = new Pool({
   max: 10,
   connectionTimeoutMillis: 5000,
   idleTimeoutMillis: 30000,
+});
+pool.on('error', (error) => {
+  console.error(`PostgreSQL idle connection error (${error.code || 'unknown'}): ${error.message}`);
 });
 
 const redis = createClient({
@@ -193,6 +200,8 @@ async function initializeDatabase() {
       );
     }
     await client.query('COMMIT');
+    await refreshEventCatalog();
+    databaseInitialized = true;
   } catch (error) {
     await client.query('ROLLBACK').catch(() => {});
     throw error;
@@ -201,13 +210,27 @@ async function initializeDatabase() {
   }
 }
 
+async function refreshEventCatalog() {
+  const { rows } = await pool.query(
+    `SELECT id, title, category, venue, city, starts_at, price_cents,
+            total_seats, available_seats, description
+     FROM events WHERE starts_at > NOW() ORDER BY starts_at`,
+  );
+  eventCatalogCache = rows;
+  return rows;
+}
+
 app.get('/health/live', (_req, res) => res.json({ status: 'ok' }));
 app.get('/health/ready', async (_req, res) => {
   try {
     await pool.query('SELECT 1');
     if (!redis.isReady) return res.status(503).json({ error: 'redis_unavailable' });
+    if (!databaseInitialized) return res.status(503).json({ error: 'database_initializing' });
     res.json({ status: 'ready' });
   } catch {
+    if (redis.isReady && eventCatalogCache) {
+      return res.json({ status: 'degraded', database: 'unavailable', catalog: 'cached' });
+    }
     res.status(503).json({ error: 'dependency_unavailable' });
   }
 });
@@ -291,13 +314,12 @@ app.post('/auth/logout', requireUser, async (req, res, next) => {
 
 app.get('/events', async (_req, res, next) => {
   try {
-    const { rows } = await pool.query(
-      `SELECT id, title, category, venue, city, starts_at, price_cents,
-              total_seats, available_seats, description
-       FROM events WHERE starts_at > NOW() ORDER BY starts_at`,
-    );
-    res.json(rows);
+    res.json(await refreshEventCatalog());
   } catch (error) {
+    if (eventCatalogCache) {
+      res.set('X-Service-State', 'degraded');
+      return res.json(eventCatalogCache);
+    }
     next(error);
   }
 });
@@ -536,16 +558,37 @@ app.post('/reservations', (_req, res) => res.status(410).json({ error: 'use_cart
 app.use((error, _req, res, _next) => {
   if (error.code === 'EBADCSRFTOKEN') return res.status(403).json({ error: 'invalid_csrf_token' });
   if (error.code === '23505') return res.status(409).json({ error: 'conflict' });
+  if (['ECONNREFUSED', 'ETIMEDOUT', 'ECONNRESET', '57P01', '08006', 'NR_CLOSED'].includes(error.code)) {
+    res.set('Retry-After', '3');
+    return res.status(503).json({ error: 'service_temporarily_unavailable' });
+  }
   console.error(error);
   res.status(500).json({ error: 'internal_error' });
 });
 
-await initializeDatabase();
-await redis.connect();
 app.listen(port, '0.0.0.0', () => console.log(`Reservation API listening on ${port}`));
+
+retryUntilReady(initializeDatabase, {
+  signal: shutdownController.signal,
+  sleep: abortableSleep,
+  onRetry: (error, attempt, delayMs) => console.error(`PostgreSQL initialization attempt ${attempt} failed (${error.code || error.message}); retrying in ${delayMs}ms`),
+}).catch((error) => {
+  if (!shutdownController.signal.aborted) console.error('PostgreSQL retry loop stopped:', error.message);
+});
+
+retryUntilReady(async () => {
+  if (!redis.isOpen) await redis.connect();
+}, {
+  signal: shutdownController.signal,
+  sleep: abortableSleep,
+  onRetry: (error, attempt, delayMs) => console.error(`Redis connection attempt ${attempt} failed (${error.code || error.message}); retrying in ${delayMs}ms`),
+}).catch((error) => {
+  if (!shutdownController.signal.aborted) console.error('Redis retry loop stopped:', error.message);
+});
 
 for (const signal of ['SIGTERM', 'SIGINT']) {
   process.on(signal, async () => {
+    shutdownController.abort(new Error('Process shutting down'));
     await Promise.allSettled([pool.end(), redis.quit()]);
     process.exit(0);
   });

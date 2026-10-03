@@ -1,0 +1,941 @@
+
+===== 2026-10-03T20:36:56+00:00 elapsed=0s =====
+NAME          REFERENCE                       TARGETS        MINPODS   MAXPODS   REPLICAS   AGE
+backend-hpa   Deployment/backend-deployment   cpu: 13%/60%   3         9         3          3h26m
+NAME          CPU(cores)   CPU%   MEMORY(bytes)   MEMORY%   
+k8s-worker1   273m         13%    1151Mi          30%       
+k8s-worker2   125m         6%     1253Mi          32%       
+k8s-worker3   245m         12%    1257Mi          32%       
+master        237m         11%    2116Mi          55%       
+POD                                    NAME       CPU(cores)   MEMORY(bytes)   
+backend-deployment-c89c4cc5f-lqcr7     backend    170m         57Mi            
+backend-deployment-c89c4cc5f-mhsx9     backend    13m          44Mi            
+frontend-deployment-9b8f78c7d-jb9hm    frontend   1m           3Mi             
+frontend-deployment-9b8f78c7d-sb5m2    frontend   1m           3Mi             
+frontend-deployment-9b8f78c7d-v5ls2    frontend   1m           3Mi             
+postgres-deployment-8598bbc8dd-9bqfj   postgres   10m          31Mi            
+redis-deployment-588df8f94f-td58m      redis      16m          32Mi            
+NAME                                   READY   RESTARTS   PHASE     NODE
+backend-deployment-c89c4cc5f-gt2j2     true    0          Running   k8s-worker1
+backend-deployment-c89c4cc5f-lqcr7     true    0          Running   k8s-worker1
+backend-deployment-c89c4cc5f-mhsx9     true    0          Running   k8s-worker3
+frontend-deployment-9b8f78c7d-jb9hm    true    0          Running   k8s-worker1
+frontend-deployment-9b8f78c7d-sb5m2    true    0          Running   k8s-worker2
+frontend-deployment-9b8f78c7d-v5ls2    true    0          Running   k8s-worker1
+postgres-deployment-8598bbc8dd-9bqfj   true    0          Running   k8s-worker3
+redis-deployment-588df8f94f-td58m      true    1          Running   k8s-worker2
+3m58s       Warning   Unhealthy   pod/backend-deployment-6bf48b89b5-ts54z    Startup probe failed: Get "http://192.168.194.98:8080/health/live": dial tcp 192.168.194.98:8080: connect: connection refused
+3m58s       Warning   Unhealthy   pod/backend-deployment-6bf48b89b5-qzjlk    Startup probe failed: Get "http://192.168.194.97:8080/health/live": dial tcp 192.168.194.97:8080: connect: connection refused
+3m43s       Warning   Unhealthy   pod/backend-deployment-6bf48b89b5-ts54z    Readiness probe failed: Get "http://192.168.194.98:8080/health/ready": context deadline exceeded (Client.Timeout exceeded while awaiting headers)
+3m28s       Warning   Unhealthy   pod/backend-deployment-6bf48b89b5-224v4    Startup probe failed: Get "http://192.168.126.28:8080/health/live": dial tcp 192.168.126.28:8080: connect: connection refused
+3m25s       Warning   Unhealthy   pod/backend-deployment-6bf48b89b5-h95qx    Startup probe failed: Get "http://192.168.194.99:8080/health/live": dial tcp 192.168.194.99:8080: connect: connection refused
+2m55s       Warning   Unhealthy   pod/backend-deployment-6bf48b89b5-sfm7r    Startup probe failed: Get "http://192.168.100.226:8080/health/live": dial tcp 192.168.100.226:8080: connect: connection refused
+2m55s       Warning   Unhealthy   pod/backend-deployment-6bf48b89b5-wcphx    Startup probe failed: Get "http://192.168.126.29:8080/health/live": dial tcp 192.168.126.29:8080: connect: connection refused
+2m53s       Warning   Unhealthy   pod/backend-deployment-6bf48b89b5-h95qx    Readiness probe failed: Get "http://192.168.194.99:8080/health/ready": context deadline exceeded (Client.Timeout exceeded while awaiting headers)
+28s         Warning   Unhealthy   pod/backend-deployment-6bf48b89b5-h68rv    Readiness probe failed: Get "http://192.168.126.27:8080/health/ready": dial tcp 192.168.126.27:8080: connect: invalid argument
+25s         Warning   Unhealthy   pod/backend-deployment-c89c4cc5f-mhsx9     Startup probe failed: Get "http://192.168.100.227:8080/health/live": dial tcp 192.168.100.227:8080: connect: connection refused
+18s         Warning   Unhealthy   pod/backend-deployment-c89c4cc5f-lqcr7     Startup probe failed: Get "http://192.168.194.100:8080/health/live": dial tcp 192.168.194.100:8080: connect: connection refused
+12s         Warning   Unhealthy   pod/backend-deployment-c89c4cc5f-gt2j2     Startup probe failed: Get "http://192.168.194.101:8080/health/live": dial tcp 192.168.194.101:8080: connect: connection refused
+
+===== 2026-10-03T20:37:01+00:00 elapsed=5s =====
+NAME          REFERENCE                       TARGETS        MINPODS   MAXPODS   REPLICAS   AGE
+backend-hpa   Deployment/backend-deployment   cpu: 13%/60%   3         9         3          3h26m
+NAME          CPU(cores)   CPU%   MEMORY(bytes)   MEMORY%   
+k8s-worker1   273m         13%    1151Mi          30%       
+k8s-worker2   125m         6%     1253Mi          32%       
+k8s-worker3   245m         12%    1257Mi          32%       
+master        237m         11%    2116Mi          55%       
+POD                                    NAME       CPU(cores)   MEMORY(bytes)   
+backend-deployment-c89c4cc5f-lqcr7     backend    170m         57Mi            
+backend-deployment-c89c4cc5f-mhsx9     backend    13m          44Mi            
+frontend-deployment-9b8f78c7d-jb9hm    frontend   1m           3Mi             
+frontend-deployment-9b8f78c7d-sb5m2    frontend   1m           3Mi             
+frontend-deployment-9b8f78c7d-v5ls2    frontend   1m           3Mi             
+postgres-deployment-8598bbc8dd-9bqfj   postgres   10m          31Mi            
+redis-deployment-588df8f94f-td58m      redis      16m          32Mi            
+NAME                                   READY   RESTARTS   PHASE     NODE
+backend-deployment-c89c4cc5f-gt2j2     true    0          Running   k8s-worker1
+backend-deployment-c89c4cc5f-lqcr7     true    0          Running   k8s-worker1
+backend-deployment-c89c4cc5f-mhsx9     true    0          Running   k8s-worker3
+frontend-deployment-9b8f78c7d-jb9hm    true    0          Running   k8s-worker1
+frontend-deployment-9b8f78c7d-sb5m2    true    0          Running   k8s-worker2
+frontend-deployment-9b8f78c7d-v5ls2    true    0          Running   k8s-worker1
+postgres-deployment-8598bbc8dd-9bqfj   true    0          Running   k8s-worker3
+redis-deployment-588df8f94f-td58m      true    1          Running   k8s-worker2
+4m4s        Warning   Unhealthy   pod/backend-deployment-6bf48b89b5-ts54z    Startup probe failed: Get "http://192.168.194.98:8080/health/live": dial tcp 192.168.194.98:8080: connect: connection refused
+4m4s        Warning   Unhealthy   pod/backend-deployment-6bf48b89b5-qzjlk    Startup probe failed: Get "http://192.168.194.97:8080/health/live": dial tcp 192.168.194.97:8080: connect: connection refused
+3m49s       Warning   Unhealthy   pod/backend-deployment-6bf48b89b5-ts54z    Readiness probe failed: Get "http://192.168.194.98:8080/health/ready": context deadline exceeded (Client.Timeout exceeded while awaiting headers)
+3m34s       Warning   Unhealthy   pod/backend-deployment-6bf48b89b5-224v4    Startup probe failed: Get "http://192.168.126.28:8080/health/live": dial tcp 192.168.126.28:8080: connect: connection refused
+3m31s       Warning   Unhealthy   pod/backend-deployment-6bf48b89b5-h95qx    Startup probe failed: Get "http://192.168.194.99:8080/health/live": dial tcp 192.168.194.99:8080: connect: connection refused
+3m1s        Warning   Unhealthy   pod/backend-deployment-6bf48b89b5-sfm7r    Startup probe failed: Get "http://192.168.100.226:8080/health/live": dial tcp 192.168.100.226:8080: connect: connection refused
+3m1s        Warning   Unhealthy   pod/backend-deployment-6bf48b89b5-wcphx    Startup probe failed: Get "http://192.168.126.29:8080/health/live": dial tcp 192.168.126.29:8080: connect: connection refused
+2m59s       Warning   Unhealthy   pod/backend-deployment-6bf48b89b5-h95qx    Readiness probe failed: Get "http://192.168.194.99:8080/health/ready": context deadline exceeded (Client.Timeout exceeded while awaiting headers)
+34s         Warning   Unhealthy   pod/backend-deployment-6bf48b89b5-h68rv    Readiness probe failed: Get "http://192.168.126.27:8080/health/ready": dial tcp 192.168.126.27:8080: connect: invalid argument
+31s         Warning   Unhealthy   pod/backend-deployment-c89c4cc5f-mhsx9     Startup probe failed: Get "http://192.168.100.227:8080/health/live": dial tcp 192.168.100.227:8080: connect: connection refused
+24s         Warning   Unhealthy   pod/backend-deployment-c89c4cc5f-lqcr7     Startup probe failed: Get "http://192.168.194.100:8080/health/live": dial tcp 192.168.194.100:8080: connect: connection refused
+18s         Warning   Unhealthy   pod/backend-deployment-c89c4cc5f-gt2j2     Startup probe failed: Get "http://192.168.194.101:8080/health/live": dial tcp 192.168.194.101:8080: connect: connection refused
+
+===== 2026-10-03T20:37:07+00:00 elapsed=10s =====
+NAME          REFERENCE                       TARGETS        MINPODS   MAXPODS   REPLICAS   AGE
+backend-hpa   Deployment/backend-deployment   cpu: 13%/60%   3         9         3          3h26m
+NAME          CPU(cores)   CPU%   MEMORY(bytes)   MEMORY%   
+k8s-worker1   444m         22%    1200Mi          31%       
+k8s-worker2   135m         6%     1204Mi          31%       
+k8s-worker3   242m         12%    1220Mi          32%       
+master        247m         12%    2106Mi          55%       
+POD                                    NAME       CPU(cores)   MEMORY(bytes)   
+backend-deployment-c89c4cc5f-gt2j2     backend    108m         55Mi            
+backend-deployment-c89c4cc5f-lqcr7     backend    125m         55Mi            
+backend-deployment-c89c4cc5f-mhsx9     backend    13m          44Mi            
+frontend-deployment-9b8f78c7d-jb9hm    frontend   1m           3Mi             
+frontend-deployment-9b8f78c7d-sb5m2    frontend   29m          7Mi             
+frontend-deployment-9b8f78c7d-v5ls2    frontend   19m          6Mi             
+postgres-deployment-8598bbc8dd-9bqfj   postgres   8m           31Mi            
+redis-deployment-588df8f94f-td58m      redis      16m          32Mi            
+NAME                                   READY   RESTARTS   PHASE     NODE
+backend-deployment-c89c4cc5f-gt2j2     true    0          Running   k8s-worker1
+backend-deployment-c89c4cc5f-lqcr7     true    0          Running   k8s-worker1
+backend-deployment-c89c4cc5f-mhsx9     true    0          Running   k8s-worker3
+frontend-deployment-9b8f78c7d-jb9hm    true    0          Running   k8s-worker1
+frontend-deployment-9b8f78c7d-sb5m2    true    0          Running   k8s-worker2
+frontend-deployment-9b8f78c7d-v5ls2    true    0          Running   k8s-worker1
+postgres-deployment-8598bbc8dd-9bqfj   true    0          Running   k8s-worker3
+redis-deployment-588df8f94f-td58m      true    1          Running   k8s-worker2
+4m9s        Warning   Unhealthy   pod/backend-deployment-6bf48b89b5-ts54z    Startup probe failed: Get "http://192.168.194.98:8080/health/live": dial tcp 192.168.194.98:8080: connect: connection refused
+4m9s        Warning   Unhealthy   pod/backend-deployment-6bf48b89b5-qzjlk    Startup probe failed: Get "http://192.168.194.97:8080/health/live": dial tcp 192.168.194.97:8080: connect: connection refused
+3m54s       Warning   Unhealthy   pod/backend-deployment-6bf48b89b5-ts54z    Readiness probe failed: Get "http://192.168.194.98:8080/health/ready": context deadline exceeded (Client.Timeout exceeded while awaiting headers)
+3m39s       Warning   Unhealthy   pod/backend-deployment-6bf48b89b5-224v4    Startup probe failed: Get "http://192.168.126.28:8080/health/live": dial tcp 192.168.126.28:8080: connect: connection refused
+3m36s       Warning   Unhealthy   pod/backend-deployment-6bf48b89b5-h95qx    Startup probe failed: Get "http://192.168.194.99:8080/health/live": dial tcp 192.168.194.99:8080: connect: connection refused
+3m6s        Warning   Unhealthy   pod/backend-deployment-6bf48b89b5-sfm7r    Startup probe failed: Get "http://192.168.100.226:8080/health/live": dial tcp 192.168.100.226:8080: connect: connection refused
+3m6s        Warning   Unhealthy   pod/backend-deployment-6bf48b89b5-wcphx    Startup probe failed: Get "http://192.168.126.29:8080/health/live": dial tcp 192.168.126.29:8080: connect: connection refused
+3m4s        Warning   Unhealthy   pod/backend-deployment-6bf48b89b5-h95qx    Readiness probe failed: Get "http://192.168.194.99:8080/health/ready": context deadline exceeded (Client.Timeout exceeded while awaiting headers)
+39s         Warning   Unhealthy   pod/backend-deployment-6bf48b89b5-h68rv    Readiness probe failed: Get "http://192.168.126.27:8080/health/ready": dial tcp 192.168.126.27:8080: connect: invalid argument
+36s         Warning   Unhealthy   pod/backend-deployment-c89c4cc5f-mhsx9     Startup probe failed: Get "http://192.168.100.227:8080/health/live": dial tcp 192.168.100.227:8080: connect: connection refused
+29s         Warning   Unhealthy   pod/backend-deployment-c89c4cc5f-lqcr7     Startup probe failed: Get "http://192.168.194.100:8080/health/live": dial tcp 192.168.194.100:8080: connect: connection refused
+23s         Warning   Unhealthy   pod/backend-deployment-c89c4cc5f-gt2j2     Startup probe failed: Get "http://192.168.194.101:8080/health/live": dial tcp 192.168.194.101:8080: connect: connection refused
+
+===== 2026-10-03T20:37:12+00:00 elapsed=15s =====
+NAME          REFERENCE                       TARGETS        MINPODS   MAXPODS   REPLICAS   AGE
+backend-hpa   Deployment/backend-deployment   cpu: 82%/60%   3         9         3          3h26m
+NAME          CPU(cores)   CPU%   MEMORY(bytes)   MEMORY%   
+k8s-worker1   444m         22%    1200Mi          31%       
+k8s-worker2   135m         6%     1204Mi          31%       
+k8s-worker3   242m         12%    1220Mi          32%       
+master        247m         12%    2106Mi          55%       
+POD                                    NAME       CPU(cores)   MEMORY(bytes)   
+backend-deployment-c89c4cc5f-gt2j2     backend    108m         55Mi            
+backend-deployment-c89c4cc5f-lqcr7     backend    125m         55Mi            
+backend-deployment-c89c4cc5f-mhsx9     backend    13m          44Mi            
+frontend-deployment-9b8f78c7d-jb9hm    frontend   1m           3Mi             
+frontend-deployment-9b8f78c7d-sb5m2    frontend   29m          7Mi             
+frontend-deployment-9b8f78c7d-v5ls2    frontend   19m          6Mi             
+postgres-deployment-8598bbc8dd-9bqfj   postgres   8m           31Mi            
+redis-deployment-588df8f94f-td58m      redis      16m          32Mi            
+NAME                                   READY   RESTARTS   PHASE     NODE
+backend-deployment-c89c4cc5f-gt2j2     true    0          Running   k8s-worker1
+backend-deployment-c89c4cc5f-l8dbd     false   0          Running   k8s-worker3
+backend-deployment-c89c4cc5f-lqcr7     true    0          Running   k8s-worker1
+backend-deployment-c89c4cc5f-mhsx9     true    0          Running   k8s-worker3
+backend-deployment-c89c4cc5f-nhw79     false   0          Running   k8s-worker2
+frontend-deployment-9b8f78c7d-jb9hm    true    0          Running   k8s-worker1
+frontend-deployment-9b8f78c7d-sb5m2    true    0          Running   k8s-worker2
+frontend-deployment-9b8f78c7d-v5ls2    true    0          Running   k8s-worker1
+postgres-deployment-8598bbc8dd-9bqfj   true    0          Running   k8s-worker3
+redis-deployment-588df8f94f-td58m      true    1          Running   k8s-worker2
+4m14s       Warning   Unhealthy   pod/backend-deployment-6bf48b89b5-ts54z    Startup probe failed: Get "http://192.168.194.98:8080/health/live": dial tcp 192.168.194.98:8080: connect: connection refused
+4m14s       Warning   Unhealthy   pod/backend-deployment-6bf48b89b5-qzjlk    Startup probe failed: Get "http://192.168.194.97:8080/health/live": dial tcp 192.168.194.97:8080: connect: connection refused
+3m59s       Warning   Unhealthy   pod/backend-deployment-6bf48b89b5-ts54z    Readiness probe failed: Get "http://192.168.194.98:8080/health/ready": context deadline exceeded (Client.Timeout exceeded while awaiting headers)
+3m44s       Warning   Unhealthy   pod/backend-deployment-6bf48b89b5-224v4    Startup probe failed: Get "http://192.168.126.28:8080/health/live": dial tcp 192.168.126.28:8080: connect: connection refused
+3m41s       Warning   Unhealthy   pod/backend-deployment-6bf48b89b5-h95qx    Startup probe failed: Get "http://192.168.194.99:8080/health/live": dial tcp 192.168.194.99:8080: connect: connection refused
+3m11s       Warning   Unhealthy   pod/backend-deployment-6bf48b89b5-sfm7r    Startup probe failed: Get "http://192.168.100.226:8080/health/live": dial tcp 192.168.100.226:8080: connect: connection refused
+3m11s       Warning   Unhealthy   pod/backend-deployment-6bf48b89b5-wcphx    Startup probe failed: Get "http://192.168.126.29:8080/health/live": dial tcp 192.168.126.29:8080: connect: connection refused
+3m9s        Warning   Unhealthy   pod/backend-deployment-6bf48b89b5-h95qx    Readiness probe failed: Get "http://192.168.194.99:8080/health/ready": context deadline exceeded (Client.Timeout exceeded while awaiting headers)
+44s         Warning   Unhealthy   pod/backend-deployment-6bf48b89b5-h68rv    Readiness probe failed: Get "http://192.168.126.27:8080/health/ready": dial tcp 192.168.126.27:8080: connect: invalid argument
+41s         Warning   Unhealthy   pod/backend-deployment-c89c4cc5f-mhsx9     Startup probe failed: Get "http://192.168.100.227:8080/health/live": dial tcp 192.168.100.227:8080: connect: connection refused
+34s         Warning   Unhealthy   pod/backend-deployment-c89c4cc5f-lqcr7     Startup probe failed: Get "http://192.168.194.100:8080/health/live": dial tcp 192.168.194.100:8080: connect: connection refused
+28s         Warning   Unhealthy   pod/backend-deployment-c89c4cc5f-gt2j2     Startup probe failed: Get "http://192.168.194.101:8080/health/live": dial tcp 192.168.194.101:8080: connect: connection refused
+
+===== 2026-10-03T20:37:17+00:00 elapsed=20s =====
+NAME          REFERENCE                       TARGETS        MINPODS   MAXPODS   REPLICAS   AGE
+backend-hpa   Deployment/backend-deployment   cpu: 82%/60%   3         9         3          3h26m
+NAME          CPU(cores)   CPU%   MEMORY(bytes)   MEMORY%   
+k8s-worker1   444m         22%    1200Mi          31%       
+k8s-worker2   135m         6%     1204Mi          31%       
+k8s-worker3   242m         12%    1220Mi          32%       
+master        247m         12%    2106Mi          55%       
+POD                                    NAME       CPU(cores)   MEMORY(bytes)   
+backend-deployment-c89c4cc5f-gt2j2     backend    108m         55Mi            
+backend-deployment-c89c4cc5f-lqcr7     backend    125m         55Mi            
+backend-deployment-c89c4cc5f-mhsx9     backend    13m          44Mi            
+frontend-deployment-9b8f78c7d-jb9hm    frontend   1m           3Mi             
+frontend-deployment-9b8f78c7d-sb5m2    frontend   29m          7Mi             
+frontend-deployment-9b8f78c7d-v5ls2    frontend   19m          6Mi             
+postgres-deployment-8598bbc8dd-9bqfj   postgres   8m           31Mi            
+redis-deployment-588df8f94f-td58m      redis      16m          32Mi            
+NAME                                   READY   RESTARTS   PHASE     NODE
+backend-deployment-c89c4cc5f-gt2j2     true    0          Running   k8s-worker1
+backend-deployment-c89c4cc5f-l8dbd     true    0          Running   k8s-worker3
+backend-deployment-c89c4cc5f-lqcr7     true    0          Running   k8s-worker1
+backend-deployment-c89c4cc5f-mhsx9     true    0          Running   k8s-worker3
+backend-deployment-c89c4cc5f-nhw79     true    0          Running   k8s-worker2
+frontend-deployment-9b8f78c7d-jb9hm    true    0          Running   k8s-worker1
+frontend-deployment-9b8f78c7d-sb5m2    true    0          Running   k8s-worker2
+frontend-deployment-9b8f78c7d-v5ls2    true    0          Running   k8s-worker1
+postgres-deployment-8598bbc8dd-9bqfj   true    0          Running   k8s-worker3
+redis-deployment-588df8f94f-td58m      true    1          Running   k8s-worker2
+4m5s        Warning   Unhealthy   pod/backend-deployment-6bf48b89b5-ts54z    Readiness probe failed: Get "http://192.168.194.98:8080/health/ready": context deadline exceeded (Client.Timeout exceeded while awaiting headers)
+3m50s       Warning   Unhealthy   pod/backend-deployment-6bf48b89b5-224v4    Startup probe failed: Get "http://192.168.126.28:8080/health/live": dial tcp 192.168.126.28:8080: connect: connection refused
+3m47s       Warning   Unhealthy   pod/backend-deployment-6bf48b89b5-h95qx    Startup probe failed: Get "http://192.168.194.99:8080/health/live": dial tcp 192.168.194.99:8080: connect: connection refused
+3m17s       Warning   Unhealthy   pod/backend-deployment-6bf48b89b5-sfm7r    Startup probe failed: Get "http://192.168.100.226:8080/health/live": dial tcp 192.168.100.226:8080: connect: connection refused
+3m17s       Warning   Unhealthy   pod/backend-deployment-6bf48b89b5-wcphx    Startup probe failed: Get "http://192.168.126.29:8080/health/live": dial tcp 192.168.126.29:8080: connect: connection refused
+3m15s       Warning   Unhealthy   pod/backend-deployment-6bf48b89b5-h95qx    Readiness probe failed: Get "http://192.168.194.99:8080/health/ready": context deadline exceeded (Client.Timeout exceeded while awaiting headers)
+50s         Warning   Unhealthy   pod/backend-deployment-6bf48b89b5-h68rv    Readiness probe failed: Get "http://192.168.126.27:8080/health/ready": dial tcp 192.168.126.27:8080: connect: invalid argument
+47s         Warning   Unhealthy   pod/backend-deployment-c89c4cc5f-mhsx9     Startup probe failed: Get "http://192.168.100.227:8080/health/live": dial tcp 192.168.100.227:8080: connect: connection refused
+40s         Warning   Unhealthy   pod/backend-deployment-c89c4cc5f-lqcr7     Startup probe failed: Get "http://192.168.194.100:8080/health/live": dial tcp 192.168.194.100:8080: connect: connection refused
+34s         Warning   Unhealthy   pod/backend-deployment-c89c4cc5f-gt2j2     Startup probe failed: Get "http://192.168.194.101:8080/health/live": dial tcp 192.168.194.101:8080: connect: connection refused
+5s          Warning   Unhealthy   pod/backend-deployment-c89c4cc5f-nhw79     Startup probe failed: Get "http://192.168.126.30:8080/health/live": dial tcp 192.168.126.30:8080: connect: connection refused
+5s          Warning   Unhealthy   pod/backend-deployment-c89c4cc5f-l8dbd     Startup probe failed: Get "http://192.168.100.228:8080/health/live": dial tcp 192.168.100.228:8080: connect: connection refused
+
+===== 2026-10-03T20:37:23+00:00 elapsed=25s =====
+NAME          REFERENCE                       TARGETS        MINPODS   MAXPODS   REPLICAS   AGE
+backend-hpa   Deployment/backend-deployment   cpu: 82%/60%   3         9         3          3h26m
+NAME          CPU(cores)   CPU%   MEMORY(bytes)   MEMORY%   
+k8s-worker1   1149m        57%    1201Mi          31%       
+k8s-worker2   355m         17%    1276Mi          33%       
+k8s-worker3   756m         37%    1249Mi          32%       
+master        293m         14%    2104Mi          55%       
+POD                                    NAME       CPU(cores)   MEMORY(bytes)   
+backend-deployment-c89c4cc5f-gt2j2     backend    385m         56Mi            
+backend-deployment-c89c4cc5f-lqcr7     backend    125m         55Mi            
+backend-deployment-c89c4cc5f-mhsx9     backend    229m         56Mi            
+frontend-deployment-9b8f78c7d-jb9hm    frontend   72m          7Mi             
+frontend-deployment-9b8f78c7d-sb5m2    frontend   87m          7Mi             
+frontend-deployment-9b8f78c7d-v5ls2    frontend   74m          7Mi             
+postgres-deployment-8598bbc8dd-9bqfj   postgres   167m         60Mi            
+redis-deployment-588df8f94f-td58m      redis      15m          33Mi            
+NAME                                   READY   RESTARTS   PHASE     NODE
+backend-deployment-c89c4cc5f-gt2j2     true    0          Running   k8s-worker1
+backend-deployment-c89c4cc5f-l8dbd     true    0          Running   k8s-worker3
+backend-deployment-c89c4cc5f-lqcr7     true    0          Running   k8s-worker1
+backend-deployment-c89c4cc5f-mhsx9     true    0          Running   k8s-worker3
+backend-deployment-c89c4cc5f-nhw79     true    0          Running   k8s-worker2
+frontend-deployment-9b8f78c7d-jb9hm    true    0          Running   k8s-worker1
+frontend-deployment-9b8f78c7d-sb5m2    true    0          Running   k8s-worker2
+frontend-deployment-9b8f78c7d-v5ls2    true    0          Running   k8s-worker1
+postgres-deployment-8598bbc8dd-9bqfj   true    0          Running   k8s-worker3
+redis-deployment-588df8f94f-td58m      true    1          Running   k8s-worker2
+4m10s       Warning   Unhealthy   pod/backend-deployment-6bf48b89b5-ts54z    Readiness probe failed: Get "http://192.168.194.98:8080/health/ready": context deadline exceeded (Client.Timeout exceeded while awaiting headers)
+3m55s       Warning   Unhealthy   pod/backend-deployment-6bf48b89b5-224v4    Startup probe failed: Get "http://192.168.126.28:8080/health/live": dial tcp 192.168.126.28:8080: connect: connection refused
+3m52s       Warning   Unhealthy   pod/backend-deployment-6bf48b89b5-h95qx    Startup probe failed: Get "http://192.168.194.99:8080/health/live": dial tcp 192.168.194.99:8080: connect: connection refused
+3m22s       Warning   Unhealthy   pod/backend-deployment-6bf48b89b5-sfm7r    Startup probe failed: Get "http://192.168.100.226:8080/health/live": dial tcp 192.168.100.226:8080: connect: connection refused
+3m22s       Warning   Unhealthy   pod/backend-deployment-6bf48b89b5-wcphx    Startup probe failed: Get "http://192.168.126.29:8080/health/live": dial tcp 192.168.126.29:8080: connect: connection refused
+3m20s       Warning   Unhealthy   pod/backend-deployment-6bf48b89b5-h95qx    Readiness probe failed: Get "http://192.168.194.99:8080/health/ready": context deadline exceeded (Client.Timeout exceeded while awaiting headers)
+55s         Warning   Unhealthy   pod/backend-deployment-6bf48b89b5-h68rv    Readiness probe failed: Get "http://192.168.126.27:8080/health/ready": dial tcp 192.168.126.27:8080: connect: invalid argument
+52s         Warning   Unhealthy   pod/backend-deployment-c89c4cc5f-mhsx9     Startup probe failed: Get "http://192.168.100.227:8080/health/live": dial tcp 192.168.100.227:8080: connect: connection refused
+45s         Warning   Unhealthy   pod/backend-deployment-c89c4cc5f-lqcr7     Startup probe failed: Get "http://192.168.194.100:8080/health/live": dial tcp 192.168.194.100:8080: connect: connection refused
+39s         Warning   Unhealthy   pod/backend-deployment-c89c4cc5f-gt2j2     Startup probe failed: Get "http://192.168.194.101:8080/health/live": dial tcp 192.168.194.101:8080: connect: connection refused
+10s         Warning   Unhealthy   pod/backend-deployment-c89c4cc5f-nhw79     Startup probe failed: Get "http://192.168.126.30:8080/health/live": dial tcp 192.168.126.30:8080: connect: connection refused
+10s         Warning   Unhealthy   pod/backend-deployment-c89c4cc5f-l8dbd     Startup probe failed: Get "http://192.168.100.228:8080/health/live": dial tcp 192.168.100.228:8080: connect: connection refused
+
+===== 2026-10-03T20:37:28+00:00 elapsed=30s =====
+NAME          REFERENCE                       TARGETS         MINPODS   MAXPODS   REPLICAS   AGE
+backend-hpa   Deployment/backend-deployment   cpu: 246%/60%   3         9         5          3h26m
+NAME          CPU(cores)   CPU%   MEMORY(bytes)   MEMORY%   
+k8s-worker1   1149m        57%    1201Mi          31%       
+k8s-worker2   355m         17%    1276Mi          33%       
+k8s-worker3   756m         37%    1249Mi          32%       
+master        293m         14%    2104Mi          55%       
+POD                                    NAME       CPU(cores)   MEMORY(bytes)   
+backend-deployment-c89c4cc5f-gt2j2     backend    385m         56Mi            
+backend-deployment-c89c4cc5f-lqcr7     backend    125m         55Mi            
+backend-deployment-c89c4cc5f-mhsx9     backend    229m         56Mi            
+frontend-deployment-9b8f78c7d-jb9hm    frontend   72m          7Mi             
+frontend-deployment-9b8f78c7d-sb5m2    frontend   87m          7Mi             
+frontend-deployment-9b8f78c7d-v5ls2    frontend   74m          7Mi             
+postgres-deployment-8598bbc8dd-9bqfj   postgres   167m         60Mi            
+redis-deployment-588df8f94f-td58m      redis      15m          33Mi            
+NAME                                   READY   RESTARTS   PHASE     NODE
+backend-deployment-c89c4cc5f-gt2j2     true    0          Running   k8s-worker1
+backend-deployment-c89c4cc5f-l8dbd     true    0          Running   k8s-worker3
+backend-deployment-c89c4cc5f-lqcr7     true    0          Running   k8s-worker1
+backend-deployment-c89c4cc5f-mhsx9     true    0          Running   k8s-worker3
+backend-deployment-c89c4cc5f-nhw79     true    0          Running   k8s-worker2
+frontend-deployment-9b8f78c7d-jb9hm    true    0          Running   k8s-worker1
+frontend-deployment-9b8f78c7d-sb5m2    true    0          Running   k8s-worker2
+frontend-deployment-9b8f78c7d-v5ls2    true    0          Running   k8s-worker1
+postgres-deployment-8598bbc8dd-9bqfj   true    0          Running   k8s-worker3
+redis-deployment-588df8f94f-td58m      true    1          Running   k8s-worker2
+4m16s       Warning   Unhealthy   pod/backend-deployment-6bf48b89b5-ts54z    Readiness probe failed: Get "http://192.168.194.98:8080/health/ready": context deadline exceeded (Client.Timeout exceeded while awaiting headers)
+4m1s        Warning   Unhealthy   pod/backend-deployment-6bf48b89b5-224v4    Startup probe failed: Get "http://192.168.126.28:8080/health/live": dial tcp 192.168.126.28:8080: connect: connection refused
+3m58s       Warning   Unhealthy   pod/backend-deployment-6bf48b89b5-h95qx    Startup probe failed: Get "http://192.168.194.99:8080/health/live": dial tcp 192.168.194.99:8080: connect: connection refused
+3m28s       Warning   Unhealthy   pod/backend-deployment-6bf48b89b5-sfm7r    Startup probe failed: Get "http://192.168.100.226:8080/health/live": dial tcp 192.168.100.226:8080: connect: connection refused
+3m28s       Warning   Unhealthy   pod/backend-deployment-6bf48b89b5-wcphx    Startup probe failed: Get "http://192.168.126.29:8080/health/live": dial tcp 192.168.126.29:8080: connect: connection refused
+3m26s       Warning   Unhealthy   pod/backend-deployment-6bf48b89b5-h95qx    Readiness probe failed: Get "http://192.168.194.99:8080/health/ready": context deadline exceeded (Client.Timeout exceeded while awaiting headers)
+61s         Warning   Unhealthy   pod/backend-deployment-6bf48b89b5-h68rv    Readiness probe failed: Get "http://192.168.126.27:8080/health/ready": dial tcp 192.168.126.27:8080: connect: invalid argument
+58s         Warning   Unhealthy   pod/backend-deployment-c89c4cc5f-mhsx9     Startup probe failed: Get "http://192.168.100.227:8080/health/live": dial tcp 192.168.100.227:8080: connect: connection refused
+51s         Warning   Unhealthy   pod/backend-deployment-c89c4cc5f-lqcr7     Startup probe failed: Get "http://192.168.194.100:8080/health/live": dial tcp 192.168.194.100:8080: connect: connection refused
+45s         Warning   Unhealthy   pod/backend-deployment-c89c4cc5f-gt2j2     Startup probe failed: Get "http://192.168.194.101:8080/health/live": dial tcp 192.168.194.101:8080: connect: connection refused
+16s         Warning   Unhealthy   pod/backend-deployment-c89c4cc5f-nhw79     Startup probe failed: Get "http://192.168.126.30:8080/health/live": dial tcp 192.168.126.30:8080: connect: connection refused
+16s         Warning   Unhealthy   pod/backend-deployment-c89c4cc5f-l8dbd     Startup probe failed: Get "http://192.168.100.228:8080/health/live": dial tcp 192.168.100.228:8080: connect: connection refused
+
+===== 2026-10-03T20:37:34+00:00 elapsed=35s =====
+NAME          REFERENCE                       TARGETS         MINPODS   MAXPODS   REPLICAS   AGE
+backend-hpa   Deployment/backend-deployment   cpu: 246%/60%   3         9         5          3h26m
+NAME          CPU(cores)   CPU%   MEMORY(bytes)   MEMORY%   
+k8s-worker1   1149m        57%    1201Mi          31%       
+k8s-worker2   355m         17%    1276Mi          33%       
+k8s-worker3   756m         37%    1249Mi          32%       
+master        293m         14%    2104Mi          55%       
+POD                                    NAME       CPU(cores)   MEMORY(bytes)   
+backend-deployment-c89c4cc5f-gt2j2     backend    333m         56Mi            
+backend-deployment-c89c4cc5f-l8dbd     backend    354m         58Mi            
+backend-deployment-c89c4cc5f-lqcr7     backend    400m         56Mi            
+backend-deployment-c89c4cc5f-mhsx9     backend    398m         56Mi            
+backend-deployment-c89c4cc5f-nhw79     backend    398m         61Mi            
+frontend-deployment-9b8f78c7d-jb9hm    frontend   72m          7Mi             
+frontend-deployment-9b8f78c7d-sb5m2    frontend   87m          7Mi             
+frontend-deployment-9b8f78c7d-v5ls2    frontend   106m         8Mi             
+postgres-deployment-8598bbc8dd-9bqfj   postgres   263m         104Mi           
+redis-deployment-588df8f94f-td58m      redis      16m          32Mi            
+NAME                                   READY   RESTARTS   PHASE     NODE
+backend-deployment-c89c4cc5f-gt2j2     true    0          Running   k8s-worker1
+backend-deployment-c89c4cc5f-l8dbd     true    0          Running   k8s-worker3
+backend-deployment-c89c4cc5f-lqcr7     true    0          Running   k8s-worker1
+backend-deployment-c89c4cc5f-mhsx9     true    0          Running   k8s-worker3
+backend-deployment-c89c4cc5f-nhw79     true    0          Running   k8s-worker2
+frontend-deployment-9b8f78c7d-jb9hm    true    0          Running   k8s-worker1
+frontend-deployment-9b8f78c7d-sb5m2    true    0          Running   k8s-worker2
+frontend-deployment-9b8f78c7d-v5ls2    true    0          Running   k8s-worker1
+postgres-deployment-8598bbc8dd-9bqfj   true    0          Running   k8s-worker3
+redis-deployment-588df8f94f-td58m      true    1          Running   k8s-worker2
+4m21s       Warning   Unhealthy   pod/backend-deployment-6bf48b89b5-ts54z    Readiness probe failed: Get "http://192.168.194.98:8080/health/ready": context deadline exceeded (Client.Timeout exceeded while awaiting headers)
+4m6s        Warning   Unhealthy   pod/backend-deployment-6bf48b89b5-224v4    Startup probe failed: Get "http://192.168.126.28:8080/health/live": dial tcp 192.168.126.28:8080: connect: connection refused
+4m3s        Warning   Unhealthy   pod/backend-deployment-6bf48b89b5-h95qx    Startup probe failed: Get "http://192.168.194.99:8080/health/live": dial tcp 192.168.194.99:8080: connect: connection refused
+3m33s       Warning   Unhealthy   pod/backend-deployment-6bf48b89b5-sfm7r    Startup probe failed: Get "http://192.168.100.226:8080/health/live": dial tcp 192.168.100.226:8080: connect: connection refused
+3m33s       Warning   Unhealthy   pod/backend-deployment-6bf48b89b5-wcphx    Startup probe failed: Get "http://192.168.126.29:8080/health/live": dial tcp 192.168.126.29:8080: connect: connection refused
+3m31s       Warning   Unhealthy   pod/backend-deployment-6bf48b89b5-h95qx    Readiness probe failed: Get "http://192.168.194.99:8080/health/ready": context deadline exceeded (Client.Timeout exceeded while awaiting headers)
+66s         Warning   Unhealthy   pod/backend-deployment-6bf48b89b5-h68rv    Readiness probe failed: Get "http://192.168.126.27:8080/health/ready": dial tcp 192.168.126.27:8080: connect: invalid argument
+63s         Warning   Unhealthy   pod/backend-deployment-c89c4cc5f-mhsx9     Startup probe failed: Get "http://192.168.100.227:8080/health/live": dial tcp 192.168.100.227:8080: connect: connection refused
+56s         Warning   Unhealthy   pod/backend-deployment-c89c4cc5f-lqcr7     Startup probe failed: Get "http://192.168.194.100:8080/health/live": dial tcp 192.168.194.100:8080: connect: connection refused
+50s         Warning   Unhealthy   pod/backend-deployment-c89c4cc5f-gt2j2     Startup probe failed: Get "http://192.168.194.101:8080/health/live": dial tcp 192.168.194.101:8080: connect: connection refused
+21s         Warning   Unhealthy   pod/backend-deployment-c89c4cc5f-nhw79     Startup probe failed: Get "http://192.168.126.30:8080/health/live": dial tcp 192.168.126.30:8080: connect: connection refused
+21s         Warning   Unhealthy   pod/backend-deployment-c89c4cc5f-l8dbd     Startup probe failed: Get "http://192.168.100.228:8080/health/live": dial tcp 192.168.100.228:8080: connect: connection refused
+
+===== 2026-10-03T20:37:39+00:00 elapsed=40s =====
+NAME          REFERENCE                       TARGETS         MINPODS   MAXPODS   REPLICAS   AGE
+backend-hpa   Deployment/backend-deployment   cpu: 246%/60%   3         9         5          3h27m
+NAME          CPU(cores)   CPU%   MEMORY(bytes)   MEMORY%   
+k8s-worker1   1108m        55%    1202Mi          31%       
+k8s-worker2   727m         36%    1267Mi          33%       
+k8s-worker3   1145m        57%    1326Mi          34%       
+master        213m         10%    2107Mi          55%       
+POD                                    NAME       CPU(cores)   MEMORY(bytes)   
+backend-deployment-c89c4cc5f-gt2j2     backend    333m         56Mi            
+backend-deployment-c89c4cc5f-l8dbd     backend    354m         58Mi            
+backend-deployment-c89c4cc5f-lqcr7     backend    400m         56Mi            
+backend-deployment-c89c4cc5f-mhsx9     backend    398m         56Mi            
+backend-deployment-c89c4cc5f-nhw79     backend    398m         61Mi            
+frontend-deployment-9b8f78c7d-jb9hm    frontend   72m          7Mi             
+frontend-deployment-9b8f78c7d-sb5m2    frontend   87m          7Mi             
+frontend-deployment-9b8f78c7d-v5ls2    frontend   106m         8Mi             
+postgres-deployment-8598bbc8dd-9bqfj   postgres   263m         104Mi           
+redis-deployment-588df8f94f-td58m      redis      16m          32Mi            
+NAME                                   READY   RESTARTS   PHASE     NODE
+backend-deployment-c89c4cc5f-gt2j2     true    0          Running   k8s-worker1
+backend-deployment-c89c4cc5f-l8dbd     true    0          Running   k8s-worker3
+backend-deployment-c89c4cc5f-lqcr7     true    0          Running   k8s-worker1
+backend-deployment-c89c4cc5f-mhsx9     true    0          Running   k8s-worker3
+backend-deployment-c89c4cc5f-nhw79     true    0          Running   k8s-worker2
+frontend-deployment-9b8f78c7d-jb9hm    true    0          Running   k8s-worker1
+frontend-deployment-9b8f78c7d-sb5m2    true    0          Running   k8s-worker2
+frontend-deployment-9b8f78c7d-v5ls2    true    0          Running   k8s-worker1
+postgres-deployment-8598bbc8dd-9bqfj   true    0          Running   k8s-worker3
+redis-deployment-588df8f94f-td58m      true    1          Running   k8s-worker2
+4m27s       Warning   Unhealthy   pod/backend-deployment-6bf48b89b5-ts54z    Readiness probe failed: Get "http://192.168.194.98:8080/health/ready": context deadline exceeded (Client.Timeout exceeded while awaiting headers)
+4m12s       Warning   Unhealthy   pod/backend-deployment-6bf48b89b5-224v4    Startup probe failed: Get "http://192.168.126.28:8080/health/live": dial tcp 192.168.126.28:8080: connect: connection refused
+4m9s        Warning   Unhealthy   pod/backend-deployment-6bf48b89b5-h95qx    Startup probe failed: Get "http://192.168.194.99:8080/health/live": dial tcp 192.168.194.99:8080: connect: connection refused
+3m39s       Warning   Unhealthy   pod/backend-deployment-6bf48b89b5-sfm7r    Startup probe failed: Get "http://192.168.100.226:8080/health/live": dial tcp 192.168.100.226:8080: connect: connection refused
+3m39s       Warning   Unhealthy   pod/backend-deployment-6bf48b89b5-wcphx    Startup probe failed: Get "http://192.168.126.29:8080/health/live": dial tcp 192.168.126.29:8080: connect: connection refused
+3m37s       Warning   Unhealthy   pod/backend-deployment-6bf48b89b5-h95qx    Readiness probe failed: Get "http://192.168.194.99:8080/health/ready": context deadline exceeded (Client.Timeout exceeded while awaiting headers)
+72s         Warning   Unhealthy   pod/backend-deployment-6bf48b89b5-h68rv    Readiness probe failed: Get "http://192.168.126.27:8080/health/ready": dial tcp 192.168.126.27:8080: connect: invalid argument
+69s         Warning   Unhealthy   pod/backend-deployment-c89c4cc5f-mhsx9     Startup probe failed: Get "http://192.168.100.227:8080/health/live": dial tcp 192.168.100.227:8080: connect: connection refused
+62s         Warning   Unhealthy   pod/backend-deployment-c89c4cc5f-lqcr7     Startup probe failed: Get "http://192.168.194.100:8080/health/live": dial tcp 192.168.194.100:8080: connect: connection refused
+56s         Warning   Unhealthy   pod/backend-deployment-c89c4cc5f-gt2j2     Startup probe failed: Get "http://192.168.194.101:8080/health/live": dial tcp 192.168.194.101:8080: connect: connection refused
+27s         Warning   Unhealthy   pod/backend-deployment-c89c4cc5f-nhw79     Startup probe failed: Get "http://192.168.126.30:8080/health/live": dial tcp 192.168.126.30:8080: connect: connection refused
+27s         Warning   Unhealthy   pod/backend-deployment-c89c4cc5f-l8dbd     Startup probe failed: Get "http://192.168.100.228:8080/health/live": dial tcp 192.168.100.228:8080: connect: connection refused
+
+===== 2026-10-03T20:37:45+00:00 elapsed=45s =====
+NAME          REFERENCE                       TARGETS         MINPODS   MAXPODS   REPLICAS   AGE
+backend-hpa   Deployment/backend-deployment   cpu: 382%/60%   3         9         5          3h27m
+NAME          CPU(cores)   CPU%   MEMORY(bytes)   MEMORY%   
+k8s-worker1   1108m        55%    1202Mi          31%       
+k8s-worker2   727m         36%    1267Mi          33%       
+k8s-worker3   1145m        57%    1326Mi          34%       
+master        213m         10%    2107Mi          55%       
+POD                                    NAME       CPU(cores)   MEMORY(bytes)   
+backend-deployment-c89c4cc5f-gt2j2     backend    333m         56Mi            
+backend-deployment-c89c4cc5f-l8dbd     backend    354m         58Mi            
+backend-deployment-c89c4cc5f-lqcr7     backend    400m         56Mi            
+backend-deployment-c89c4cc5f-mhsx9     backend    398m         56Mi            
+backend-deployment-c89c4cc5f-nhw79     backend    398m         61Mi            
+frontend-deployment-9b8f78c7d-jb9hm    frontend   72m          7Mi             
+frontend-deployment-9b8f78c7d-sb5m2    frontend   87m          7Mi             
+frontend-deployment-9b8f78c7d-v5ls2    frontend   106m         8Mi             
+postgres-deployment-8598bbc8dd-9bqfj   postgres   263m         104Mi           
+redis-deployment-588df8f94f-td58m      redis      16m          32Mi            
+NAME                                   READY   RESTARTS   PHASE     NODE
+backend-deployment-c89c4cc5f-b8ch6     false   0          Running   k8s-worker2
+backend-deployment-c89c4cc5f-gt2j2     true    0          Running   k8s-worker1
+backend-deployment-c89c4cc5f-l8dbd     true    0          Running   k8s-worker3
+backend-deployment-c89c4cc5f-lqcr7     true    0          Running   k8s-worker1
+backend-deployment-c89c4cc5f-mhsx9     true    0          Running   k8s-worker3
+backend-deployment-c89c4cc5f-nhw79     true    0          Running   k8s-worker2
+backend-deployment-c89c4cc5f-zqtfx     false   0          Running   k8s-worker1
+frontend-deployment-9b8f78c7d-jb9hm    true    0          Running   k8s-worker1
+frontend-deployment-9b8f78c7d-sb5m2    true    0          Running   k8s-worker2
+frontend-deployment-9b8f78c7d-v5ls2    true    0          Running   k8s-worker1
+postgres-deployment-8598bbc8dd-9bqfj   true    0          Running   k8s-worker3
+redis-deployment-588df8f94f-td58m      true    1          Running   k8s-worker2
+4m14s       Warning   Unhealthy   pod/backend-deployment-6bf48b89b5-h95qx    Startup probe failed: Get "http://192.168.194.99:8080/health/live": dial tcp 192.168.194.99:8080: connect: connection refused
+3m44s       Warning   Unhealthy   pod/backend-deployment-6bf48b89b5-wcphx    Startup probe failed: Get "http://192.168.126.29:8080/health/live": dial tcp 192.168.126.29:8080: connect: connection refused
+3m44s       Warning   Unhealthy   pod/backend-deployment-6bf48b89b5-sfm7r    Startup probe failed: Get "http://192.168.100.226:8080/health/live": dial tcp 192.168.100.226:8080: connect: connection refused
+3m42s       Warning   Unhealthy   pod/backend-deployment-6bf48b89b5-h95qx    Readiness probe failed: Get "http://192.168.194.99:8080/health/ready": context deadline exceeded (Client.Timeout exceeded while awaiting headers)
+77s         Warning   Unhealthy   pod/backend-deployment-6bf48b89b5-h68rv    Readiness probe failed: Get "http://192.168.126.27:8080/health/ready": dial tcp 192.168.126.27:8080: connect: invalid argument
+74s         Warning   Unhealthy   pod/backend-deployment-c89c4cc5f-mhsx9     Startup probe failed: Get "http://192.168.100.227:8080/health/live": dial tcp 192.168.100.227:8080: connect: connection refused
+67s         Warning   Unhealthy   pod/backend-deployment-c89c4cc5f-lqcr7     Startup probe failed: Get "http://192.168.194.100:8080/health/live": dial tcp 192.168.194.100:8080: connect: connection refused
+61s         Warning   Unhealthy   pod/backend-deployment-c89c4cc5f-gt2j2     Startup probe failed: Get "http://192.168.194.101:8080/health/live": dial tcp 192.168.194.101:8080: connect: connection refused
+32s         Warning   Unhealthy   pod/backend-deployment-c89c4cc5f-l8dbd     Startup probe failed: Get "http://192.168.100.228:8080/health/live": dial tcp 192.168.100.228:8080: connect: connection refused
+32s         Warning   Unhealthy   pod/backend-deployment-c89c4cc5f-nhw79     Startup probe failed: Get "http://192.168.126.30:8080/health/live": dial tcp 192.168.126.30:8080: connect: connection refused
+2s          Warning   Unhealthy   pod/backend-deployment-c89c4cc5f-zqtfx     Startup probe failed: Get "http://192.168.194.102:8080/health/live": dial tcp 192.168.194.102:8080: connect: connection refused
+2s          Warning   Unhealthy   pod/backend-deployment-c89c4cc5f-b8ch6     Startup probe failed: Get "http://192.168.126.31:8080/health/live": dial tcp 192.168.126.31:8080: connect: connection refused
+
+===== 2026-10-03T20:37:50+00:00 elapsed=50s =====
+NAME          REFERENCE                       TARGETS         MINPODS   MAXPODS   REPLICAS   AGE
+backend-hpa   Deployment/backend-deployment   cpu: 382%/60%   3         9         5          3h27m
+NAME          CPU(cores)   CPU%   MEMORY(bytes)   MEMORY%   
+k8s-worker1   1118m        55%    1220Mi          32%       
+k8s-worker2   826m         41%    1321Mi          34%       
+k8s-worker3   1067m        53%    1328Mi          34%       
+master        303m         15%    2106Mi          55%       
+POD                                    NAME       CPU(cores)   MEMORY(bytes)   
+backend-deployment-c89c4cc5f-gt2j2     backend    287m         57Mi            
+backend-deployment-c89c4cc5f-l8dbd     backend    387m         58Mi            
+backend-deployment-c89c4cc5f-lqcr7     backend    356m         56Mi            
+backend-deployment-c89c4cc5f-mhsx9     backend    289m         57Mi            
+backend-deployment-c89c4cc5f-nhw79     backend    400m         61Mi            
+frontend-deployment-9b8f78c7d-jb9hm    frontend   122m         9Mi             
+frontend-deployment-9b8f78c7d-sb5m2    frontend   122m         8Mi             
+frontend-deployment-9b8f78c7d-v5ls2    frontend   129m         9Mi             
+postgres-deployment-8598bbc8dd-9bqfj   postgres   301m         105Mi           
+redis-deployment-588df8f94f-td58m      redis      15m          32Mi            
+NAME                                   READY   RESTARTS   PHASE     NODE
+backend-deployment-c89c4cc5f-b8ch6     true    0          Running   k8s-worker2
+backend-deployment-c89c4cc5f-gt2j2     true    0          Running   k8s-worker1
+backend-deployment-c89c4cc5f-l8dbd     true    0          Running   k8s-worker3
+backend-deployment-c89c4cc5f-lqcr7     true    0          Running   k8s-worker1
+backend-deployment-c89c4cc5f-mhsx9     true    0          Running   k8s-worker3
+backend-deployment-c89c4cc5f-nhw79     true    0          Running   k8s-worker2
+backend-deployment-c89c4cc5f-zqtfx     true    0          Running   k8s-worker1
+frontend-deployment-9b8f78c7d-jb9hm    true    0          Running   k8s-worker1
+frontend-deployment-9b8f78c7d-sb5m2    true    0          Running   k8s-worker2
+frontend-deployment-9b8f78c7d-v5ls2    true    0          Running   k8s-worker1
+postgres-deployment-8598bbc8dd-9bqfj   true    0          Running   k8s-worker3
+redis-deployment-588df8f94f-td58m      true    1          Running   k8s-worker2
+4m20s       Warning   Unhealthy   pod/backend-deployment-6bf48b89b5-h95qx    Startup probe failed: Get "http://192.168.194.99:8080/health/live": dial tcp 192.168.194.99:8080: connect: connection refused
+3m50s       Warning   Unhealthy   pod/backend-deployment-6bf48b89b5-wcphx    Startup probe failed: Get "http://192.168.126.29:8080/health/live": dial tcp 192.168.126.29:8080: connect: connection refused
+3m50s       Warning   Unhealthy   pod/backend-deployment-6bf48b89b5-sfm7r    Startup probe failed: Get "http://192.168.100.226:8080/health/live": dial tcp 192.168.100.226:8080: connect: connection refused
+3m48s       Warning   Unhealthy   pod/backend-deployment-6bf48b89b5-h95qx    Readiness probe failed: Get "http://192.168.194.99:8080/health/ready": context deadline exceeded (Client.Timeout exceeded while awaiting headers)
+83s         Warning   Unhealthy   pod/backend-deployment-6bf48b89b5-h68rv    Readiness probe failed: Get "http://192.168.126.27:8080/health/ready": dial tcp 192.168.126.27:8080: connect: invalid argument
+80s         Warning   Unhealthy   pod/backend-deployment-c89c4cc5f-mhsx9     Startup probe failed: Get "http://192.168.100.227:8080/health/live": dial tcp 192.168.100.227:8080: connect: connection refused
+73s         Warning   Unhealthy   pod/backend-deployment-c89c4cc5f-lqcr7     Startup probe failed: Get "http://192.168.194.100:8080/health/live": dial tcp 192.168.194.100:8080: connect: connection refused
+67s         Warning   Unhealthy   pod/backend-deployment-c89c4cc5f-gt2j2     Startup probe failed: Get "http://192.168.194.101:8080/health/live": dial tcp 192.168.194.101:8080: connect: connection refused
+38s         Warning   Unhealthy   pod/backend-deployment-c89c4cc5f-l8dbd     Startup probe failed: Get "http://192.168.100.228:8080/health/live": dial tcp 192.168.100.228:8080: connect: connection refused
+38s         Warning   Unhealthy   pod/backend-deployment-c89c4cc5f-nhw79     Startup probe failed: Get "http://192.168.126.30:8080/health/live": dial tcp 192.168.126.30:8080: connect: connection refused
+8s          Warning   Unhealthy   pod/backend-deployment-c89c4cc5f-b8ch6     Startup probe failed: Get "http://192.168.126.31:8080/health/live": dial tcp 192.168.126.31:8080: connect: connection refused
+5s          Warning   Unhealthy   pod/backend-deployment-c89c4cc5f-zqtfx     Startup probe failed: Get "http://192.168.194.102:8080/health/live": dial tcp 192.168.194.102:8080: connect: connection refused
+
+===== 2026-10-03T20:37:56+00:00 elapsed=55s =====
+NAME          REFERENCE                       TARGETS         MINPODS   MAXPODS   REPLICAS   AGE
+backend-hpa   Deployment/backend-deployment   cpu: 343%/60%   3         9         7          3h27m
+NAME          CPU(cores)   CPU%   MEMORY(bytes)   MEMORY%   
+k8s-worker1   1118m        55%    1220Mi          32%       
+k8s-worker2   826m         41%    1321Mi          34%       
+k8s-worker3   1067m        53%    1328Mi          34%       
+master        303m         15%    2106Mi          55%       
+POD                                    NAME       CPU(cores)   MEMORY(bytes)   
+backend-deployment-c89c4cc5f-gt2j2     backend    287m         57Mi            
+backend-deployment-c89c4cc5f-l8dbd     backend    387m         58Mi            
+backend-deployment-c89c4cc5f-lqcr7     backend    356m         56Mi            
+backend-deployment-c89c4cc5f-mhsx9     backend    289m         57Mi            
+backend-deployment-c89c4cc5f-nhw79     backend    400m         61Mi            
+frontend-deployment-9b8f78c7d-jb9hm    frontend   122m         9Mi             
+frontend-deployment-9b8f78c7d-sb5m2    frontend   122m         8Mi             
+frontend-deployment-9b8f78c7d-v5ls2    frontend   129m         9Mi             
+postgres-deployment-8598bbc8dd-9bqfj   postgres   301m         105Mi           
+redis-deployment-588df8f94f-td58m      redis      15m          32Mi            
+NAME                                   READY   RESTARTS   PHASE     NODE
+backend-deployment-c89c4cc5f-b8ch6     true    0          Running   k8s-worker2
+backend-deployment-c89c4cc5f-gt2j2     true    0          Running   k8s-worker1
+backend-deployment-c89c4cc5f-l8dbd     true    0          Running   k8s-worker3
+backend-deployment-c89c4cc5f-lqcr7     true    0          Running   k8s-worker1
+backend-deployment-c89c4cc5f-mhsx9     true    0          Running   k8s-worker3
+backend-deployment-c89c4cc5f-nhw79     true    0          Running   k8s-worker2
+backend-deployment-c89c4cc5f-zqtfx     true    0          Running   k8s-worker1
+frontend-deployment-9b8f78c7d-jb9hm    true    0          Running   k8s-worker1
+frontend-deployment-9b8f78c7d-sb5m2    true    0          Running   k8s-worker2
+frontend-deployment-9b8f78c7d-v5ls2    true    0          Running   k8s-worker1
+postgres-deployment-8598bbc8dd-9bqfj   true    0          Running   k8s-worker3
+redis-deployment-588df8f94f-td58m      true    1          Running   k8s-worker2
+4m25s       Warning   Unhealthy   pod/backend-deployment-6bf48b89b5-h95qx    Startup probe failed: Get "http://192.168.194.99:8080/health/live": dial tcp 192.168.194.99:8080: connect: connection refused
+3m55s       Warning   Unhealthy   pod/backend-deployment-6bf48b89b5-wcphx    Startup probe failed: Get "http://192.168.126.29:8080/health/live": dial tcp 192.168.126.29:8080: connect: connection refused
+3m55s       Warning   Unhealthy   pod/backend-deployment-6bf48b89b5-sfm7r    Startup probe failed: Get "http://192.168.100.226:8080/health/live": dial tcp 192.168.100.226:8080: connect: connection refused
+3m53s       Warning   Unhealthy   pod/backend-deployment-6bf48b89b5-h95qx    Readiness probe failed: Get "http://192.168.194.99:8080/health/ready": context deadline exceeded (Client.Timeout exceeded while awaiting headers)
+88s         Warning   Unhealthy   pod/backend-deployment-6bf48b89b5-h68rv    Readiness probe failed: Get "http://192.168.126.27:8080/health/ready": dial tcp 192.168.126.27:8080: connect: invalid argument
+85s         Warning   Unhealthy   pod/backend-deployment-c89c4cc5f-mhsx9     Startup probe failed: Get "http://192.168.100.227:8080/health/live": dial tcp 192.168.100.227:8080: connect: connection refused
+78s         Warning   Unhealthy   pod/backend-deployment-c89c4cc5f-lqcr7     Startup probe failed: Get "http://192.168.194.100:8080/health/live": dial tcp 192.168.194.100:8080: connect: connection refused
+72s         Warning   Unhealthy   pod/backend-deployment-c89c4cc5f-gt2j2     Startup probe failed: Get "http://192.168.194.101:8080/health/live": dial tcp 192.168.194.101:8080: connect: connection refused
+43s         Warning   Unhealthy   pod/backend-deployment-c89c4cc5f-l8dbd     Startup probe failed: Get "http://192.168.100.228:8080/health/live": dial tcp 192.168.100.228:8080: connect: connection refused
+43s         Warning   Unhealthy   pod/backend-deployment-c89c4cc5f-nhw79     Startup probe failed: Get "http://192.168.126.30:8080/health/live": dial tcp 192.168.126.30:8080: connect: connection refused
+13s         Warning   Unhealthy   pod/backend-deployment-c89c4cc5f-b8ch6     Startup probe failed: Get "http://192.168.126.31:8080/health/live": dial tcp 192.168.126.31:8080: connect: connection refused
+10s         Warning   Unhealthy   pod/backend-deployment-c89c4cc5f-zqtfx     Startup probe failed: Get "http://192.168.194.102:8080/health/live": dial tcp 192.168.194.102:8080: connect: connection refused
+
+===== 2026-10-03T20:38:01+00:00 elapsed=60s =====
+NAME          REFERENCE                       TARGETS         MINPODS   MAXPODS   REPLICAS   AGE
+backend-hpa   Deployment/backend-deployment   cpu: 343%/60%   3         9         7          3h27m
+NAME          CPU(cores)   CPU%   MEMORY(bytes)   MEMORY%   
+k8s-worker1   1118m        55%    1220Mi          32%       
+k8s-worker2   826m         41%    1321Mi          34%       
+k8s-worker3   1067m        53%    1328Mi          34%       
+master        303m         15%    2106Mi          55%       
+POD                                    NAME       CPU(cores)   MEMORY(bytes)   
+backend-deployment-c89c4cc5f-gt2j2     backend    287m         57Mi            
+backend-deployment-c89c4cc5f-l8dbd     backend    387m         58Mi            
+backend-deployment-c89c4cc5f-lqcr7     backend    356m         56Mi            
+backend-deployment-c89c4cc5f-mhsx9     backend    289m         57Mi            
+backend-deployment-c89c4cc5f-nhw79     backend    400m         61Mi            
+frontend-deployment-9b8f78c7d-jb9hm    frontend   122m         9Mi             
+frontend-deployment-9b8f78c7d-sb5m2    frontend   122m         8Mi             
+frontend-deployment-9b8f78c7d-v5ls2    frontend   129m         9Mi             
+postgres-deployment-8598bbc8dd-9bqfj   postgres   301m         105Mi           
+redis-deployment-588df8f94f-td58m      redis      15m          32Mi            
+NAME                                   READY   RESTARTS   PHASE     NODE
+backend-deployment-c89c4cc5f-b8ch6     true    0          Running   k8s-worker2
+backend-deployment-c89c4cc5f-gt2j2     true    0          Running   k8s-worker1
+backend-deployment-c89c4cc5f-l8dbd     true    0          Running   k8s-worker3
+backend-deployment-c89c4cc5f-lqcr7     true    0          Running   k8s-worker1
+backend-deployment-c89c4cc5f-mhsx9     true    0          Running   k8s-worker3
+backend-deployment-c89c4cc5f-nhw79     true    0          Running   k8s-worker2
+backend-deployment-c89c4cc5f-zqtfx     true    0          Running   k8s-worker1
+frontend-deployment-9b8f78c7d-jb9hm    true    0          Running   k8s-worker1
+frontend-deployment-9b8f78c7d-sb5m2    true    0          Running   k8s-worker2
+frontend-deployment-9b8f78c7d-v5ls2    true    0          Running   k8s-worker1
+postgres-deployment-8598bbc8dd-9bqfj   true    0          Running   k8s-worker3
+redis-deployment-588df8f94f-td58m      true    1          Running   k8s-worker2
+4m30s       Warning   Unhealthy   pod/backend-deployment-6bf48b89b5-h95qx    Startup probe failed: Get "http://192.168.194.99:8080/health/live": dial tcp 192.168.194.99:8080: connect: connection refused
+4m          Warning   Unhealthy   pod/backend-deployment-6bf48b89b5-wcphx    Startup probe failed: Get "http://192.168.126.29:8080/health/live": dial tcp 192.168.126.29:8080: connect: connection refused
+4m          Warning   Unhealthy   pod/backend-deployment-6bf48b89b5-sfm7r    Startup probe failed: Get "http://192.168.100.226:8080/health/live": dial tcp 192.168.100.226:8080: connect: connection refused
+3m58s       Warning   Unhealthy   pod/backend-deployment-6bf48b89b5-h95qx    Readiness probe failed: Get "http://192.168.194.99:8080/health/ready": context deadline exceeded (Client.Timeout exceeded while awaiting headers)
+93s         Warning   Unhealthy   pod/backend-deployment-6bf48b89b5-h68rv    Readiness probe failed: Get "http://192.168.126.27:8080/health/ready": dial tcp 192.168.126.27:8080: connect: invalid argument
+90s         Warning   Unhealthy   pod/backend-deployment-c89c4cc5f-mhsx9     Startup probe failed: Get "http://192.168.100.227:8080/health/live": dial tcp 192.168.100.227:8080: connect: connection refused
+83s         Warning   Unhealthy   pod/backend-deployment-c89c4cc5f-lqcr7     Startup probe failed: Get "http://192.168.194.100:8080/health/live": dial tcp 192.168.194.100:8080: connect: connection refused
+77s         Warning   Unhealthy   pod/backend-deployment-c89c4cc5f-gt2j2     Startup probe failed: Get "http://192.168.194.101:8080/health/live": dial tcp 192.168.194.101:8080: connect: connection refused
+48s         Warning   Unhealthy   pod/backend-deployment-c89c4cc5f-l8dbd     Startup probe failed: Get "http://192.168.100.228:8080/health/live": dial tcp 192.168.100.228:8080: connect: connection refused
+48s         Warning   Unhealthy   pod/backend-deployment-c89c4cc5f-nhw79     Startup probe failed: Get "http://192.168.126.30:8080/health/live": dial tcp 192.168.126.30:8080: connect: connection refused
+18s         Warning   Unhealthy   pod/backend-deployment-c89c4cc5f-b8ch6     Startup probe failed: Get "http://192.168.126.31:8080/health/live": dial tcp 192.168.126.31:8080: connect: connection refused
+15s         Warning   Unhealthy   pod/backend-deployment-c89c4cc5f-zqtfx     Startup probe failed: Get "http://192.168.194.102:8080/health/live": dial tcp 192.168.194.102:8080: connect: connection refused
+
+===== 2026-10-03T20:38:07+00:00 elapsed=65s =====
+NAME          REFERENCE                       TARGETS         MINPODS   MAXPODS   REPLICAS   AGE
+backend-hpa   Deployment/backend-deployment   cpu: 343%/60%   3         9         7          3h27m
+NAME          CPU(cores)   CPU%   MEMORY(bytes)   MEMORY%   
+k8s-worker1   1575m        78%    1261Mi          33%       
+k8s-worker2   1188m        59%    1335Mi          35%       
+k8s-worker3   1193m        59%    1351Mi          35%       
+master        245m         12%    2108Mi          55%       
+POD                                    NAME       CPU(cores)   MEMORY(bytes)   
+backend-deployment-c89c4cc5f-b8ch6     backend    384m         69Mi            
+backend-deployment-c89c4cc5f-gt2j2     backend    332m         57Mi            
+backend-deployment-c89c4cc5f-l8dbd     backend    322m         58Mi            
+backend-deployment-c89c4cc5f-lqcr7     backend    357m         57Mi            
+backend-deployment-c89c4cc5f-mhsx9     backend    332m         57Mi            
+backend-deployment-c89c4cc5f-nhw79     backend    401m         61Mi            
+backend-deployment-c89c4cc5f-zqtfx     backend    384m         58Mi            
+frontend-deployment-9b8f78c7d-jb9hm    frontend   122m         9Mi             
+frontend-deployment-9b8f78c7d-sb5m2    frontend   157m         10Mi            
+frontend-deployment-9b8f78c7d-v5ls2    frontend   155m         9Mi             
+postgres-deployment-8598bbc8dd-9bqfj   postgres   407m         130Mi           
+redis-deployment-588df8f94f-td58m      redis      18m          32Mi            
+NAME                                   READY   RESTARTS   PHASE     NODE
+backend-deployment-c89c4cc5f-b8ch6     true    0          Running   k8s-worker2
+backend-deployment-c89c4cc5f-gt2j2     true    0          Running   k8s-worker1
+backend-deployment-c89c4cc5f-l8dbd     true    0          Running   k8s-worker3
+backend-deployment-c89c4cc5f-lqcr7     true    0          Running   k8s-worker1
+backend-deployment-c89c4cc5f-mhsx9     true    0          Running   k8s-worker3
+backend-deployment-c89c4cc5f-nhw79     true    0          Running   k8s-worker2
+backend-deployment-c89c4cc5f-zqtfx     true    0          Running   k8s-worker1
+frontend-deployment-9b8f78c7d-jb9hm    true    0          Running   k8s-worker1
+frontend-deployment-9b8f78c7d-sb5m2    true    0          Running   k8s-worker2
+frontend-deployment-9b8f78c7d-v5ls2    true    0          Running   k8s-worker1
+postgres-deployment-8598bbc8dd-9bqfj   true    0          Running   k8s-worker3
+redis-deployment-588df8f94f-td58m      true    1          Running   k8s-worker2
+4m36s       Warning   Unhealthy   pod/backend-deployment-6bf48b89b5-h95qx    Startup probe failed: Get "http://192.168.194.99:8080/health/live": dial tcp 192.168.194.99:8080: connect: connection refused
+4m6s        Warning   Unhealthy   pod/backend-deployment-6bf48b89b5-wcphx    Startup probe failed: Get "http://192.168.126.29:8080/health/live": dial tcp 192.168.126.29:8080: connect: connection refused
+4m6s        Warning   Unhealthy   pod/backend-deployment-6bf48b89b5-sfm7r    Startup probe failed: Get "http://192.168.100.226:8080/health/live": dial tcp 192.168.100.226:8080: connect: connection refused
+4m4s        Warning   Unhealthy   pod/backend-deployment-6bf48b89b5-h95qx    Readiness probe failed: Get "http://192.168.194.99:8080/health/ready": context deadline exceeded (Client.Timeout exceeded while awaiting headers)
+99s         Warning   Unhealthy   pod/backend-deployment-6bf48b89b5-h68rv    Readiness probe failed: Get "http://192.168.126.27:8080/health/ready": dial tcp 192.168.126.27:8080: connect: invalid argument
+96s         Warning   Unhealthy   pod/backend-deployment-c89c4cc5f-mhsx9     Startup probe failed: Get "http://192.168.100.227:8080/health/live": dial tcp 192.168.100.227:8080: connect: connection refused
+89s         Warning   Unhealthy   pod/backend-deployment-c89c4cc5f-lqcr7     Startup probe failed: Get "http://192.168.194.100:8080/health/live": dial tcp 192.168.194.100:8080: connect: connection refused
+83s         Warning   Unhealthy   pod/backend-deployment-c89c4cc5f-gt2j2     Startup probe failed: Get "http://192.168.194.101:8080/health/live": dial tcp 192.168.194.101:8080: connect: connection refused
+54s         Warning   Unhealthy   pod/backend-deployment-c89c4cc5f-l8dbd     Startup probe failed: Get "http://192.168.100.228:8080/health/live": dial tcp 192.168.100.228:8080: connect: connection refused
+54s         Warning   Unhealthy   pod/backend-deployment-c89c4cc5f-nhw79     Startup probe failed: Get "http://192.168.126.30:8080/health/live": dial tcp 192.168.126.30:8080: connect: connection refused
+24s         Warning   Unhealthy   pod/backend-deployment-c89c4cc5f-b8ch6     Startup probe failed: Get "http://192.168.126.31:8080/health/live": dial tcp 192.168.126.31:8080: connect: connection refused
+21s         Warning   Unhealthy   pod/backend-deployment-c89c4cc5f-zqtfx     Startup probe failed: Get "http://192.168.194.102:8080/health/live": dial tcp 192.168.194.102:8080: connect: connection refused
+
+===== 2026-10-03T20:38:12+00:00 elapsed=70s =====
+NAME          REFERENCE                       TARGETS         MINPODS   MAXPODS   REPLICAS   AGE
+backend-hpa   Deployment/backend-deployment   cpu: 354%/60%   3         9         7          3h27m
+NAME          CPU(cores)   CPU%   MEMORY(bytes)   MEMORY%   
+k8s-worker1   1575m        78%    1261Mi          33%       
+k8s-worker2   1188m        59%    1335Mi          35%       
+k8s-worker3   1193m        59%    1351Mi          35%       
+master        245m         12%    2108Mi          55%       
+POD                                    NAME       CPU(cores)   MEMORY(bytes)   
+backend-deployment-c89c4cc5f-b8ch6     backend    384m         69Mi            
+backend-deployment-c89c4cc5f-gt2j2     backend    332m         57Mi            
+backend-deployment-c89c4cc5f-l8dbd     backend    322m         58Mi            
+backend-deployment-c89c4cc5f-lqcr7     backend    357m         57Mi            
+backend-deployment-c89c4cc5f-mhsx9     backend    332m         57Mi            
+backend-deployment-c89c4cc5f-nhw79     backend    401m         61Mi            
+backend-deployment-c89c4cc5f-zqtfx     backend    384m         58Mi            
+frontend-deployment-9b8f78c7d-jb9hm    frontend   122m         9Mi             
+frontend-deployment-9b8f78c7d-sb5m2    frontend   157m         10Mi            
+frontend-deployment-9b8f78c7d-v5ls2    frontend   155m         9Mi             
+postgres-deployment-8598bbc8dd-9bqfj   postgres   407m         130Mi           
+redis-deployment-588df8f94f-td58m      redis      18m          32Mi            
+NAME                                   READY   RESTARTS   PHASE     NODE
+backend-deployment-c89c4cc5f-7x2dz     false   0          Running   k8s-worker2
+backend-deployment-c89c4cc5f-b8ch6     true    0          Running   k8s-worker2
+backend-deployment-c89c4cc5f-gt2j2     true    0          Running   k8s-worker1
+backend-deployment-c89c4cc5f-l4b6s     false   0          Running   k8s-worker3
+backend-deployment-c89c4cc5f-l8dbd     true    0          Running   k8s-worker3
+backend-deployment-c89c4cc5f-lqcr7     true    0          Running   k8s-worker1
+backend-deployment-c89c4cc5f-mhsx9     true    0          Running   k8s-worker3
+backend-deployment-c89c4cc5f-nhw79     true    0          Running   k8s-worker2
+backend-deployment-c89c4cc5f-zqtfx     true    0          Running   k8s-worker1
+frontend-deployment-9b8f78c7d-jb9hm    true    0          Running   k8s-worker1
+frontend-deployment-9b8f78c7d-sb5m2    true    0          Running   k8s-worker2
+frontend-deployment-9b8f78c7d-v5ls2    true    0          Running   k8s-worker1
+postgres-deployment-8598bbc8dd-9bqfj   true    0          Running   k8s-worker3
+redis-deployment-588df8f94f-td58m      true    1          Running   k8s-worker2
+4m42s       Warning   Unhealthy   pod/backend-deployment-6bf48b89b5-h95qx    Startup probe failed: Get "http://192.168.194.99:8080/health/live": dial tcp 192.168.194.99:8080: connect: connection refused
+4m12s       Warning   Unhealthy   pod/backend-deployment-6bf48b89b5-wcphx    Startup probe failed: Get "http://192.168.126.29:8080/health/live": dial tcp 192.168.126.29:8080: connect: connection refused
+4m12s       Warning   Unhealthy   pod/backend-deployment-6bf48b89b5-sfm7r    Startup probe failed: Get "http://192.168.100.226:8080/health/live": dial tcp 192.168.100.226:8080: connect: connection refused
+4m10s       Warning   Unhealthy   pod/backend-deployment-6bf48b89b5-h95qx    Readiness probe failed: Get "http://192.168.194.99:8080/health/ready": context deadline exceeded (Client.Timeout exceeded while awaiting headers)
+105s        Warning   Unhealthy   pod/backend-deployment-6bf48b89b5-h68rv    Readiness probe failed: Get "http://192.168.126.27:8080/health/ready": dial tcp 192.168.126.27:8080: connect: invalid argument
+102s        Warning   Unhealthy   pod/backend-deployment-c89c4cc5f-mhsx9     Startup probe failed: Get "http://192.168.100.227:8080/health/live": dial tcp 192.168.100.227:8080: connect: connection refused
+95s         Warning   Unhealthy   pod/backend-deployment-c89c4cc5f-lqcr7     Startup probe failed: Get "http://192.168.194.100:8080/health/live": dial tcp 192.168.194.100:8080: connect: connection refused
+89s         Warning   Unhealthy   pod/backend-deployment-c89c4cc5f-gt2j2     Startup probe failed: Get "http://192.168.194.101:8080/health/live": dial tcp 192.168.194.101:8080: connect: connection refused
+60s         Warning   Unhealthy   pod/backend-deployment-c89c4cc5f-l8dbd     Startup probe failed: Get "http://192.168.100.228:8080/health/live": dial tcp 192.168.100.228:8080: connect: connection refused
+60s         Warning   Unhealthy   pod/backend-deployment-c89c4cc5f-nhw79     Startup probe failed: Get "http://192.168.126.30:8080/health/live": dial tcp 192.168.126.30:8080: connect: connection refused
+30s         Warning   Unhealthy   pod/backend-deployment-c89c4cc5f-b8ch6     Startup probe failed: Get "http://192.168.126.31:8080/health/live": dial tcp 192.168.126.31:8080: connect: connection refused
+27s         Warning   Unhealthy   pod/backend-deployment-c89c4cc5f-zqtfx     Startup probe failed: Get "http://192.168.194.102:8080/health/live": dial tcp 192.168.194.102:8080: connect: connection refused
+
+===== 2026-10-03T20:38:18+00:00 elapsed=75s =====
+NAME          REFERENCE                       TARGETS         MINPODS   MAXPODS   REPLICAS   AGE
+backend-hpa   Deployment/backend-deployment   cpu: 354%/60%   3         9         7          3h27m
+NAME          CPU(cores)   CPU%   MEMORY(bytes)   MEMORY%   
+k8s-worker1   1575m        78%    1261Mi          33%       
+k8s-worker2   1188m        59%    1335Mi          35%       
+k8s-worker3   1193m        59%    1351Mi          35%       
+master        245m         12%    2108Mi          55%       
+POD                                    NAME       CPU(cores)   MEMORY(bytes)   
+backend-deployment-c89c4cc5f-b8ch6     backend    384m         69Mi            
+backend-deployment-c89c4cc5f-gt2j2     backend    332m         57Mi            
+backend-deployment-c89c4cc5f-l8dbd     backend    322m         58Mi            
+backend-deployment-c89c4cc5f-lqcr7     backend    357m         57Mi            
+backend-deployment-c89c4cc5f-mhsx9     backend    332m         57Mi            
+backend-deployment-c89c4cc5f-nhw79     backend    401m         61Mi            
+backend-deployment-c89c4cc5f-zqtfx     backend    384m         58Mi            
+frontend-deployment-9b8f78c7d-jb9hm    frontend   122m         9Mi             
+frontend-deployment-9b8f78c7d-sb5m2    frontend   157m         10Mi            
+frontend-deployment-9b8f78c7d-v5ls2    frontend   155m         9Mi             
+postgres-deployment-8598bbc8dd-9bqfj   postgres   407m         130Mi           
+redis-deployment-588df8f94f-td58m      redis      18m          32Mi            
+NAME                                   READY   RESTARTS   PHASE     NODE
+backend-deployment-c89c4cc5f-7x2dz     false   0          Running   k8s-worker2
+backend-deployment-c89c4cc5f-b8ch6     true    0          Running   k8s-worker2
+backend-deployment-c89c4cc5f-gt2j2     true    0          Running   k8s-worker1
+backend-deployment-c89c4cc5f-l4b6s     false   0          Running   k8s-worker3
+backend-deployment-c89c4cc5f-l8dbd     true    0          Running   k8s-worker3
+backend-deployment-c89c4cc5f-lqcr7     true    0          Running   k8s-worker1
+backend-deployment-c89c4cc5f-mhsx9     true    0          Running   k8s-worker3
+backend-deployment-c89c4cc5f-nhw79     true    0          Running   k8s-worker2
+backend-deployment-c89c4cc5f-zqtfx     true    0          Running   k8s-worker1
+frontend-deployment-9b8f78c7d-jb9hm    true    0          Running   k8s-worker1
+frontend-deployment-9b8f78c7d-sb5m2    true    0          Running   k8s-worker2
+frontend-deployment-9b8f78c7d-v5ls2    true    0          Running   k8s-worker1
+postgres-deployment-8598bbc8dd-9bqfj   true    0          Running   k8s-worker3
+redis-deployment-588df8f94f-td58m      true    1          Running   k8s-worker2
+4m17s       Warning   Unhealthy   pod/backend-deployment-6bf48b89b5-sfm7r    Startup probe failed: Get "http://192.168.100.226:8080/health/live": dial tcp 192.168.100.226:8080: connect: connection refused
+4m15s       Warning   Unhealthy   pod/backend-deployment-6bf48b89b5-h95qx    Readiness probe failed: Get "http://192.168.194.99:8080/health/ready": context deadline exceeded (Client.Timeout exceeded while awaiting headers)
+110s        Warning   Unhealthy   pod/backend-deployment-6bf48b89b5-h68rv    Readiness probe failed: Get "http://192.168.126.27:8080/health/ready": dial tcp 192.168.126.27:8080: connect: invalid argument
+107s        Warning   Unhealthy   pod/backend-deployment-c89c4cc5f-mhsx9     Startup probe failed: Get "http://192.168.100.227:8080/health/live": dial tcp 192.168.100.227:8080: connect: connection refused
+100s        Warning   Unhealthy   pod/backend-deployment-c89c4cc5f-lqcr7     Startup probe failed: Get "http://192.168.194.100:8080/health/live": dial tcp 192.168.194.100:8080: connect: connection refused
+94s         Warning   Unhealthy   pod/backend-deployment-c89c4cc5f-gt2j2     Startup probe failed: Get "http://192.168.194.101:8080/health/live": dial tcp 192.168.194.101:8080: connect: connection refused
+65s         Warning   Unhealthy   pod/backend-deployment-c89c4cc5f-l8dbd     Startup probe failed: Get "http://192.168.100.228:8080/health/live": dial tcp 192.168.100.228:8080: connect: connection refused
+65s         Warning   Unhealthy   pod/backend-deployment-c89c4cc5f-nhw79     Startup probe failed: Get "http://192.168.126.30:8080/health/live": dial tcp 192.168.126.30:8080: connect: connection refused
+35s         Warning   Unhealthy   pod/backend-deployment-c89c4cc5f-b8ch6     Startup probe failed: Get "http://192.168.126.31:8080/health/live": dial tcp 192.168.126.31:8080: connect: connection refused
+32s         Warning   Unhealthy   pod/backend-deployment-c89c4cc5f-zqtfx     Startup probe failed: Get "http://192.168.194.102:8080/health/live": dial tcp 192.168.194.102:8080: connect: connection refused
+2s          Warning   Unhealthy   pod/backend-deployment-c89c4cc5f-l4b6s     Startup probe failed: Get "http://192.168.100.229:8080/health/live": dial tcp 192.168.100.229:8080: connect: connection refused
+2s          Warning   Unhealthy   pod/backend-deployment-c89c4cc5f-7x2dz     Startup probe failed: Get "http://192.168.126.32:8080/health/live": dial tcp 192.168.126.32:8080: connect: connection refused
+
+===== 2026-10-03T20:38:23+00:00 elapsed=80s =====
+NAME          REFERENCE                       TARGETS         MINPODS   MAXPODS   REPLICAS   AGE
+backend-hpa   Deployment/backend-deployment   cpu: 354%/60%   3         9         7          3h27m
+NAME          CPU(cores)   CPU%   MEMORY(bytes)   MEMORY%   
+k8s-worker1   1621m        81%    1264Mi          33%       
+k8s-worker2   1261m        63%    1375Mi          36%       
+k8s-worker3   1140m        56%    1371Mi          35%       
+master        381m         19%    2107Mi          55%       
+POD                                    NAME       CPU(cores)   MEMORY(bytes)   
+backend-deployment-c89c4cc5f-b8ch6     backend    381m         59Mi            
+backend-deployment-c89c4cc5f-gt2j2     backend    306m         57Mi            
+backend-deployment-c89c4cc5f-l8dbd     backend    287m         58Mi            
+backend-deployment-c89c4cc5f-lqcr7     backend    319m         58Mi            
+backend-deployment-c89c4cc5f-mhsx9     backend    328m         57Mi            
+backend-deployment-c89c4cc5f-nhw79     backend    321m         61Mi            
+backend-deployment-c89c4cc5f-zqtfx     backend    396m         58Mi            
+frontend-deployment-9b8f78c7d-jb9hm    frontend   184m         11Mi            
+frontend-deployment-9b8f78c7d-sb5m2    frontend   231m         10Mi            
+frontend-deployment-9b8f78c7d-v5ls2    frontend   175m         10Mi            
+postgres-deployment-8598bbc8dd-9bqfj   postgres   421m         140Mi           
+redis-deployment-588df8f94f-td58m      redis      18m          32Mi            
+NAME                                   READY   RESTARTS   PHASE     NODE
+backend-deployment-c89c4cc5f-7x2dz     true    0          Running   k8s-worker2
+backend-deployment-c89c4cc5f-b8ch6     true    0          Running   k8s-worker2
+backend-deployment-c89c4cc5f-gt2j2     true    0          Running   k8s-worker1
+backend-deployment-c89c4cc5f-l4b6s     true    0          Running   k8s-worker3
+backend-deployment-c89c4cc5f-l8dbd     true    0          Running   k8s-worker3
+backend-deployment-c89c4cc5f-lqcr7     true    0          Running   k8s-worker1
+backend-deployment-c89c4cc5f-mhsx9     true    0          Running   k8s-worker3
+backend-deployment-c89c4cc5f-nhw79     true    0          Running   k8s-worker2
+backend-deployment-c89c4cc5f-zqtfx     true    0          Running   k8s-worker1
+frontend-deployment-9b8f78c7d-jb9hm    true    0          Running   k8s-worker1
+frontend-deployment-9b8f78c7d-sb5m2    true    0          Running   k8s-worker2
+frontend-deployment-9b8f78c7d-v5ls2    true    0          Running   k8s-worker1
+postgres-deployment-8598bbc8dd-9bqfj   true    0          Running   k8s-worker3
+redis-deployment-588df8f94f-td58m      true    1          Running   k8s-worker2
+4m23s       Warning   Unhealthy   pod/backend-deployment-6bf48b89b5-sfm7r    Startup probe failed: Get "http://192.168.100.226:8080/health/live": dial tcp 192.168.100.226:8080: connect: connection refused
+4m21s       Warning   Unhealthy   pod/backend-deployment-6bf48b89b5-h95qx    Readiness probe failed: Get "http://192.168.194.99:8080/health/ready": context deadline exceeded (Client.Timeout exceeded while awaiting headers)
+116s        Warning   Unhealthy   pod/backend-deployment-6bf48b89b5-h68rv    Readiness probe failed: Get "http://192.168.126.27:8080/health/ready": dial tcp 192.168.126.27:8080: connect: invalid argument
+113s        Warning   Unhealthy   pod/backend-deployment-c89c4cc5f-mhsx9     Startup probe failed: Get "http://192.168.100.227:8080/health/live": dial tcp 192.168.100.227:8080: connect: connection refused
+106s        Warning   Unhealthy   pod/backend-deployment-c89c4cc5f-lqcr7     Startup probe failed: Get "http://192.168.194.100:8080/health/live": dial tcp 192.168.194.100:8080: connect: connection refused
+100s        Warning   Unhealthy   pod/backend-deployment-c89c4cc5f-gt2j2     Startup probe failed: Get "http://192.168.194.101:8080/health/live": dial tcp 192.168.194.101:8080: connect: connection refused
+71s         Warning   Unhealthy   pod/backend-deployment-c89c4cc5f-l8dbd     Startup probe failed: Get "http://192.168.100.228:8080/health/live": dial tcp 192.168.100.228:8080: connect: connection refused
+71s         Warning   Unhealthy   pod/backend-deployment-c89c4cc5f-nhw79     Startup probe failed: Get "http://192.168.126.30:8080/health/live": dial tcp 192.168.126.30:8080: connect: connection refused
+41s         Warning   Unhealthy   pod/backend-deployment-c89c4cc5f-b8ch6     Startup probe failed: Get "http://192.168.126.31:8080/health/live": dial tcp 192.168.126.31:8080: connect: connection refused
+38s         Warning   Unhealthy   pod/backend-deployment-c89c4cc5f-zqtfx     Startup probe failed: Get "http://192.168.194.102:8080/health/live": dial tcp 192.168.194.102:8080: connect: connection refused
+8s          Warning   Unhealthy   pod/backend-deployment-c89c4cc5f-l4b6s     Startup probe failed: Get "http://192.168.100.229:8080/health/live": dial tcp 192.168.100.229:8080: connect: connection refused
+8s          Warning   Unhealthy   pod/backend-deployment-c89c4cc5f-7x2dz     Startup probe failed: Get "http://192.168.126.32:8080/health/live": dial tcp 192.168.126.32:8080: connect: connection refused
+
+===== 2026-10-03T20:38:29+00:00 elapsed=85s =====
+NAME          REFERENCE                       TARGETS         MINPODS   MAXPODS   REPLICAS   AGE
+backend-hpa   Deployment/backend-deployment   cpu: 334%/60%   3         9         9          3h27m
+NAME          CPU(cores)   CPU%   MEMORY(bytes)   MEMORY%   
+k8s-worker1   1621m        81%    1264Mi          33%       
+k8s-worker2   1261m        63%    1375Mi          36%       
+k8s-worker3   1140m        56%    1371Mi          35%       
+master        381m         19%    2107Mi          55%       
+POD                                    NAME       CPU(cores)   MEMORY(bytes)   
+backend-deployment-c89c4cc5f-b8ch6     backend    381m         59Mi            
+backend-deployment-c89c4cc5f-gt2j2     backend    306m         57Mi            
+backend-deployment-c89c4cc5f-l8dbd     backend    287m         58Mi            
+backend-deployment-c89c4cc5f-lqcr7     backend    319m         58Mi            
+backend-deployment-c89c4cc5f-mhsx9     backend    328m         57Mi            
+backend-deployment-c89c4cc5f-nhw79     backend    321m         61Mi            
+backend-deployment-c89c4cc5f-zqtfx     backend    396m         58Mi            
+frontend-deployment-9b8f78c7d-jb9hm    frontend   184m         11Mi            
+frontend-deployment-9b8f78c7d-sb5m2    frontend   231m         10Mi            
+frontend-deployment-9b8f78c7d-v5ls2    frontend   175m         10Mi            
+postgres-deployment-8598bbc8dd-9bqfj   postgres   421m         140Mi           
+redis-deployment-588df8f94f-td58m      redis      18m          32Mi            
+NAME                                   READY   RESTARTS   PHASE     NODE
+backend-deployment-c89c4cc5f-7x2dz     true    0          Running   k8s-worker2
+backend-deployment-c89c4cc5f-b8ch6     true    0          Running   k8s-worker2
+backend-deployment-c89c4cc5f-gt2j2     true    0          Running   k8s-worker1
+backend-deployment-c89c4cc5f-l4b6s     true    0          Running   k8s-worker3
+backend-deployment-c89c4cc5f-l8dbd     true    0          Running   k8s-worker3
+backend-deployment-c89c4cc5f-lqcr7     true    0          Running   k8s-worker1
+backend-deployment-c89c4cc5f-mhsx9     true    0          Running   k8s-worker3
+backend-deployment-c89c4cc5f-nhw79     true    0          Running   k8s-worker2
+backend-deployment-c89c4cc5f-zqtfx     true    0          Running   k8s-worker1
+frontend-deployment-9b8f78c7d-jb9hm    true    0          Running   k8s-worker1
+frontend-deployment-9b8f78c7d-sb5m2    true    0          Running   k8s-worker2
+frontend-deployment-9b8f78c7d-v5ls2    true    0          Running   k8s-worker1
+postgres-deployment-8598bbc8dd-9bqfj   true    0          Running   k8s-worker3
+redis-deployment-588df8f94f-td58m      true    1          Running   k8s-worker2
+4m28s       Warning   Unhealthy   pod/backend-deployment-6bf48b89b5-sfm7r    Startup probe failed: Get "http://192.168.100.226:8080/health/live": dial tcp 192.168.100.226:8080: connect: connection refused
+4m26s       Warning   Unhealthy   pod/backend-deployment-6bf48b89b5-h95qx    Readiness probe failed: Get "http://192.168.194.99:8080/health/ready": context deadline exceeded (Client.Timeout exceeded while awaiting headers)
+2m1s        Warning   Unhealthy   pod/backend-deployment-6bf48b89b5-h68rv    Readiness probe failed: Get "http://192.168.126.27:8080/health/ready": dial tcp 192.168.126.27:8080: connect: invalid argument
+118s        Warning   Unhealthy   pod/backend-deployment-c89c4cc5f-mhsx9     Startup probe failed: Get "http://192.168.100.227:8080/health/live": dial tcp 192.168.100.227:8080: connect: connection refused
+111s        Warning   Unhealthy   pod/backend-deployment-c89c4cc5f-lqcr7     Startup probe failed: Get "http://192.168.194.100:8080/health/live": dial tcp 192.168.194.100:8080: connect: connection refused
+105s        Warning   Unhealthy   pod/backend-deployment-c89c4cc5f-gt2j2     Startup probe failed: Get "http://192.168.194.101:8080/health/live": dial tcp 192.168.194.101:8080: connect: connection refused
+76s         Warning   Unhealthy   pod/backend-deployment-c89c4cc5f-l8dbd     Startup probe failed: Get "http://192.168.100.228:8080/health/live": dial tcp 192.168.100.228:8080: connect: connection refused
+76s         Warning   Unhealthy   pod/backend-deployment-c89c4cc5f-nhw79     Startup probe failed: Get "http://192.168.126.30:8080/health/live": dial tcp 192.168.126.30:8080: connect: connection refused
+46s         Warning   Unhealthy   pod/backend-deployment-c89c4cc5f-b8ch6     Startup probe failed: Get "http://192.168.126.31:8080/health/live": dial tcp 192.168.126.31:8080: connect: connection refused
+43s         Warning   Unhealthy   pod/backend-deployment-c89c4cc5f-zqtfx     Startup probe failed: Get "http://192.168.194.102:8080/health/live": dial tcp 192.168.194.102:8080: connect: connection refused
+13s         Warning   Unhealthy   pod/backend-deployment-c89c4cc5f-l4b6s     Startup probe failed: Get "http://192.168.100.229:8080/health/live": dial tcp 192.168.100.229:8080: connect: connection refused
+13s         Warning   Unhealthy   pod/backend-deployment-c89c4cc5f-7x2dz     Startup probe failed: Get "http://192.168.126.32:8080/health/live": dial tcp 192.168.126.32:8080: connect: connection refused
+
+===== 2026-10-03T20:38:34+00:00 elapsed=90s =====
+NAME          REFERENCE                       TARGETS         MINPODS   MAXPODS   REPLICAS   AGE
+backend-hpa   Deployment/backend-deployment   cpu: 334%/60%   3         9         9          3h27m
+NAME          CPU(cores)   CPU%   MEMORY(bytes)   MEMORY%   
+k8s-worker1   1801m        90%    1265Mi          33%       
+k8s-worker2   1480m        74%    1394Mi          36%       
+k8s-worker3   1638m        81%    1460Mi          38%       
+master        232m         11%    2108Mi          55%       
+POD                                    NAME       CPU(cores)   MEMORY(bytes)   
+backend-deployment-c89c4cc5f-7x2dz     backend    321m         68Mi            
+backend-deployment-c89c4cc5f-b8ch6     backend    343m         59Mi            
+backend-deployment-c89c4cc5f-gt2j2     backend    337m         58Mi            
+backend-deployment-c89c4cc5f-l4b6s     backend    315m         69Mi            
+backend-deployment-c89c4cc5f-l8dbd     backend    313m         58Mi            
+backend-deployment-c89c4cc5f-lqcr7     backend    331m         57Mi            
+backend-deployment-c89c4cc5f-mhsx9     backend    336m         58Mi            
+backend-deployment-c89c4cc5f-nhw79     backend    322m         61Mi            
+backend-deployment-c89c4cc5f-zqtfx     backend    383m         59Mi            
+frontend-deployment-9b8f78c7d-jb9hm    frontend   184m         11Mi            
+frontend-deployment-9b8f78c7d-sb5m2    frontend   234m         10Mi            
+frontend-deployment-9b8f78c7d-v5ls2    frontend   208m         10Mi            
+postgres-deployment-8598bbc8dd-9bqfj   postgres   487m         173Mi           
+redis-deployment-588df8f94f-td58m      redis      20m          32Mi            
+NAME                                   READY   RESTARTS   PHASE     NODE
+backend-deployment-c89c4cc5f-7x2dz     true    0          Running   k8s-worker2
+backend-deployment-c89c4cc5f-b8ch6     true    0          Running   k8s-worker2
+backend-deployment-c89c4cc5f-gt2j2     true    0          Running   k8s-worker1
+backend-deployment-c89c4cc5f-l4b6s     true    0          Running   k8s-worker3
+backend-deployment-c89c4cc5f-l8dbd     true    0          Running   k8s-worker3
+backend-deployment-c89c4cc5f-lqcr7     true    0          Running   k8s-worker1
+backend-deployment-c89c4cc5f-mhsx9     true    0          Running   k8s-worker3
+backend-deployment-c89c4cc5f-nhw79     true    0          Running   k8s-worker2
+backend-deployment-c89c4cc5f-zqtfx     true    0          Running   k8s-worker1
+frontend-deployment-9b8f78c7d-jb9hm    true    0          Running   k8s-worker1
+frontend-deployment-9b8f78c7d-sb5m2    true    0          Running   k8s-worker2
+frontend-deployment-9b8f78c7d-v5ls2    true    0          Running   k8s-worker1
+postgres-deployment-8598bbc8dd-9bqfj   true    0          Running   k8s-worker3
+redis-deployment-588df8f94f-td58m      true    1          Running   k8s-worker2
+4m34s       Warning   Unhealthy   pod/backend-deployment-6bf48b89b5-sfm7r    Startup probe failed: Get "http://192.168.100.226:8080/health/live": dial tcp 192.168.100.226:8080: connect: connection refused
+4m32s       Warning   Unhealthy   pod/backend-deployment-6bf48b89b5-h95qx    Readiness probe failed: Get "http://192.168.194.99:8080/health/ready": context deadline exceeded (Client.Timeout exceeded while awaiting headers)
+2m7s        Warning   Unhealthy   pod/backend-deployment-6bf48b89b5-h68rv    Readiness probe failed: Get "http://192.168.126.27:8080/health/ready": dial tcp 192.168.126.27:8080: connect: invalid argument
+2m4s        Warning   Unhealthy   pod/backend-deployment-c89c4cc5f-mhsx9     Startup probe failed: Get "http://192.168.100.227:8080/health/live": dial tcp 192.168.100.227:8080: connect: connection refused
+117s        Warning   Unhealthy   pod/backend-deployment-c89c4cc5f-lqcr7     Startup probe failed: Get "http://192.168.194.100:8080/health/live": dial tcp 192.168.194.100:8080: connect: connection refused
+111s        Warning   Unhealthy   pod/backend-deployment-c89c4cc5f-gt2j2     Startup probe failed: Get "http://192.168.194.101:8080/health/live": dial tcp 192.168.194.101:8080: connect: connection refused
+82s         Warning   Unhealthy   pod/backend-deployment-c89c4cc5f-l8dbd     Startup probe failed: Get "http://192.168.100.228:8080/health/live": dial tcp 192.168.100.228:8080: connect: connection refused
+82s         Warning   Unhealthy   pod/backend-deployment-c89c4cc5f-nhw79     Startup probe failed: Get "http://192.168.126.30:8080/health/live": dial tcp 192.168.126.30:8080: connect: connection refused
+52s         Warning   Unhealthy   pod/backend-deployment-c89c4cc5f-b8ch6     Startup probe failed: Get "http://192.168.126.31:8080/health/live": dial tcp 192.168.126.31:8080: connect: connection refused
+49s         Warning   Unhealthy   pod/backend-deployment-c89c4cc5f-zqtfx     Startup probe failed: Get "http://192.168.194.102:8080/health/live": dial tcp 192.168.194.102:8080: connect: connection refused
+19s         Warning   Unhealthy   pod/backend-deployment-c89c4cc5f-l4b6s     Startup probe failed: Get "http://192.168.100.229:8080/health/live": dial tcp 192.168.100.229:8080: connect: connection refused
+19s         Warning   Unhealthy   pod/backend-deployment-c89c4cc5f-7x2dz     Startup probe failed: Get "http://192.168.126.32:8080/health/live": dial tcp 192.168.126.32:8080: connect: connection refused
+
+===== 2026-10-03T20:38:40+00:00 elapsed=95s =====
+NAME          REFERENCE                       TARGETS         MINPODS   MAXPODS   REPLICAS   AGE
+backend-hpa   Deployment/backend-deployment   cpu: 334%/60%   3         9         9          3h28m
+NAME          CPU(cores)   CPU%   MEMORY(bytes)   MEMORY%   
+k8s-worker1   1801m        90%    1265Mi          33%       
+k8s-worker2   1480m        74%    1394Mi          36%       
+k8s-worker3   1638m        81%    1460Mi          38%       
+master        232m         11%    2108Mi          55%       
+POD                                    NAME       CPU(cores)   MEMORY(bytes)   
+backend-deployment-c89c4cc5f-7x2dz     backend    321m         68Mi            
+backend-deployment-c89c4cc5f-b8ch6     backend    343m         59Mi            
+backend-deployment-c89c4cc5f-gt2j2     backend    337m         58Mi            
+backend-deployment-c89c4cc5f-l4b6s     backend    315m         69Mi            
+backend-deployment-c89c4cc5f-l8dbd     backend    313m         58Mi            
+backend-deployment-c89c4cc5f-lqcr7     backend    331m         57Mi            
+backend-deployment-c89c4cc5f-mhsx9     backend    336m         58Mi            
+backend-deployment-c89c4cc5f-nhw79     backend    322m         61Mi            
+backend-deployment-c89c4cc5f-zqtfx     backend    383m         59Mi            
+frontend-deployment-9b8f78c7d-jb9hm    frontend   184m         11Mi            
+frontend-deployment-9b8f78c7d-sb5m2    frontend   234m         10Mi            
+frontend-deployment-9b8f78c7d-v5ls2    frontend   208m         10Mi            
+postgres-deployment-8598bbc8dd-9bqfj   postgres   487m         173Mi           
+redis-deployment-588df8f94f-td58m      redis      20m          32Mi            
+NAME                                   READY   RESTARTS   PHASE     NODE
+backend-deployment-c89c4cc5f-7x2dz     true    0          Running   k8s-worker2
+backend-deployment-c89c4cc5f-b8ch6     true    0          Running   k8s-worker2
+backend-deployment-c89c4cc5f-gt2j2     true    0          Running   k8s-worker1
+backend-deployment-c89c4cc5f-l4b6s     true    0          Running   k8s-worker3
+backend-deployment-c89c4cc5f-l8dbd     true    0          Running   k8s-worker3
+backend-deployment-c89c4cc5f-lqcr7     true    0          Running   k8s-worker1
+backend-deployment-c89c4cc5f-mhsx9     true    0          Running   k8s-worker3
+backend-deployment-c89c4cc5f-nhw79     true    0          Running   k8s-worker2
+backend-deployment-c89c4cc5f-zqtfx     true    0          Running   k8s-worker1
+frontend-deployment-9b8f78c7d-jb9hm    true    0          Running   k8s-worker1
+frontend-deployment-9b8f78c7d-sb5m2    true    0          Running   k8s-worker2
+frontend-deployment-9b8f78c7d-v5ls2    true    0          Running   k8s-worker1
+postgres-deployment-8598bbc8dd-9bqfj   true    0          Running   k8s-worker3
+redis-deployment-588df8f94f-td58m      true    1          Running   k8s-worker2
+4m39s       Warning   Unhealthy   pod/backend-deployment-6bf48b89b5-sfm7r    Startup probe failed: Get "http://192.168.100.226:8080/health/live": dial tcp 192.168.100.226:8080: connect: connection refused
+4m37s       Warning   Unhealthy   pod/backend-deployment-6bf48b89b5-h95qx    Readiness probe failed: Get "http://192.168.194.99:8080/health/ready": context deadline exceeded (Client.Timeout exceeded while awaiting headers)
+2m12s       Warning   Unhealthy   pod/backend-deployment-6bf48b89b5-h68rv    Readiness probe failed: Get "http://192.168.126.27:8080/health/ready": dial tcp 192.168.126.27:8080: connect: invalid argument
+2m9s        Warning   Unhealthy   pod/backend-deployment-c89c4cc5f-mhsx9     Startup probe failed: Get "http://192.168.100.227:8080/health/live": dial tcp 192.168.100.227:8080: connect: connection refused
+2m2s        Warning   Unhealthy   pod/backend-deployment-c89c4cc5f-lqcr7     Startup probe failed: Get "http://192.168.194.100:8080/health/live": dial tcp 192.168.194.100:8080: connect: connection refused
+116s        Warning   Unhealthy   pod/backend-deployment-c89c4cc5f-gt2j2     Startup probe failed: Get "http://192.168.194.101:8080/health/live": dial tcp 192.168.194.101:8080: connect: connection refused
+87s         Warning   Unhealthy   pod/backend-deployment-c89c4cc5f-l8dbd     Startup probe failed: Get "http://192.168.100.228:8080/health/live": dial tcp 192.168.100.228:8080: connect: connection refused
+87s         Warning   Unhealthy   pod/backend-deployment-c89c4cc5f-nhw79     Startup probe failed: Get "http://192.168.126.30:8080/health/live": dial tcp 192.168.126.30:8080: connect: connection refused
+57s         Warning   Unhealthy   pod/backend-deployment-c89c4cc5f-b8ch6     Startup probe failed: Get "http://192.168.126.31:8080/health/live": dial tcp 192.168.126.31:8080: connect: connection refused
+54s         Warning   Unhealthy   pod/backend-deployment-c89c4cc5f-zqtfx     Startup probe failed: Get "http://192.168.194.102:8080/health/live": dial tcp 192.168.194.102:8080: connect: connection refused
+24s         Warning   Unhealthy   pod/backend-deployment-c89c4cc5f-l4b6s     Startup probe failed: Get "http://192.168.100.229:8080/health/live": dial tcp 192.168.100.229:8080: connect: connection refused
+24s         Warning   Unhealthy   pod/backend-deployment-c89c4cc5f-7x2dz     Startup probe failed: Get "http://192.168.126.32:8080/health/live": dial tcp 192.168.126.32:8080: connect: connection refused
+
+===== 2026-10-03T20:38:45+00:00 elapsed=100s =====
+NAME          REFERENCE                       TARGETS         MINPODS   MAXPODS   REPLICAS   AGE
+backend-hpa   Deployment/backend-deployment   cpu: 337%/60%   3         9         9          3h28m
+NAME          CPU(cores)   CPU%   MEMORY(bytes)   MEMORY%   
+k8s-worker1   1801m        90%    1265Mi          33%       
+k8s-worker2   1480m        74%    1394Mi          36%       
+k8s-worker3   1638m        81%    1460Mi          38%       
+master        232m         11%    2108Mi          55%       
+POD                                    NAME       CPU(cores)   MEMORY(bytes)   
+backend-deployment-c89c4cc5f-7x2dz     backend    321m         68Mi            
+backend-deployment-c89c4cc5f-b8ch6     backend    343m         59Mi            
+backend-deployment-c89c4cc5f-gt2j2     backend    337m         58Mi            
+backend-deployment-c89c4cc5f-l4b6s     backend    315m         69Mi            
+backend-deployment-c89c4cc5f-l8dbd     backend    313m         58Mi            
+backend-deployment-c89c4cc5f-lqcr7     backend    331m         57Mi            
+backend-deployment-c89c4cc5f-mhsx9     backend    336m         58Mi            
+backend-deployment-c89c4cc5f-nhw79     backend    322m         61Mi            
+backend-deployment-c89c4cc5f-zqtfx     backend    383m         59Mi            
+frontend-deployment-9b8f78c7d-jb9hm    frontend   184m         11Mi            
+frontend-deployment-9b8f78c7d-sb5m2    frontend   234m         10Mi            
+frontend-deployment-9b8f78c7d-v5ls2    frontend   208m         10Mi            
+postgres-deployment-8598bbc8dd-9bqfj   postgres   487m         173Mi           
+redis-deployment-588df8f94f-td58m      redis      20m          32Mi            
+NAME                                   READY   RESTARTS   PHASE     NODE
+backend-deployment-c89c4cc5f-7x2dz     true    0          Running   k8s-worker2
+backend-deployment-c89c4cc5f-b8ch6     true    0          Running   k8s-worker2
+backend-deployment-c89c4cc5f-gt2j2     true    0          Running   k8s-worker1
+backend-deployment-c89c4cc5f-l4b6s     true    0          Running   k8s-worker3
+backend-deployment-c89c4cc5f-l8dbd     true    0          Running   k8s-worker3
+backend-deployment-c89c4cc5f-lqcr7     true    0          Running   k8s-worker1
+backend-deployment-c89c4cc5f-mhsx9     true    0          Running   k8s-worker3
+backend-deployment-c89c4cc5f-nhw79     true    0          Running   k8s-worker2
+backend-deployment-c89c4cc5f-zqtfx     true    0          Running   k8s-worker1
+frontend-deployment-9b8f78c7d-jb9hm    true    0          Running   k8s-worker1
+frontend-deployment-9b8f78c7d-sb5m2    true    0          Running   k8s-worker2
+frontend-deployment-9b8f78c7d-v5ls2    true    0          Running   k8s-worker1
+postgres-deployment-8598bbc8dd-9bqfj   true    0          Running   k8s-worker3
+redis-deployment-588df8f94f-td58m      true    1          Running   k8s-worker2
+4m44s       Warning   Unhealthy   pod/backend-deployment-6bf48b89b5-sfm7r    Startup probe failed: Get "http://192.168.100.226:8080/health/live": dial tcp 192.168.100.226:8080: connect: connection refused
+4m42s       Warning   Unhealthy   pod/backend-deployment-6bf48b89b5-h95qx    Readiness probe failed: Get "http://192.168.194.99:8080/health/ready": context deadline exceeded (Client.Timeout exceeded while awaiting headers)
+2m17s       Warning   Unhealthy   pod/backend-deployment-6bf48b89b5-h68rv    Readiness probe failed: Get "http://192.168.126.27:8080/health/ready": dial tcp 192.168.126.27:8080: connect: invalid argument
+2m14s       Warning   Unhealthy   pod/backend-deployment-c89c4cc5f-mhsx9     Startup probe failed: Get "http://192.168.100.227:8080/health/live": dial tcp 192.168.100.227:8080: connect: connection refused
+2m7s        Warning   Unhealthy   pod/backend-deployment-c89c4cc5f-lqcr7     Startup probe failed: Get "http://192.168.194.100:8080/health/live": dial tcp 192.168.194.100:8080: connect: connection refused
+2m1s        Warning   Unhealthy   pod/backend-deployment-c89c4cc5f-gt2j2     Startup probe failed: Get "http://192.168.194.101:8080/health/live": dial tcp 192.168.194.101:8080: connect: connection refused
+92s         Warning   Unhealthy   pod/backend-deployment-c89c4cc5f-l8dbd     Startup probe failed: Get "http://192.168.100.228:8080/health/live": dial tcp 192.168.100.228:8080: connect: connection refused
+92s         Warning   Unhealthy   pod/backend-deployment-c89c4cc5f-nhw79     Startup probe failed: Get "http://192.168.126.30:8080/health/live": dial tcp 192.168.126.30:8080: connect: connection refused
+62s         Warning   Unhealthy   pod/backend-deployment-c89c4cc5f-b8ch6     Startup probe failed: Get "http://192.168.126.31:8080/health/live": dial tcp 192.168.126.31:8080: connect: connection refused
+59s         Warning   Unhealthy   pod/backend-deployment-c89c4cc5f-zqtfx     Startup probe failed: Get "http://192.168.194.102:8080/health/live": dial tcp 192.168.194.102:8080: connect: connection refused
+29s         Warning   Unhealthy   pod/backend-deployment-c89c4cc5f-l4b6s     Startup probe failed: Get "http://192.168.100.229:8080/health/live": dial tcp 192.168.100.229:8080: connect: connection refused
+29s         Warning   Unhealthy   pod/backend-deployment-c89c4cc5f-7x2dz     Startup probe failed: Get "http://192.168.126.32:8080/health/live": dial tcp 192.168.126.32:8080: connect: connection refused

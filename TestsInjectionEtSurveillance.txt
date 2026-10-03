@@ -1,0 +1,105 @@
+TESTS DE CHARGE ET SURVEILLANCE - APP-RESERVATION
+=================================================
+
+Contexte
+--------
+Ces tests sont des tests de charge de laboratoire, sur le cluster local uniquement.
+Ils envoient des GET sur le catalogue et ne creent ni compte, ni panier, ni commande.
+Ne pas utiliser cette procedure contre un environnement de production.
+
+Prerequis
+---------
+- Depuis le host PC, Node.js 20 ou plus recent et le depot /dataSSD/K8S/reservation-app.
+- SSH par cle vers camillej@192.168.122.10; kubectl configure sur le control plane.
+- Metrics Server fonctionnel: `kubectl top nodes` et `kubectl top pods` doivent repondre.
+- Le point d'entree HAProxy doit repondre: `curl -f http://192.168.122.1:8080/health`.
+
+Lancer un test supervise
+------------------------
+Depuis un terminal du host:
+
+    cd /dataSSD/K8S/reservation-app
+    CONCURRENCY=500 DURATION_SECONDS=100 bash scripts/run-load-test.sh
+
+Le script envoie le trafic vers http://192.168.122.1:8080/api/events et collecte
+en parallele, toutes les 5 secondes, le HPA, CPU/memoire des noeuds et des pods,
+leur etat Ready, leurs redemarrages et leur placement. A la fin il capture les
+evenements Kubernetes, les logs backend/frontend et les compteurs CPU cgroup.
+Les trois fichiers de resultat sont places dans un repertoire horodate sous
+/tmp/reservation-load-YYYYMMDD-HHMMSS/.
+
+Valeurs configurables:
+
+    CONCURRENCY=100 DURATION_SECONDS=120 bash scripts/run-load-test.sh
+    CONTROL_PLANE=camillej@192.168.122.10 LOAD_URL=http://192.168.122.1:8080 \
+      LOAD_RESULTS_DIR=/tmp/test-charge bash scripts/run-load-test.sh
+
+Pour un essai graduel, commencer par 60 ou 100 clients, puis monter a 300 et 500.
+La limite du generateur est 500 clients. Le retour non nul signifie qu'au moins
+une requete a eu un statut non-2xx ou une erreur reseau; le log donne les statuts
+HTTP et causes telles que ECONNRESET ou TimeoutError.
+
+Surveiller manuellement dans un second terminal sur le control plane
+--------------------------------------------------------------------
+
+    ssh camillej@192.168.122.10
+    kubectl get hpa -n app-reservation -w
+
+Dans d'autres terminaux, si besoin:
+
+    kubectl top nodes
+    kubectl top pods -n app-reservation --containers
+    kubectl get pods -n app-reservation -o wide -w
+    kubectl get events -n app-reservation --sort-by=.lastTimestamp
+    kubectl describe hpa backend-hpa -n app-reservation
+    kubectl logs -n app-reservation -l app=backend-api --all-containers \
+      --prefix --since=5m --max-log-requests=10 -f
+    kubectl logs -n app-reservation -l app=frontend-web --all-containers \
+      --prefix --since=5m --max-log-requests=10 -f
+
+Lire les resultats
+------------------
+- HPA: nombre de replicas demande/actuel, CPU moyen/cible et ScalingLimited.
+- `kubectl top`: CPU/memoire de chaque noeud et conteneur; comparer au requests/limits
+  dans les manifests. `kubectl get pods`: READY et RESTARTS.
+- `cluster-final.log`: Warning Unhealthy, OOMKilled, erreurs de probes, rollouts,
+  saturation HPA, logs d'application, et compteurs `/sys/fs/cgroup/cpu.stat`.
+- `nr_throttled / nr_periods` indique la fraction des periodes CPU ou le conteneur a
+  ete bride. Un nombre eleve avec une limite CPU atteinte signale une saturation,
+  meme si les requetes HTTP reussissent.
+- Les premiers `connection refused` sur startupProbe juste apres la creation d'un pod
+  sont normaux tant que le conteneur demarre et finit Ready. Des echecs liveness/
+  readiness repetes, RESTARTS croissants, OOMKilled ou statuts HTTP 5xx ne le sont pas.
+- Apres l'arret, le HPA peut garder des replicas supplementaires pendant sa fenetre
+  de stabilisation de 120 s, puis reduit d'un pod par minute vers minReplicas=3.
+
+Resultats observes le 03/10/2026
+-------------------------------
+Charge identique pour les trois passages: 500 clients, 100 s, GET `/api/events`.
+
+1. HPA max6, backend CPU limit300m: 77367 reponses HTTP OK, 0 erreur, 757.3 req/s,
+   moyenne 651ms, p95 2181ms. Les pods backend touchaient leur limite CPU.
+2. HPA max9, probes a 3s, frontend limit250m, backend toujours a 300m: 66287 OK,
+   0 erreur, 644.7 req/s, moyenne 762ms, p95 2442ms. Le scale-up a 9 est arrive
+   tard dans la fenetre; ce resultat inclut le demarrage de nouveaux pods.
+3. Backend CPU limit400m: 101606 OK, 0 erreur, 1005.7 req/s, moyenne 493ms,
+   p95 2131ms. HPA a atteint 9; tous les pods backend etaient Ready sans restart.
+
+Diagnostic et limites actuelles
+-------------------------------
+- Les 328 erreurs signalees dans un essai non collecte anterieurement ne peuvent pas
+  etre detaillees apres coup. Les tests supervises ici n'ont reproduit aucun statut
+  HTTP non-2xx ni erreur reseau.
+- Les probes a 1 seconde etaient trop strictes pendant les pointes. Elles sont a 3s;
+  aucun timeout liveness/readiness n'a ete observe pendant le troisieme passage.
+- Le backend avait un CPU limit de 300m et les compteurs cgroup montraient beaucoup
+  de periodes bridees. Il est passe a 400m. Le throttling agrege final restait ~57.8%.
+- Le HPA est limite a 9 (3 pods par worker en theorie) et indiquait encore environ
+  337% CPU pour une cible de 60%. Un worker a atteint 90% CPU, alors que sa memoire
+  restait a 33%; ne pas augmenter automatiquement replicas ou limites avant un nouvel
+  essai et une verification de la capacite de chaque VM.
+- PostgreSQL est reste a un replica et son PVC NFS n'a pas ete modifie pendant ces
+  tests. Le trafic ne fait que lire le catalogue.
+
+Les sorties brutes des trois campagnes sont sous /tmp/reservation-load-20261003-*.
+Elles ne sont pas ajoutees au depot Git; ce fichier conserve la procedure et le resume.

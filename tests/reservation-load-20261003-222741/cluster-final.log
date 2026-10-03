@@ -1,0 +1,210 @@
+NAME          STATUS   ROLES           AGE   VERSION    INTERNAL-IP      EXTERNAL-IP   OS-IMAGE             KERNEL-VERSION     CONTAINER-RUNTIME
+k8s-worker1   Ready    <none>          10h   v1.31.14   192.168.122.11   <none>        Ubuntu 24.04.5 LTS   7.0.0-38-generic   containerd://2.2.1
+k8s-worker2   Ready    <none>          10h   v1.31.14   192.168.122.12   <none>        Ubuntu 24.04.5 LTS   7.0.0-38-generic   containerd://2.2.1
+k8s-worker3   Ready    <none>          10h   v1.31.14   192.168.122.13   <none>        Ubuntu 24.04.5 LTS   7.0.0-38-generic   containerd://2.2.1
+master        Ready    control-plane   10h   v1.31.14   192.168.122.10   <none>        Ubuntu 24.04.5 LTS   7.0.0-38-generic   containerd://2.2.1
+NAME                                  READY   UP-TO-DATE   AVAILABLE   AGE
+deployment.apps/backend-deployment    6/6     6            6           10h
+deployment.apps/frontend-deployment   3/3     3            3           10h
+deployment.apps/postgres-deployment   1/1     1            1           10h
+deployment.apps/redis-deployment      1/1     1            1           10h
+
+NAME                                              REFERENCE                       TARGETS         MINPODS   MAXPODS   REPLICAS   AGE
+horizontalpodautoscaler.autoscaling/backend-hpa   Deployment/backend-deployment   cpu: 288%/60%   3         6         6          3h19m
+NAME                                   READY   STATUS    RESTARTS        AGE     IP                NODE          NOMINATED NODE   READINESS GATES
+backend-deployment-6f54f569f-hwqlq     1/1     Running   0               86s     192.168.194.94    k8s-worker1   <none>           <none>
+backend-deployment-6f54f569f-jnk24     1/1     Running   0               58m     192.168.194.90    k8s-worker1   <none>           <none>
+backend-deployment-6f54f569f-l6sjg     1/1     Running   0               86s     192.168.100.223   k8s-worker3   <none>           <none>
+backend-deployment-6f54f569f-l8r7b     1/1     Running   0               58m     192.168.100.220   k8s-worker3   <none>           <none>
+backend-deployment-6f54f569f-n844p     1/1     Running   0               56m     192.168.126.23    k8s-worker2   <none>           <none>
+backend-deployment-6f54f569f-tq2pk     1/1     Running   0               56s     192.168.126.25    k8s-worker2   <none>           <none>
+frontend-deployment-74d59d98d8-2zc5r   1/1     Running   0               56m     192.168.194.92    k8s-worker1   <none>           <none>
+frontend-deployment-74d59d98d8-gcmcb   1/1     Running   0               58m     192.168.126.22    k8s-worker2   <none>           <none>
+frontend-deployment-74d59d98d8-sggfz   1/1     Running   0               58m     192.168.100.218   k8s-worker3   <none>           <none>
+postgres-deployment-8598bbc8dd-9bqfj   1/1     Running   0               57m     192.168.100.221   k8s-worker3   <none>           <none>
+redis-deployment-588df8f94f-td58m      1/1     Running   1 (3h53m ago)   7h15m   192.168.126.13    k8s-worker2   <none>           <none>
+Name:                                                  backend-hpa
+Namespace:                                             app-reservation
+Labels:                                                <none>
+Annotations:                                           <none>
+CreationTimestamp:                                     Sat, 03 Oct 2026 17:10:35 +0000
+Reference:                                             Deployment/backend-deployment
+Metrics:                                               ( current / target )
+  resource cpu on pods  (as a percentage of request):  288% (288m) / 60%
+Min replicas:                                          3
+Max replicas:                                          6
+Behavior:
+  Scale Up:
+    Stabilization Window: 0 seconds
+    Select Policy: Max
+    Policies:
+      - Type: Pods  Value: 2  Period: 30 seconds
+  Scale Down:
+    Stabilization Window: 120 seconds
+    Select Policy: Max
+    Policies:
+      - Type: Pods  Value: 1  Period: 60 seconds
+Deployment pods:    6 current / 6 desired
+Conditions:
+  Type            Status  Reason            Message
+  ----            ------  ------            -------
+  AbleToScale     True    ReadyForNewScale  recommended size matches current size
+  ScalingActive   True    ValidMetricFound  the HPA was able to successfully calculate a replica count from cpu resource utilization (percentage of request)
+  ScalingLimited  True    TooManyReplicas   the desired replica count is more than the maximum replica count
+Events:
+  Type     Reason                        Age                   From                       Message
+  ----     ------                        ----                  ----                       -------
+  Warning  FailedGetResourceMetric       59m (x5 over 3h16m)   horizontal-pod-autoscaler  failed to get cpu utilization: unable to get metrics for resource cpu: no metrics returned from resource metrics API
+  Warning  FailedComputeMetricsReplicas  59m (x5 over 3h16m)   horizontal-pod-autoscaler  invalid metrics (1 invalid out of 1), first error is: failed to get cpu resource metric value: failed to get cpu utilization: unable to get metrics for resource cpu: no metrics returned from resource metrics API
+  Normal   SuccessfulRescale             59m (x2 over 157m)    horizontal-pod-autoscaler  New size: 4; reason: cpu resource utilization (percentage of request) above target
+  Warning  FailedGetResourceMetric       57m (x4 over 3h18m)   horizontal-pod-autoscaler  failed to get cpu utilization: did not receive metrics for targeted pods (pods might be unready)
+  Warning  FailedComputeMetricsReplicas  57m (x4 over 3h18m)   horizontal-pod-autoscaler  invalid metrics (1 invalid out of 1), first error is: failed to get cpu resource metric value: failed to get cpu utilization: did not receive metrics for targeted pods (pods might be unready)
+  Normal   SuccessfulRescale             6m57s (x2 over 62m)   horizontal-pod-autoscaler  New size: 5; reason: All metrics below target
+  Normal   SuccessfulRescale             5m56s (x2 over 61m)   horizontal-pod-autoscaler  New size: 4; reason: All metrics below target
+  Normal   SuccessfulRescale             4m56s (x3 over 155m)  horizontal-pod-autoscaler  New size: 3; reason: All metrics below target
+  Normal   SuccessfulRescale             86s (x3 over 67m)     horizontal-pod-autoscaler  New size: 5; reason: cpu resource utilization (percentage of request) above target
+  Normal   SuccessfulRescale             56s (x3 over 66m)     horizontal-pod-autoscaler  New size: 6; reason: cpu resource utilization (percentage of request) above target
+NAME          CPU(cores)   CPU%   MEMORY(bytes)   MEMORY%   
+k8s-worker1   620m         31%    1194Mi          31%       
+k8s-worker2   521m         26%    1309Mi          34%       
+k8s-worker3   841m         42%    1352Mi          35%       
+master        231m         11%    2089Mi          54%       
+POD                                    NAME       CPU(cores)   MEMORY(bytes)   
+backend-deployment-6f54f569f-hwqlq     backend    195m         60Mi            
+backend-deployment-6f54f569f-jnk24     backend    88m          57Mi            
+backend-deployment-6f54f569f-l6sjg     backend    279m         60Mi            
+backend-deployment-6f54f569f-l8r7b     backend    200m         58Mi            
+backend-deployment-6f54f569f-n844p     backend    92m          57Mi            
+backend-deployment-6f54f569f-tq2pk     backend    138m         60Mi            
+frontend-deployment-74d59d98d8-2zc5r   frontend   106m         6Mi             
+frontend-deployment-74d59d98d8-gcmcb   frontend   49m          6Mi             
+frontend-deployment-74d59d98d8-sggfz   frontend   84m          6Mi             
+postgres-deployment-8598bbc8dd-9bqfj   postgres   316m         120Mi           
+redis-deployment-588df8f94f-td58m      redis      18m          33Mi            
+56m         Normal    Killing                        pod/frontend-deployment-74d59d98d8-hnnzz    Stopping container frontend
+56m         Normal    Killing                        pod/backend-deployment-6f54f569f-4lfpj      Stopping container backend
+56m         Normal    Scheduled                      pod/backend-deployment-6f54f569f-n844p      Successfully assigned app-reservation/backend-deployment-6f54f569f-n844p to k8s-worker2
+56m         Normal    SuccessfulCreate               replicaset/backend-deployment-6f54f569f     Created pod: backend-deployment-6f54f569f-n844p
+56m         Normal    Pulled                         pod/backend-deployment-6f54f569f-n844p      Successfully pulled image "192.168.122.10:5000/reservation-backend:2.2" in 53ms (53ms including waiting). Image size: 67636374 bytes.
+56m         Normal    Started                        pod/backend-deployment-6f54f569f-n844p      Started container backend
+56m         Normal    Created                        pod/backend-deployment-6f54f569f-n844p      Created container: backend
+56m         Normal    Pulling                        pod/backend-deployment-6f54f569f-n844p      Pulling image "192.168.122.10:5000/reservation-backend:2.2"
+56m         Warning   Unhealthy                      pod/backend-deployment-6f54f569f-n844p      Startup probe failed: Get "http://192.168.126.23:8080/health/live": dial tcp 192.168.126.23:8080: connect: connection refused
+12m         Normal    SuccessfulCreate               replicaset/backend-deployment-6f54f569f     Created pod: backend-deployment-6f54f569f-lttqd
+12m         Normal    SuccessfulCreate               replicaset/backend-deployment-6f54f569f     Created pod: backend-deployment-6f54f569f-zh5n9
+12m         Normal    Scheduled                      pod/backend-deployment-6f54f569f-lttqd      Successfully assigned app-reservation/backend-deployment-6f54f569f-lttqd to k8s-worker1
+12m         Normal    Scheduled                      pod/backend-deployment-6f54f569f-zh5n9      Successfully assigned app-reservation/backend-deployment-6f54f569f-zh5n9 to k8s-worker3
+12m         Normal    Pulled                         pod/backend-deployment-6f54f569f-lttqd      Container image "192.168.122.10:5000/reservation-backend:2.2" already present on machine
+12m         Normal    Created                        pod/backend-deployment-6f54f569f-lttqd      Created container: backend
+12m         Normal    Started                        pod/backend-deployment-6f54f569f-lttqd      Started container backend
+12m         Normal    Started                        pod/backend-deployment-6f54f569f-zh5n9      Started container backend
+12m         Normal    Created                        pod/backend-deployment-6f54f569f-zh5n9      Created container: backend
+12m         Normal    Pulled                         pod/backend-deployment-6f54f569f-zh5n9      Container image "192.168.122.10:5000/reservation-backend:2.2" already present on machine
+12m         Warning   Unhealthy                      pod/backend-deployment-6f54f569f-zh5n9      Startup probe failed: Get "http://192.168.100.222:8080/health/live": dial tcp 192.168.100.222:8080: connect: connection refused
+12m         Warning   Unhealthy                      pod/backend-deployment-6f54f569f-lttqd      Startup probe failed: Get "http://192.168.194.93:8080/health/live": dial tcp 192.168.194.93:8080: connect: connection refused
+11m         Normal    Scheduled                      pod/backend-deployment-6f54f569f-t65k7      Successfully assigned app-reservation/backend-deployment-6f54f569f-t65k7 to k8s-worker2
+11m         Normal    SuccessfulCreate               replicaset/backend-deployment-6f54f569f     Created pod: backend-deployment-6f54f569f-t65k7
+10m         Warning   Unhealthy                      pod/backend-deployment-6f54f569f-lttqd      Liveness probe failed: Get "http://192.168.194.93:8080/health/live": context deadline exceeded (Client.Timeout exceeded while awaiting headers)
+10m         Warning   Unhealthy                      pod/backend-deployment-6f54f569f-lttqd      Readiness probe failed: Get "http://192.168.194.93:8080/health/ready": context deadline exceeded (Client.Timeout exceeded while awaiting headers)
+10m         Normal    Killing                        pod/backend-deployment-6f54f569f-t65k7      Container backend failed liveness probe, will be restarted
+10m         Normal    Created                        pod/backend-deployment-6f54f569f-t65k7      Created container: backend
+10m         Normal    Pulled                         pod/backend-deployment-6f54f569f-t65k7      Container image "192.168.122.10:5000/reservation-backend:2.2" already present on machine
+10m         Normal    Started                        pod/backend-deployment-6f54f569f-t65k7      Started container backend
+10m         Warning   Unhealthy                      pod/backend-deployment-6f54f569f-t65k7      Startup probe failed: Get "http://192.168.126.24:8080/health/live": dial tcp 192.168.126.24:8080: connect: connection refused
+10m         Warning   Unhealthy                      pod/backend-deployment-6f54f569f-t65k7      Liveness probe failed: Get "http://192.168.126.24:8080/health/live": context deadline exceeded (Client.Timeout exceeded while awaiting headers)
+10m         Warning   Unhealthy                      pod/backend-deployment-6f54f569f-t65k7      Readiness probe failed: Get "http://192.168.126.24:8080/health/ready": context deadline exceeded (Client.Timeout exceeded while awaiting headers)
+9m24s       Warning   Unhealthy                      pod/frontend-deployment-74d59d98d8-gcmcb    Liveness probe failed: Get "http://192.168.126.22:80/health": context deadline exceeded (Client.Timeout exceeded while awaiting headers)
+9m23s       Warning   Unhealthy                      pod/frontend-deployment-74d59d98d8-gcmcb    Readiness probe failed: Get "http://192.168.126.22:80/health": context deadline exceeded (Client.Timeout exceeded while awaiting headers)
+9m20s       Warning   Unhealthy                      pod/frontend-deployment-74d59d98d8-sggfz    Readiness probe failed: Get "http://192.168.100.218:80/health": context deadline exceeded (Client.Timeout exceeded while awaiting headers)
+6m57s       Normal    ScalingReplicaSet              deployment/backend-deployment               Scaled down replica set backend-deployment-6f54f569f to 5 from 6
+6m57s       Normal    SuccessfulRescale              horizontalpodautoscaler/backend-hpa         New size: 5; reason: All metrics below target
+6m57s       Normal    SuccessfulDelete               replicaset/backend-deployment-6f54f569f     Deleted pod: backend-deployment-6f54f569f-t65k7
+5m56s       Normal    Killing                        pod/backend-deployment-6f54f569f-zh5n9      Stopping container backend
+5m56s       Normal    SuccessfulRescale              horizontalpodautoscaler/backend-hpa         New size: 4; reason: All metrics below target
+5m56s       Normal    SuccessfulDelete               replicaset/backend-deployment-6f54f569f     Deleted pod: backend-deployment-6f54f569f-zh5n9
+5m56s       Normal    ScalingReplicaSet              deployment/backend-deployment               Scaled down replica set backend-deployment-6f54f569f to 4 from 5
+4m56s       Normal    SuccessfulRescale              horizontalpodautoscaler/backend-hpa         New size: 3; reason: All metrics below target
+4m56s       Normal    SuccessfulDelete               replicaset/backend-deployment-6f54f569f     Deleted pod: backend-deployment-6f54f569f-lttqd
+4m56s       Normal    ScalingReplicaSet              deployment/backend-deployment               Scaled down replica set backend-deployment-6f54f569f to 3 from 4
+4m56s       Normal    Killing                        pod/backend-deployment-6f54f569f-lttqd      Stopping container backend
+103s        Warning   Unhealthy                      pod/backend-deployment-6f54f569f-n844p      Liveness probe failed: Get "http://192.168.126.23:8080/health/live": context deadline exceeded (Client.Timeout exceeded while awaiting headers)
+86s         Normal    SuccessfulCreate               replicaset/backend-deployment-6f54f569f     Created pod: backend-deployment-6f54f569f-l6sjg
+86s         Normal    SuccessfulCreate               replicaset/backend-deployment-6f54f569f     Created pod: backend-deployment-6f54f569f-hwqlq
+86s         Normal    Scheduled                      pod/backend-deployment-6f54f569f-hwqlq      Successfully assigned app-reservation/backend-deployment-6f54f569f-hwqlq to k8s-worker1
+86s         Normal    Scheduled                      pod/backend-deployment-6f54f569f-l6sjg      Successfully assigned app-reservation/backend-deployment-6f54f569f-l6sjg to k8s-worker3
+86s         Normal    ScalingReplicaSet              deployment/backend-deployment               Scaled up replica set backend-deployment-6f54f569f to 5 from 3
+86s         Normal    SuccessfulRescale              horizontalpodautoscaler/backend-hpa         New size: 5; reason: cpu resource utilization (percentage of request) above target
+85s         Normal    Created                        pod/backend-deployment-6f54f569f-hwqlq      Created container: backend
+85s         Normal    Started                        pod/backend-deployment-6f54f569f-l6sjg      Started container backend
+85s         Normal    Created                        pod/backend-deployment-6f54f569f-l6sjg      Created container: backend
+85s         Normal    Started                        pod/backend-deployment-6f54f569f-hwqlq      Started container backend
+85s         Normal    Pulled                         pod/backend-deployment-6f54f569f-l6sjg      Container image "192.168.122.10:5000/reservation-backend:2.2" already present on machine
+85s         Normal    Pulled                         pod/backend-deployment-6f54f569f-hwqlq      Container image "192.168.122.10:5000/reservation-backend:2.2" already present on machine
+85s         Warning   Unhealthy                      pod/backend-deployment-6f54f569f-l8r7b      Liveness probe failed: Get "http://192.168.100.220:8080/health/live": context deadline exceeded (Client.Timeout exceeded while awaiting headers)
+84s         Warning   Unhealthy                      pod/backend-deployment-6f54f569f-l8r7b      Readiness probe failed: Get "http://192.168.100.220:8080/health/ready": context deadline exceeded (Client.Timeout exceeded while awaiting headers)
+80s         Warning   Unhealthy                      pod/backend-deployment-6f54f569f-l6sjg      Startup probe failed: Get "http://192.168.100.223:8080/health/live": dial tcp 192.168.100.223:8080: connect: connection refused
+78s         Warning   Unhealthy                      pod/backend-deployment-6f54f569f-n844p      Readiness probe failed: Get "http://192.168.126.23:8080/health/ready": context deadline exceeded (Client.Timeout exceeded while awaiting headers)
+77s         Warning   Unhealthy                      pod/backend-deployment-6f54f569f-hwqlq      Startup probe failed: Get "http://192.168.194.94:8080/health/live": dial tcp 192.168.194.94:8080: connect: connection refused
+75s         Warning   Unhealthy                      pod/backend-deployment-6f54f569f-jnk24      Readiness probe failed: Get "http://192.168.194.90:8080/health/ready": context deadline exceeded (Client.Timeout exceeded while awaiting headers)
+75s         Warning   Unhealthy                      pod/backend-deployment-6f54f569f-jnk24      Liveness probe failed: Get "http://192.168.194.90:8080/health/live": context deadline exceeded (Client.Timeout exceeded while awaiting headers)
+65s         Warning   Unhealthy                      pod/backend-deployment-6f54f569f-hwqlq      Liveness probe failed: Get "http://192.168.194.94:8080/health/live": context deadline exceeded (Client.Timeout exceeded while awaiting headers)
+56s         Normal    ScalingReplicaSet              deployment/backend-deployment               Scaled up replica set backend-deployment-6f54f569f to 6 from 5
+56s         Normal    SuccessfulCreate               replicaset/backend-deployment-6f54f569f     Created pod: backend-deployment-6f54f569f-tq2pk
+56s         Normal    SuccessfulRescale              horizontalpodautoscaler/backend-hpa         New size: 6; reason: cpu resource utilization (percentage of request) above target
+56s         Normal    Scheduled                      pod/backend-deployment-6f54f569f-tq2pk      Successfully assigned app-reservation/backend-deployment-6f54f569f-tq2pk to k8s-worker2
+55s         Normal    Created                        pod/backend-deployment-6f54f569f-tq2pk      Created container: backend
+55s         Normal    Pulled                         pod/backend-deployment-6f54f569f-tq2pk      Container image "192.168.122.10:5000/reservation-backend:2.2" already present on machine
+55s         Normal    Started                        pod/backend-deployment-6f54f569f-tq2pk      Started container backend
+53s         Warning   Unhealthy                      pod/backend-deployment-6f54f569f-tq2pk      Startup probe failed: Get "http://192.168.126.25:8080/health/live": dial tcp 192.168.126.25:8080: connect: connection refused
+45s         Warning   Unhealthy                      pod/backend-deployment-6f54f569f-l6sjg      Liveness probe failed: Get "http://192.168.100.223:8080/health/live": context deadline exceeded (Client.Timeout exceeded while awaiting headers)
+44s         Warning   Unhealthy                      pod/backend-deployment-6f54f569f-l6sjg      Readiness probe failed: Get "http://192.168.100.223:8080/health/ready": context deadline exceeded (Client.Timeout exceeded while awaiting headers)
+30s         Warning   Unhealthy                      pod/backend-deployment-6f54f569f-hwqlq      Readiness probe failed: Get "http://192.168.194.94:8080/health/ready": context deadline exceeded (Client.Timeout exceeded while awaiting headers)
+14s         Warning   Unhealthy                      pod/backend-deployment-6f54f569f-tq2pk      Readiness probe failed: Get "http://192.168.126.25:8080/health/ready": context deadline exceeded (Client.Timeout exceeded while awaiting headers)
+14s         Warning   Unhealthy                      pod/backend-deployment-6f54f569f-tq2pk      Liveness probe failed: Get "http://192.168.126.25:8080/health/live": context deadline exceeded (Client.Timeout exceeded while awaiting headers)
+===== logs selector=app=backend-api =====
+[pod/backend-deployment-6f54f569f-l6sjg/backend] 
+[pod/backend-deployment-6f54f569f-l6sjg/backend] > reservation-api@1.0.0 start
+[pod/backend-deployment-6f54f569f-l6sjg/backend] > node src/server.js
+[pod/backend-deployment-6f54f569f-l6sjg/backend] 
+[pod/backend-deployment-6f54f569f-l6sjg/backend] Reservation API listening on 8080
+[pod/backend-deployment-6f54f569f-tq2pk/backend] 
+[pod/backend-deployment-6f54f569f-tq2pk/backend] > reservation-api@1.0.0 start
+[pod/backend-deployment-6f54f569f-tq2pk/backend] > node src/server.js
+[pod/backend-deployment-6f54f569f-tq2pk/backend] 
+[pod/backend-deployment-6f54f569f-tq2pk/backend] Reservation API listening on 8080
+[pod/backend-deployment-6f54f569f-hwqlq/backend] 
+[pod/backend-deployment-6f54f569f-hwqlq/backend] > reservation-api@1.0.0 start
+[pod/backend-deployment-6f54f569f-hwqlq/backend] > node src/server.js
+[pod/backend-deployment-6f54f569f-hwqlq/backend] 
+[pod/backend-deployment-6f54f569f-hwqlq/backend] Reservation API listening on 8080
+===== logs selector=app=frontend-web =====
+[pod/frontend-deployment-74d59d98d8-2zc5r/frontend] 192.168.122.11 - - [03/Oct/2026:20:29:24 +0000] "GET /api/events HTTP/1.1" 200 1200 "-" "node" "-"
+[pod/frontend-deployment-74d59d98d8-2zc5r/frontend] 192.168.100.192 - - [03/Oct/2026:20:29:24 +0000] "GET /api/events HTTP/1.1" 200 1200 "-" "node" "-"
+[pod/frontend-deployment-74d59d98d8-2zc5r/frontend] 192.168.126.0 - - [03/Oct/2026:20:29:24 +0000] "GET /api/events HTTP/1.1" 200 1200 "-" "node" "-"
+[pod/frontend-deployment-74d59d98d8-2zc5r/frontend] 192.168.100.192 - - [03/Oct/2026:20:29:24 +0000] "GET /api/events HTTP/1.1" 200 1200 "-" "node" "-"
+[pod/frontend-deployment-74d59d98d8-2zc5r/frontend] 192.168.126.0 - - [03/Oct/2026:20:29:24 +0000] "GET /api/events HTTP/1.1" 200 1200 "-" "node" "-"
+[pod/frontend-deployment-74d59d98d8-2zc5r/frontend] 192.168.126.0 - - [03/Oct/2026:20:29:24 +0000] "GET /api/events HTTP/1.1" 200 1200 "-" "node" "-"
+[pod/frontend-deployment-74d59d98d8-2zc5r/frontend] 192.168.122.11 - - [03/Oct/2026:20:29:24 +0000] "GET /api/events HTTP/1.1" 200 1200 "-" "node" "-"
+[pod/frontend-deployment-74d59d98d8-2zc5r/frontend] 192.168.100.192 - - [03/Oct/2026:20:29:24 +0000] "GET /api/events HTTP/1.1" 200 1200 "-" "node" "-"
+[pod/frontend-deployment-74d59d98d8-2zc5r/frontend] 192.168.122.11 - - [03/Oct/2026:20:29:24 +0000] "GET /api/events HTTP/1.1" 200 1200 "-" "node" "-"
+[pod/frontend-deployment-74d59d98d8-2zc5r/frontend] 192.168.122.11 - - [03/Oct/2026:20:29:24 +0000] "GET /api/events HTTP/1.1" 200 1200 "-" "node" "-"
+[pod/frontend-deployment-74d59d98d8-gcmcb/frontend] 192.168.194.64 - - [03/Oct/2026:20:29:24 +0000] "GET /api/events HTTP/1.1" 200 1200 "-" "node" "-"
+[pod/frontend-deployment-74d59d98d8-gcmcb/frontend] 192.168.100.192 - - [03/Oct/2026:20:29:24 +0000] "GET /api/events HTTP/1.1" 200 1200 "-" "node" "-"
+[pod/frontend-deployment-74d59d98d8-gcmcb/frontend] 192.168.100.192 - - [03/Oct/2026:20:29:24 +0000] "GET /api/events HTTP/1.1" 200 1200 "-" "node" "-"
+[pod/frontend-deployment-74d59d98d8-gcmcb/frontend] 192.168.194.64 - - [03/Oct/2026:20:29:24 +0000] "GET /api/events HTTP/1.1" 200 1200 "-" "node" "-"
+[pod/frontend-deployment-74d59d98d8-gcmcb/frontend] 192.168.100.192 - - [03/Oct/2026:20:29:24 +0000] "GET /api/events HTTP/1.1" 200 1200 "-" "node" "-"
+[pod/frontend-deployment-74d59d98d8-gcmcb/frontend] 192.168.122.12 - - [03/Oct/2026:20:29:24 +0000] "GET /api/events HTTP/1.1" 200 1200 "-" "node" "-"
+[pod/frontend-deployment-74d59d98d8-gcmcb/frontend] 192.168.122.12 - - [03/Oct/2026:20:29:24 +0000] "GET /api/events HTTP/1.1" 200 1200 "-" "node" "-"
+[pod/frontend-deployment-74d59d98d8-gcmcb/frontend] 192.168.100.192 - - [03/Oct/2026:20:29:24 +0000] "GET /api/events HTTP/1.1" 200 1200 "-" "node" "-"
+[pod/frontend-deployment-74d59d98d8-gcmcb/frontend] 192.168.122.12 - - [03/Oct/2026:20:29:24 +0000] "GET /api/events HTTP/1.1" 200 1200 "-" "node" "-"
+[pod/frontend-deployment-74d59d98d8-gcmcb/frontend] 192.168.122.12 - - [03/Oct/2026:20:29:24 +0000] "GET /api/events HTTP/1.1" 200 1200 "-" "node" "-"
+[pod/frontend-deployment-74d59d98d8-sggfz/frontend] 192.168.194.64 - - [03/Oct/2026:20:29:24 +0000] "GET /api/events HTTP/1.1" 200 1200 "-" "node" "-"
+[pod/frontend-deployment-74d59d98d8-sggfz/frontend] 192.168.122.13 - - [03/Oct/2026:20:29:24 +0000] "GET /api/events HTTP/1.1" 200 1200 "-" "node" "-"
+[pod/frontend-deployment-74d59d98d8-sggfz/frontend] 192.168.126.0 - - [03/Oct/2026:20:29:24 +0000] "GET /api/events HTTP/1.1" 200 1200 "-" "node" "-"
+[pod/frontend-deployment-74d59d98d8-sggfz/frontend] 192.168.194.64 - - [03/Oct/2026:20:29:24 +0000] "GET /api/events HTTP/1.1" 200 1200 "-" "node" "-"
+[pod/frontend-deployment-74d59d98d8-sggfz/frontend] 192.168.126.0 - - [03/Oct/2026:20:29:24 +0000] "GET /api/events HTTP/1.1" 200 1200 "-" "node" "-"
+[pod/frontend-deployment-74d59d98d8-sggfz/frontend] 192.168.194.64 - - [03/Oct/2026:20:29:24 +0000] "GET /api/events HTTP/1.1" 200 1200 "-" "node" "-"
+[pod/frontend-deployment-74d59d98d8-sggfz/frontend] 192.168.122.13 - - [03/Oct/2026:20:29:24 +0000] "GET /api/events HTTP/1.1" 200 1200 "-" "node" "-"
+[pod/frontend-deployment-74d59d98d8-sggfz/frontend] 192.168.194.64 - - [03/Oct/2026:20:29:24 +0000] "GET /api/events HTTP/1.1" 200 1200 "-" "node" "-"
+[pod/frontend-deployment-74d59d98d8-sggfz/frontend] 192.168.122.13 - - [03/Oct/2026:20:29:24 +0000] "GET /api/events HTTP/1.1" 200 1200 "-" "node" "-"
+[pod/frontend-deployment-74d59d98d8-sggfz/frontend] 192.168.122.13 - - [03/Oct/2026:20:29:24 +0000] "GET /api/events HTTP/1.1" 200 1200 "-" "node" "-"

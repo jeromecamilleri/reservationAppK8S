@@ -1,0 +1,636 @@
+
+===== 2026-10-03T20:27:42+00:00 elapsed=0s =====
+NAME          REFERENCE                       TARGETS       MINPODS   MAXPODS   REPLICAS   AGE
+backend-hpa   Deployment/backend-deployment   cpu: 1%/60%   3         6         3          3h17m
+NAME          CPU(cores)   CPU%   MEMORY(bytes)   MEMORY%   
+k8s-worker1   76m          3%     1128Mi          29%       
+k8s-worker2   118m         5%     1251Mi          32%       
+k8s-worker3   90m          4%     1210Mi          31%       
+master        227m         11%    2081Mi          54%       
+POD                                    NAME       CPU(cores)   MEMORY(bytes)   
+backend-deployment-6f54f569f-jnk24     backend    1m           50Mi            
+backend-deployment-6f54f569f-l8r7b     backend    1m           58Mi            
+backend-deployment-6f54f569f-n844p     backend    2m           49Mi            
+frontend-deployment-74d59d98d8-2zc5r   frontend   1m           3Mi             
+frontend-deployment-74d59d98d8-gcmcb   frontend   1m           3Mi             
+frontend-deployment-74d59d98d8-sggfz   frontend   1m           3Mi             
+postgres-deployment-8598bbc8dd-9bqfj   postgres   5m           26Mi            
+redis-deployment-588df8f94f-td58m      redis      23m          32Mi            
+NAME                                   READY   RESTARTS   PHASE     NODE
+backend-deployment-6f54f569f-jnk24     true    0          Running   k8s-worker1
+backend-deployment-6f54f569f-l8r7b     true    0          Running   k8s-worker3
+backend-deployment-6f54f569f-n844p     true    0          Running   k8s-worker2
+frontend-deployment-74d59d98d8-2zc5r   true    0          Running   k8s-worker1
+frontend-deployment-74d59d98d8-gcmcb   true    0          Running   k8s-worker2
+frontend-deployment-74d59d98d8-sggfz   true    0          Running   k8s-worker3
+postgres-deployment-8598bbc8dd-9bqfj   true    0          Running   k8s-worker3
+redis-deployment-588df8f94f-td58m      true    1          Running   k8s-worker2
+
+===== 2026-10-03T20:27:47+00:00 elapsed=5s =====
+NAME          REFERENCE                       TARGETS       MINPODS   MAXPODS   REPLICAS   AGE
+backend-hpa   Deployment/backend-deployment   cpu: 1%/60%   3         6         3          3h17m
+NAME          CPU(cores)   CPU%   MEMORY(bytes)   MEMORY%   
+k8s-worker1   76m          3%     1128Mi          29%       
+k8s-worker2   118m         5%     1251Mi          32%       
+k8s-worker3   90m          4%     1210Mi          31%       
+master        227m         11%    2081Mi          54%       
+POD                                    NAME       CPU(cores)   MEMORY(bytes)   
+backend-deployment-6f54f569f-jnk24     backend    1m           50Mi            
+backend-deployment-6f54f569f-l8r7b     backend    1m           58Mi            
+backend-deployment-6f54f569f-n844p     backend    2m           49Mi            
+frontend-deployment-74d59d98d8-2zc5r   frontend   1m           3Mi             
+frontend-deployment-74d59d98d8-gcmcb   frontend   1m           3Mi             
+frontend-deployment-74d59d98d8-sggfz   frontend   1m           3Mi             
+postgres-deployment-8598bbc8dd-9bqfj   postgres   5m           26Mi            
+redis-deployment-588df8f94f-td58m      redis      23m          32Mi            
+NAME                                   READY   RESTARTS   PHASE     NODE
+backend-deployment-6f54f569f-jnk24     true    0          Running   k8s-worker1
+backend-deployment-6f54f569f-l8r7b     true    0          Running   k8s-worker3
+backend-deployment-6f54f569f-n844p     true    0          Running   k8s-worker2
+frontend-deployment-74d59d98d8-2zc5r   true    0          Running   k8s-worker1
+frontend-deployment-74d59d98d8-gcmcb   true    0          Running   k8s-worker2
+frontend-deployment-74d59d98d8-sggfz   true    0          Running   k8s-worker3
+postgres-deployment-8598bbc8dd-9bqfj   true    0          Running   k8s-worker3
+redis-deployment-588df8f94f-td58m      true    1          Running   k8s-worker2
+
+===== 2026-10-03T20:27:53+00:00 elapsed=10s =====
+NAME          REFERENCE                       TARGETS       MINPODS   MAXPODS   REPLICAS   AGE
+backend-hpa   Deployment/backend-deployment   cpu: 1%/60%   3         6         3          3h17m
+NAME          CPU(cores)   CPU%   MEMORY(bytes)   MEMORY%   
+k8s-worker1   83m          4%     1127Mi          29%       
+k8s-worker2   162m         8%     1258Mi          33%       
+k8s-worker3   81m          4%     1210Mi          31%       
+master        235m         11%    2083Mi          54%       
+POD                                    NAME       CPU(cores)   MEMORY(bytes)   
+backend-deployment-6f54f569f-jnk24     backend    23m          54Mi            
+backend-deployment-6f54f569f-l8r7b     backend    1m           57Mi            
+backend-deployment-6f54f569f-n844p     backend    2m           50Mi            
+frontend-deployment-74d59d98d8-2zc5r   frontend   8m           6Mi             
+frontend-deployment-74d59d98d8-gcmcb   frontend   5m           6Mi             
+frontend-deployment-74d59d98d8-sggfz   frontend   1m           3Mi             
+postgres-deployment-8598bbc8dd-9bqfj   postgres   80m          71Mi            
+redis-deployment-588df8f94f-td58m      redis      20m          32Mi            
+NAME                                   READY   RESTARTS   PHASE     NODE
+backend-deployment-6f54f569f-jnk24     true    0          Running   k8s-worker1
+backend-deployment-6f54f569f-l8r7b     true    0          Running   k8s-worker3
+backend-deployment-6f54f569f-n844p     true    0          Running   k8s-worker2
+frontend-deployment-74d59d98d8-2zc5r   true    0          Running   k8s-worker1
+frontend-deployment-74d59d98d8-gcmcb   true    0          Running   k8s-worker2
+frontend-deployment-74d59d98d8-sggfz   true    0          Running   k8s-worker3
+postgres-deployment-8598bbc8dd-9bqfj   true    0          Running   k8s-worker3
+redis-deployment-588df8f94f-td58m      true    1          Running   k8s-worker2
+
+===== 2026-10-03T20:27:58+00:00 elapsed=15s =====
+NAME          REFERENCE                       TARGETS       MINPODS   MAXPODS   REPLICAS   AGE
+backend-hpa   Deployment/backend-deployment   cpu: 8%/60%   3         6         3          3h17m
+NAME          CPU(cores)   CPU%   MEMORY(bytes)   MEMORY%   
+k8s-worker1   83m          4%     1127Mi          29%       
+k8s-worker2   162m         8%     1258Mi          33%       
+k8s-worker3   81m          4%     1210Mi          31%       
+master        235m         11%    2083Mi          54%       
+POD                                    NAME       CPU(cores)   MEMORY(bytes)   
+backend-deployment-6f54f569f-jnk24     backend    23m          54Mi            
+backend-deployment-6f54f569f-l8r7b     backend    1m           57Mi            
+backend-deployment-6f54f569f-n844p     backend    2m           50Mi            
+frontend-deployment-74d59d98d8-2zc5r   frontend   8m           6Mi             
+frontend-deployment-74d59d98d8-gcmcb   frontend   5m           6Mi             
+frontend-deployment-74d59d98d8-sggfz   frontend   1m           3Mi             
+postgres-deployment-8598bbc8dd-9bqfj   postgres   80m          71Mi            
+redis-deployment-588df8f94f-td58m      redis      20m          32Mi            
+NAME                                   READY   RESTARTS   PHASE     NODE
+backend-deployment-6f54f569f-jnk24     true    0          Running   k8s-worker1
+backend-deployment-6f54f569f-l8r7b     true    0          Running   k8s-worker3
+backend-deployment-6f54f569f-n844p     false   0          Running   k8s-worker2
+frontend-deployment-74d59d98d8-2zc5r   true    0          Running   k8s-worker1
+frontend-deployment-74d59d98d8-gcmcb   true    0          Running   k8s-worker2
+frontend-deployment-74d59d98d8-sggfz   true    0          Running   k8s-worker3
+postgres-deployment-8598bbc8dd-9bqfj   true    0          Running   k8s-worker3
+redis-deployment-588df8f94f-td58m      true    1          Running   k8s-worker2
+
+===== 2026-10-03T20:28:03+00:00 elapsed=20s =====
+NAME          REFERENCE                       TARGETS       MINPODS   MAXPODS   REPLICAS   AGE
+backend-hpa   Deployment/backend-deployment   cpu: 8%/60%   3         6         3          3h17m
+NAME          CPU(cores)   CPU%   MEMORY(bytes)   MEMORY%   
+k8s-worker1   83m          4%     1127Mi          29%       
+k8s-worker2   162m         8%     1258Mi          33%       
+k8s-worker3   81m          4%     1210Mi          31%       
+master        235m         11%    2083Mi          54%       
+POD                                    NAME       CPU(cores)   MEMORY(bytes)   
+backend-deployment-6f54f569f-jnk24     backend    23m          54Mi            
+backend-deployment-6f54f569f-l8r7b     backend    1m           57Mi            
+backend-deployment-6f54f569f-n844p     backend    2m           50Mi            
+frontend-deployment-74d59d98d8-2zc5r   frontend   8m           6Mi             
+frontend-deployment-74d59d98d8-gcmcb   frontend   5m           6Mi             
+frontend-deployment-74d59d98d8-sggfz   frontend   1m           3Mi             
+postgres-deployment-8598bbc8dd-9bqfj   postgres   80m          71Mi            
+redis-deployment-588df8f94f-td58m      redis      20m          32Mi            
+NAME                                   READY   RESTARTS   PHASE     NODE
+backend-deployment-6f54f569f-jnk24     true    0          Running   k8s-worker1
+backend-deployment-6f54f569f-l8r7b     true    0          Running   k8s-worker3
+backend-deployment-6f54f569f-n844p     true    0          Running   k8s-worker2
+frontend-deployment-74d59d98d8-2zc5r   true    0          Running   k8s-worker1
+frontend-deployment-74d59d98d8-gcmcb   true    0          Running   k8s-worker2
+frontend-deployment-74d59d98d8-sggfz   true    0          Running   k8s-worker3
+postgres-deployment-8598bbc8dd-9bqfj   true    0          Running   k8s-worker3
+redis-deployment-588df8f94f-td58m      true    1          Running   k8s-worker2
+
+===== 2026-10-03T20:28:09+00:00 elapsed=25s =====
+NAME          REFERENCE                       TARGETS       MINPODS   MAXPODS   REPLICAS   AGE
+backend-hpa   Deployment/backend-deployment   cpu: 8%/60%   3         6         3          3h17m
+NAME          CPU(cores)   CPU%   MEMORY(bytes)   MEMORY%   
+k8s-worker1   456m         22%    1137Mi          29%       
+k8s-worker2   518m         25%    1261Mi          33%       
+k8s-worker3   616m         30%    1253Mi          32%       
+master        234m         11%    2091Mi          54%       
+POD                                    NAME       CPU(cores)   MEMORY(bytes)   
+backend-deployment-6f54f569f-jnk24     backend    300m         58Mi            
+backend-deployment-6f54f569f-l8r7b     backend    210m         58Mi            
+backend-deployment-6f54f569f-n844p     backend    268m         56Mi            
+frontend-deployment-74d59d98d8-2zc5r   frontend   74m          7Mi             
+frontend-deployment-74d59d98d8-gcmcb   frontend   77m          7Mi             
+frontend-deployment-74d59d98d8-sggfz   frontend   66m          7Mi             
+postgres-deployment-8598bbc8dd-9bqfj   postgres   80m          71Mi            
+redis-deployment-588df8f94f-td58m      redis      16m          32Mi            
+NAME                                   READY   RESTARTS   PHASE     NODE
+backend-deployment-6f54f569f-hwqlq     false   0          Pending   k8s-worker1
+backend-deployment-6f54f569f-jnk24     true    0          Running   k8s-worker1
+backend-deployment-6f54f569f-l6sjg     false   0          Pending   k8s-worker3
+backend-deployment-6f54f569f-l8r7b     true    0          Running   k8s-worker3
+backend-deployment-6f54f569f-n844p     true    0          Running   k8s-worker2
+frontend-deployment-74d59d98d8-2zc5r   true    0          Running   k8s-worker1
+frontend-deployment-74d59d98d8-gcmcb   true    0          Running   k8s-worker2
+frontend-deployment-74d59d98d8-sggfz   true    0          Running   k8s-worker3
+postgres-deployment-8598bbc8dd-9bqfj   true    0          Running   k8s-worker3
+redis-deployment-588df8f94f-td58m      true    1          Running   k8s-worker2
+
+===== 2026-10-03T20:28:14+00:00 elapsed=30s =====
+NAME          REFERENCE                       TARGETS         MINPODS   MAXPODS   REPLICAS   AGE
+backend-hpa   Deployment/backend-deployment   cpu: 259%/60%   3         6         3          3h17m
+NAME          CPU(cores)   CPU%   MEMORY(bytes)   MEMORY%   
+k8s-worker1   456m         22%    1137Mi          29%       
+k8s-worker2   518m         25%    1261Mi          33%       
+k8s-worker3   616m         30%    1253Mi          32%       
+master        234m         11%    2091Mi          54%       
+POD                                    NAME       CPU(cores)   MEMORY(bytes)   
+backend-deployment-6f54f569f-jnk24     backend    300m         58Mi            
+backend-deployment-6f54f569f-l8r7b     backend    210m         58Mi            
+backend-deployment-6f54f569f-n844p     backend    268m         56Mi            
+frontend-deployment-74d59d98d8-2zc5r   frontend   74m          7Mi             
+frontend-deployment-74d59d98d8-gcmcb   frontend   77m          7Mi             
+frontend-deployment-74d59d98d8-sggfz   frontend   66m          7Mi             
+postgres-deployment-8598bbc8dd-9bqfj   postgres   80m          71Mi            
+redis-deployment-588df8f94f-td58m      redis      16m          32Mi            
+NAME                                   READY   RESTARTS   PHASE     NODE
+backend-deployment-6f54f569f-hwqlq     false   0          Running   k8s-worker1
+backend-deployment-6f54f569f-jnk24     true    0          Running   k8s-worker1
+backend-deployment-6f54f569f-l6sjg     false   0          Running   k8s-worker3
+backend-deployment-6f54f569f-l8r7b     true    0          Running   k8s-worker3
+backend-deployment-6f54f569f-n844p     true    0          Running   k8s-worker2
+frontend-deployment-74d59d98d8-2zc5r   true    0          Running   k8s-worker1
+frontend-deployment-74d59d98d8-gcmcb   true    0          Running   k8s-worker2
+frontend-deployment-74d59d98d8-sggfz   true    0          Running   k8s-worker3
+postgres-deployment-8598bbc8dd-9bqfj   true    0          Running   k8s-worker3
+redis-deployment-588df8f94f-td58m      true    1          Running   k8s-worker2
+
+===== 2026-10-03T20:28:20+00:00 elapsed=35s =====
+NAME          REFERENCE                       TARGETS         MINPODS   MAXPODS   REPLICAS   AGE
+backend-hpa   Deployment/backend-deployment   cpu: 259%/60%   3         6         3          3h17m
+NAME          CPU(cores)   CPU%   MEMORY(bytes)   MEMORY%   
+k8s-worker1   561m         28%    1137Mi          29%       
+k8s-worker2   589m         29%    1262Mi          33%       
+k8s-worker3   730m         36%    1252Mi          32%       
+master        339m         16%    2089Mi          54%       
+POD                                    NAME       CPU(cores)   MEMORY(bytes)   
+backend-deployment-6f54f569f-jnk24     backend    301m         57Mi            
+backend-deployment-6f54f569f-l8r7b     backend    254m         58Mi            
+backend-deployment-6f54f569f-n844p     backend    220m         56Mi            
+frontend-deployment-74d59d98d8-2zc5r   frontend   73m          7Mi             
+frontend-deployment-74d59d98d8-gcmcb   frontend   78m          8Mi             
+frontend-deployment-74d59d98d8-sggfz   frontend   73m          7Mi             
+postgres-deployment-8598bbc8dd-9bqfj   postgres   192m         72Mi            
+redis-deployment-588df8f94f-td58m      redis      17m          32Mi            
+NAME                                   READY   RESTARTS   PHASE     NODE
+backend-deployment-6f54f569f-hwqlq     false   0          Running   k8s-worker1
+backend-deployment-6f54f569f-jnk24     true    0          Running   k8s-worker1
+backend-deployment-6f54f569f-l6sjg     true    0          Running   k8s-worker3
+backend-deployment-6f54f569f-l8r7b     true    0          Running   k8s-worker3
+backend-deployment-6f54f569f-n844p     true    0          Running   k8s-worker2
+frontend-deployment-74d59d98d8-2zc5r   true    0          Running   k8s-worker1
+frontend-deployment-74d59d98d8-gcmcb   true    0          Running   k8s-worker2
+frontend-deployment-74d59d98d8-sggfz   true    0          Running   k8s-worker3
+postgres-deployment-8598bbc8dd-9bqfj   true    0          Running   k8s-worker3
+redis-deployment-588df8f94f-td58m      true    1          Running   k8s-worker2
+
+===== 2026-10-03T20:28:25+00:00 elapsed=40s =====
+NAME          REFERENCE                       TARGETS         MINPODS   MAXPODS   REPLICAS   AGE
+backend-hpa   Deployment/backend-deployment   cpu: 258%/60%   3         6         5          3h17m
+NAME          CPU(cores)   CPU%   MEMORY(bytes)   MEMORY%   
+k8s-worker1   561m         28%    1137Mi          29%       
+k8s-worker2   589m         29%    1262Mi          33%       
+k8s-worker3   730m         36%    1252Mi          32%       
+master        339m         16%    2089Mi          54%       
+POD                                    NAME       CPU(cores)   MEMORY(bytes)   
+backend-deployment-6f54f569f-jnk24     backend    301m         57Mi            
+backend-deployment-6f54f569f-l8r7b     backend    254m         58Mi            
+backend-deployment-6f54f569f-n844p     backend    220m         56Mi            
+frontend-deployment-74d59d98d8-2zc5r   frontend   73m          7Mi             
+frontend-deployment-74d59d98d8-gcmcb   frontend   78m          8Mi             
+frontend-deployment-74d59d98d8-sggfz   frontend   73m          7Mi             
+postgres-deployment-8598bbc8dd-9bqfj   postgres   192m         72Mi            
+redis-deployment-588df8f94f-td58m      redis      17m          32Mi            
+NAME                                   READY   RESTARTS   PHASE     NODE
+backend-deployment-6f54f569f-hwqlq     true    0          Running   k8s-worker1
+backend-deployment-6f54f569f-jnk24     true    0          Running   k8s-worker1
+backend-deployment-6f54f569f-l6sjg     true    0          Running   k8s-worker3
+backend-deployment-6f54f569f-l8r7b     true    0          Running   k8s-worker3
+backend-deployment-6f54f569f-n844p     true    0          Running   k8s-worker2
+frontend-deployment-74d59d98d8-2zc5r   true    0          Running   k8s-worker1
+frontend-deployment-74d59d98d8-gcmcb   true    0          Running   k8s-worker2
+frontend-deployment-74d59d98d8-sggfz   true    0          Running   k8s-worker3
+postgres-deployment-8598bbc8dd-9bqfj   true    0          Running   k8s-worker3
+redis-deployment-588df8f94f-td58m      true    1          Running   k8s-worker2
+
+===== 2026-10-03T20:28:30+00:00 elapsed=45s =====
+NAME          REFERENCE                       TARGETS         MINPODS   MAXPODS   REPLICAS   AGE
+backend-hpa   Deployment/backend-deployment   cpu: 258%/60%   3         6         5          3h17m
+NAME          CPU(cores)   CPU%   MEMORY(bytes)   MEMORY%   
+k8s-worker1   561m         28%    1137Mi          29%       
+k8s-worker2   589m         29%    1262Mi          33%       
+k8s-worker3   730m         36%    1252Mi          32%       
+master        339m         16%    2089Mi          54%       
+POD                                    NAME       CPU(cores)   MEMORY(bytes)   
+backend-deployment-6f54f569f-jnk24     backend    301m         57Mi            
+backend-deployment-6f54f569f-l8r7b     backend    254m         58Mi            
+backend-deployment-6f54f569f-n844p     backend    220m         56Mi            
+frontend-deployment-74d59d98d8-2zc5r   frontend   73m          7Mi             
+frontend-deployment-74d59d98d8-gcmcb   frontend   78m          8Mi             
+frontend-deployment-74d59d98d8-sggfz   frontend   73m          7Mi             
+postgres-deployment-8598bbc8dd-9bqfj   postgres   192m         72Mi            
+redis-deployment-588df8f94f-td58m      redis      17m          32Mi            
+NAME                                   READY   RESTARTS   PHASE     NODE
+backend-deployment-6f54f569f-hwqlq     true    0          Running   k8s-worker1
+backend-deployment-6f54f569f-jnk24     true    0          Running   k8s-worker1
+backend-deployment-6f54f569f-l6sjg     true    0          Running   k8s-worker3
+backend-deployment-6f54f569f-l8r7b     true    0          Running   k8s-worker3
+backend-deployment-6f54f569f-n844p     true    0          Running   k8s-worker2
+frontend-deployment-74d59d98d8-2zc5r   true    0          Running   k8s-worker1
+frontend-deployment-74d59d98d8-gcmcb   true    0          Running   k8s-worker2
+frontend-deployment-74d59d98d8-sggfz   true    0          Running   k8s-worker3
+postgres-deployment-8598bbc8dd-9bqfj   true    0          Running   k8s-worker3
+redis-deployment-588df8f94f-td58m      true    1          Running   k8s-worker2
+
+===== 2026-10-03T20:28:36+00:00 elapsed=50s =====
+NAME          REFERENCE                       TARGETS         MINPODS   MAXPODS   REPLICAS   AGE
+backend-hpa   Deployment/backend-deployment   cpu: 258%/60%   3         6         5          3h18m
+NAME          CPU(cores)   CPU%   MEMORY(bytes)   MEMORY%   
+k8s-worker1   803m         40%    1206Mi          31%       
+k8s-worker2   584m         29%    1263Mi          33%       
+k8s-worker3   986m         49%    1336Mi          35%       
+master        231m         11%    2090Mi          54%       
+POD                                    NAME       CPU(cores)   MEMORY(bytes)   
+backend-deployment-6f54f569f-hwqlq     backend    238m         70Mi            
+backend-deployment-6f54f569f-jnk24     backend    272m         57Mi            
+backend-deployment-6f54f569f-l6sjg     backend    253m         71Mi            
+backend-deployment-6f54f569f-l8r7b     backend    271m         58Mi            
+backend-deployment-6f54f569f-n844p     backend    296m         57Mi            
+frontend-deployment-74d59d98d8-2zc5r   frontend   92m          8Mi             
+frontend-deployment-74d59d98d8-gcmcb   frontend   78m          8Mi             
+frontend-deployment-74d59d98d8-sggfz   frontend   83m          8Mi             
+postgres-deployment-8598bbc8dd-9bqfj   postgres   221m         93Mi            
+redis-deployment-588df8f94f-td58m      redis      17m          33Mi            
+NAME                                   READY   RESTARTS   PHASE     NODE
+backend-deployment-6f54f569f-hwqlq     false   0          Running   k8s-worker1
+backend-deployment-6f54f569f-jnk24     true    0          Running   k8s-worker1
+backend-deployment-6f54f569f-l6sjg     true    0          Running   k8s-worker3
+backend-deployment-6f54f569f-l8r7b     true    0          Running   k8s-worker3
+backend-deployment-6f54f569f-n844p     true    0          Running   k8s-worker2
+frontend-deployment-74d59d98d8-2zc5r   true    0          Running   k8s-worker1
+frontend-deployment-74d59d98d8-gcmcb   true    0          Running   k8s-worker2
+frontend-deployment-74d59d98d8-sggfz   true    0          Running   k8s-worker3
+postgres-deployment-8598bbc8dd-9bqfj   true    0          Running   k8s-worker3
+redis-deployment-588df8f94f-td58m      true    1          Running   k8s-worker2
+
+===== 2026-10-03T20:28:41+00:00 elapsed=55s =====
+NAME          REFERENCE                       TARGETS         MINPODS   MAXPODS   REPLICAS   AGE
+backend-hpa   Deployment/backend-deployment   cpu: 279%/60%   3         6         5          3h18m
+NAME          CPU(cores)   CPU%   MEMORY(bytes)   MEMORY%   
+k8s-worker1   803m         40%    1206Mi          31%       
+k8s-worker2   584m         29%    1263Mi          33%       
+k8s-worker3   986m         49%    1336Mi          35%       
+master        231m         11%    2090Mi          54%       
+POD                                    NAME       CPU(cores)   MEMORY(bytes)   
+backend-deployment-6f54f569f-hwqlq     backend    238m         70Mi            
+backend-deployment-6f54f569f-jnk24     backend    272m         57Mi            
+backend-deployment-6f54f569f-l6sjg     backend    253m         71Mi            
+backend-deployment-6f54f569f-l8r7b     backend    271m         58Mi            
+backend-deployment-6f54f569f-n844p     backend    296m         57Mi            
+frontend-deployment-74d59d98d8-2zc5r   frontend   92m          8Mi             
+frontend-deployment-74d59d98d8-gcmcb   frontend   78m          8Mi             
+frontend-deployment-74d59d98d8-sggfz   frontend   83m          8Mi             
+postgres-deployment-8598bbc8dd-9bqfj   postgres   221m         93Mi            
+redis-deployment-588df8f94f-td58m      redis      17m          33Mi            
+NAME                                   READY   RESTARTS   PHASE     NODE
+backend-deployment-6f54f569f-hwqlq     true    0          Running   k8s-worker1
+backend-deployment-6f54f569f-jnk24     true    0          Running   k8s-worker1
+backend-deployment-6f54f569f-l6sjg     true    0          Running   k8s-worker3
+backend-deployment-6f54f569f-l8r7b     true    0          Running   k8s-worker3
+backend-deployment-6f54f569f-n844p     true    0          Running   k8s-worker2
+backend-deployment-6f54f569f-tq2pk     false   0          Running   k8s-worker2
+frontend-deployment-74d59d98d8-2zc5r   true    0          Running   k8s-worker1
+frontend-deployment-74d59d98d8-gcmcb   true    0          Running   k8s-worker2
+frontend-deployment-74d59d98d8-sggfz   true    0          Running   k8s-worker3
+postgres-deployment-8598bbc8dd-9bqfj   true    0          Running   k8s-worker3
+redis-deployment-588df8f94f-td58m      true    1          Running   k8s-worker2
+
+===== 2026-10-03T20:28:46+00:00 elapsed=60s =====
+NAME          REFERENCE                       TARGETS         MINPODS   MAXPODS   REPLICAS   AGE
+backend-hpa   Deployment/backend-deployment   cpu: 279%/60%   3         6         5          3h18m
+NAME          CPU(cores)   CPU%   MEMORY(bytes)   MEMORY%   
+k8s-worker1   803m         40%    1206Mi          31%       
+k8s-worker2   584m         29%    1263Mi          33%       
+k8s-worker3   986m         49%    1336Mi          35%       
+master        231m         11%    2090Mi          54%       
+POD                                    NAME       CPU(cores)   MEMORY(bytes)   
+backend-deployment-6f54f569f-hwqlq     backend    238m         70Mi            
+backend-deployment-6f54f569f-jnk24     backend    272m         57Mi            
+backend-deployment-6f54f569f-l6sjg     backend    253m         71Mi            
+backend-deployment-6f54f569f-l8r7b     backend    271m         58Mi            
+backend-deployment-6f54f569f-n844p     backend    296m         57Mi            
+frontend-deployment-74d59d98d8-2zc5r   frontend   92m          8Mi             
+frontend-deployment-74d59d98d8-gcmcb   frontend   78m          8Mi             
+frontend-deployment-74d59d98d8-sggfz   frontend   83m          8Mi             
+postgres-deployment-8598bbc8dd-9bqfj   postgres   221m         93Mi            
+redis-deployment-588df8f94f-td58m      redis      17m          33Mi            
+NAME                                   READY   RESTARTS   PHASE     NODE
+backend-deployment-6f54f569f-hwqlq     true    0          Running   k8s-worker1
+backend-deployment-6f54f569f-jnk24     true    0          Running   k8s-worker1
+backend-deployment-6f54f569f-l6sjg     true    0          Running   k8s-worker3
+backend-deployment-6f54f569f-l8r7b     true    0          Running   k8s-worker3
+backend-deployment-6f54f569f-n844p     true    0          Running   k8s-worker2
+backend-deployment-6f54f569f-tq2pk     true    0          Running   k8s-worker2
+frontend-deployment-74d59d98d8-2zc5r   true    0          Running   k8s-worker1
+frontend-deployment-74d59d98d8-gcmcb   true    0          Running   k8s-worker2
+frontend-deployment-74d59d98d8-sggfz   true    0          Running   k8s-worker3
+postgres-deployment-8598bbc8dd-9bqfj   true    0          Running   k8s-worker3
+redis-deployment-588df8f94f-td58m      true    1          Running   k8s-worker2
+
+===== 2026-10-03T20:28:52+00:00 elapsed=65s =====
+NAME          REFERENCE                       TARGETS         MINPODS   MAXPODS   REPLICAS   AGE
+backend-hpa   Deployment/backend-deployment   cpu: 279%/60%   3         6         5          3h18m
+NAME          CPU(cores)   CPU%   MEMORY(bytes)   MEMORY%   
+k8s-worker1   780m         39%    1196Mi          31%       
+k8s-worker2   751m         37%    1316Mi          34%       
+k8s-worker3   1079m        53%    1331Mi          34%       
+master        273m         13%    2088Mi          54%       
+POD                                    NAME       CPU(cores)   MEMORY(bytes)   
+backend-deployment-6f54f569f-hwqlq     backend    299m         71Mi            
+backend-deployment-6f54f569f-jnk24     backend    272m         57Mi            
+backend-deployment-6f54f569f-l6sjg     backend    300m         63Mi            
+backend-deployment-6f54f569f-l8r7b     backend    271m         58Mi            
+backend-deployment-6f54f569f-n844p     backend    273m         57Mi            
+frontend-deployment-74d59d98d8-2zc5r   frontend   101m         9Mi             
+frontend-deployment-74d59d98d8-gcmcb   frontend   109m         9Mi             
+frontend-deployment-74d59d98d8-sggfz   frontend   105m         9Mi             
+postgres-deployment-8598bbc8dd-9bqfj   postgres   257m         93Mi            
+redis-deployment-588df8f94f-td58m      redis      17m          32Mi            
+NAME                                   READY   RESTARTS   PHASE     NODE
+backend-deployment-6f54f569f-hwqlq     true    0          Running   k8s-worker1
+backend-deployment-6f54f569f-jnk24     true    0          Running   k8s-worker1
+backend-deployment-6f54f569f-l6sjg     false   0          Running   k8s-worker3
+backend-deployment-6f54f569f-l8r7b     true    0          Running   k8s-worker3
+backend-deployment-6f54f569f-n844p     true    0          Running   k8s-worker2
+backend-deployment-6f54f569f-tq2pk     true    0          Running   k8s-worker2
+frontend-deployment-74d59d98d8-2zc5r   true    0          Running   k8s-worker1
+frontend-deployment-74d59d98d8-gcmcb   true    0          Running   k8s-worker2
+frontend-deployment-74d59d98d8-sggfz   true    0          Running   k8s-worker3
+postgres-deployment-8598bbc8dd-9bqfj   true    0          Running   k8s-worker3
+redis-deployment-588df8f94f-td58m      true    1          Running   k8s-worker2
+
+===== 2026-10-03T20:28:57+00:00 elapsed=70s =====
+NAME          REFERENCE                       TARGETS         MINPODS   MAXPODS   REPLICAS   AGE
+backend-hpa   Deployment/backend-deployment   cpu: 272%/60%   3         6         6          3h18m
+NAME          CPU(cores)   CPU%   MEMORY(bytes)   MEMORY%   
+k8s-worker1   780m         39%    1196Mi          31%       
+k8s-worker2   751m         37%    1316Mi          34%       
+k8s-worker3   1079m        53%    1331Mi          34%       
+master        273m         13%    2088Mi          54%       
+POD                                    NAME       CPU(cores)   MEMORY(bytes)   
+backend-deployment-6f54f569f-hwqlq     backend    299m         71Mi            
+backend-deployment-6f54f569f-jnk24     backend    272m         57Mi            
+backend-deployment-6f54f569f-l6sjg     backend    300m         63Mi            
+backend-deployment-6f54f569f-l8r7b     backend    271m         58Mi            
+backend-deployment-6f54f569f-n844p     backend    273m         57Mi            
+frontend-deployment-74d59d98d8-2zc5r   frontend   101m         9Mi             
+frontend-deployment-74d59d98d8-gcmcb   frontend   109m         9Mi             
+frontend-deployment-74d59d98d8-sggfz   frontend   105m         9Mi             
+postgres-deployment-8598bbc8dd-9bqfj   postgres   257m         93Mi            
+redis-deployment-588df8f94f-td58m      redis      17m          32Mi            
+NAME                                   READY   RESTARTS   PHASE     NODE
+backend-deployment-6f54f569f-hwqlq     true    0          Running   k8s-worker1
+backend-deployment-6f54f569f-jnk24     true    0          Running   k8s-worker1
+backend-deployment-6f54f569f-l6sjg     true    0          Running   k8s-worker3
+backend-deployment-6f54f569f-l8r7b     true    0          Running   k8s-worker3
+backend-deployment-6f54f569f-n844p     true    0          Running   k8s-worker2
+backend-deployment-6f54f569f-tq2pk     true    0          Running   k8s-worker2
+frontend-deployment-74d59d98d8-2zc5r   true    0          Running   k8s-worker1
+frontend-deployment-74d59d98d8-gcmcb   true    0          Running   k8s-worker2
+frontend-deployment-74d59d98d8-sggfz   true    0          Running   k8s-worker3
+postgres-deployment-8598bbc8dd-9bqfj   true    0          Running   k8s-worker3
+redis-deployment-588df8f94f-td58m      true    1          Running   k8s-worker2
+
+===== 2026-10-03T20:29:02+00:00 elapsed=75s =====
+NAME          REFERENCE                       TARGETS         MINPODS   MAXPODS   REPLICAS   AGE
+backend-hpa   Deployment/backend-deployment   cpu: 272%/60%   3         6         6          3h18m
+NAME          CPU(cores)   CPU%   MEMORY(bytes)   MEMORY%   
+k8s-worker1   780m         39%    1196Mi          31%       
+k8s-worker2   751m         37%    1316Mi          34%       
+k8s-worker3   1079m        53%    1331Mi          34%       
+master        273m         13%    2088Mi          54%       
+POD                                    NAME       CPU(cores)   MEMORY(bytes)   
+backend-deployment-6f54f569f-hwqlq     backend    299m         71Mi            
+backend-deployment-6f54f569f-jnk24     backend    272m         57Mi            
+backend-deployment-6f54f569f-l6sjg     backend    300m         63Mi            
+backend-deployment-6f54f569f-l8r7b     backend    271m         58Mi            
+backend-deployment-6f54f569f-n844p     backend    273m         57Mi            
+frontend-deployment-74d59d98d8-2zc5r   frontend   101m         9Mi             
+frontend-deployment-74d59d98d8-gcmcb   frontend   109m         9Mi             
+frontend-deployment-74d59d98d8-sggfz   frontend   105m         9Mi             
+postgres-deployment-8598bbc8dd-9bqfj   postgres   257m         93Mi            
+redis-deployment-588df8f94f-td58m      redis      17m          32Mi            
+NAME                                   READY   RESTARTS   PHASE     NODE
+backend-deployment-6f54f569f-hwqlq     true    0          Running   k8s-worker1
+backend-deployment-6f54f569f-jnk24     true    0          Running   k8s-worker1
+backend-deployment-6f54f569f-l6sjg     true    0          Running   k8s-worker3
+backend-deployment-6f54f569f-l8r7b     true    0          Running   k8s-worker3
+backend-deployment-6f54f569f-n844p     true    0          Running   k8s-worker2
+backend-deployment-6f54f569f-tq2pk     false   0          Running   k8s-worker2
+frontend-deployment-74d59d98d8-2zc5r   true    0          Running   k8s-worker1
+frontend-deployment-74d59d98d8-gcmcb   true    0          Running   k8s-worker2
+frontend-deployment-74d59d98d8-sggfz   true    0          Running   k8s-worker3
+postgres-deployment-8598bbc8dd-9bqfj   true    0          Running   k8s-worker3
+redis-deployment-588df8f94f-td58m      true    1          Running   k8s-worker2
+
+===== 2026-10-03T20:29:08+00:00 elapsed=80s =====
+NAME          REFERENCE                       TARGETS         MINPODS   MAXPODS   REPLICAS   AGE
+backend-hpa   Deployment/backend-deployment   cpu: 272%/60%   3         6         6          3h18m
+NAME          CPU(cores)   CPU%   MEMORY(bytes)   MEMORY%   
+k8s-worker1   875m         43%    1196Mi          31%       
+k8s-worker2   894m         44%    1323Mi          34%       
+k8s-worker3   1129m        56%    1349Mi          35%       
+master        194m         9%     2090Mi          54%       
+POD                                    NAME       CPU(cores)   MEMORY(bytes)   
+backend-deployment-6f54f569f-hwqlq     backend    278m         60Mi            
+backend-deployment-6f54f569f-jnk24     backend    277m         58Mi            
+backend-deployment-6f54f569f-l6sjg     backend    301m         60Mi            
+backend-deployment-6f54f569f-l8r7b     backend    277m         58Mi            
+backend-deployment-6f54f569f-n844p     backend    264m         57Mi            
+backend-deployment-6f54f569f-tq2pk     backend    299m         60Mi            
+frontend-deployment-74d59d98d8-2zc5r   frontend   123m         10Mi            
+frontend-deployment-74d59d98d8-gcmcb   frontend   124m         10Mi            
+frontend-deployment-74d59d98d8-sggfz   frontend   125m         9Mi             
+postgres-deployment-8598bbc8dd-9bqfj   postgres   309m         115Mi           
+redis-deployment-588df8f94f-td58m      redis      14m          32Mi            
+NAME                                   READY   RESTARTS   PHASE     NODE
+backend-deployment-6f54f569f-hwqlq     true    0          Running   k8s-worker1
+backend-deployment-6f54f569f-jnk24     true    0          Running   k8s-worker1
+backend-deployment-6f54f569f-l6sjg     true    0          Running   k8s-worker3
+backend-deployment-6f54f569f-l8r7b     true    0          Running   k8s-worker3
+backend-deployment-6f54f569f-n844p     true    0          Running   k8s-worker2
+backend-deployment-6f54f569f-tq2pk     true    0          Running   k8s-worker2
+frontend-deployment-74d59d98d8-2zc5r   true    0          Running   k8s-worker1
+frontend-deployment-74d59d98d8-gcmcb   true    0          Running   k8s-worker2
+frontend-deployment-74d59d98d8-sggfz   true    0          Running   k8s-worker3
+postgres-deployment-8598bbc8dd-9bqfj   true    0          Running   k8s-worker3
+redis-deployment-588df8f94f-td58m      true    1          Running   k8s-worker2
+
+===== 2026-10-03T20:29:13+00:00 elapsed=85s =====
+NAME          REFERENCE                       TARGETS         MINPODS   MAXPODS   REPLICAS   AGE
+backend-hpa   Deployment/backend-deployment   cpu: 272%/60%   3         6         6          3h18m
+NAME          CPU(cores)   CPU%   MEMORY(bytes)   MEMORY%   
+k8s-worker1   875m         43%    1196Mi          31%       
+k8s-worker2   894m         44%    1323Mi          34%       
+k8s-worker3   1129m        56%    1349Mi          35%       
+master        194m         9%     2090Mi          54%       
+POD                                    NAME       CPU(cores)   MEMORY(bytes)   
+backend-deployment-6f54f569f-hwqlq     backend    278m         60Mi            
+backend-deployment-6f54f569f-jnk24     backend    277m         58Mi            
+backend-deployment-6f54f569f-l6sjg     backend    301m         60Mi            
+backend-deployment-6f54f569f-l8r7b     backend    277m         58Mi            
+backend-deployment-6f54f569f-n844p     backend    264m         57Mi            
+backend-deployment-6f54f569f-tq2pk     backend    299m         60Mi            
+frontend-deployment-74d59d98d8-2zc5r   frontend   123m         10Mi            
+frontend-deployment-74d59d98d8-gcmcb   frontend   124m         10Mi            
+frontend-deployment-74d59d98d8-sggfz   frontend   125m         9Mi             
+postgres-deployment-8598bbc8dd-9bqfj   postgres   309m         115Mi           
+redis-deployment-588df8f94f-td58m      redis      14m          32Mi            
+NAME                                   READY   RESTARTS   PHASE     NODE
+backend-deployment-6f54f569f-hwqlq     true    0          Running   k8s-worker1
+backend-deployment-6f54f569f-jnk24     true    0          Running   k8s-worker1
+backend-deployment-6f54f569f-l6sjg     true    0          Running   k8s-worker3
+backend-deployment-6f54f569f-l8r7b     true    0          Running   k8s-worker3
+backend-deployment-6f54f569f-n844p     true    0          Running   k8s-worker2
+backend-deployment-6f54f569f-tq2pk     true    0          Running   k8s-worker2
+frontend-deployment-74d59d98d8-2zc5r   true    0          Running   k8s-worker1
+frontend-deployment-74d59d98d8-gcmcb   true    0          Running   k8s-worker2
+frontend-deployment-74d59d98d8-sggfz   true    0          Running   k8s-worker3
+postgres-deployment-8598bbc8dd-9bqfj   true    0          Running   k8s-worker3
+redis-deployment-588df8f94f-td58m      true    1          Running   k8s-worker2
+
+===== 2026-10-03T20:29:18+00:00 elapsed=90s =====
+NAME          REFERENCE                       TARGETS         MINPODS   MAXPODS   REPLICAS   AGE
+backend-hpa   Deployment/backend-deployment   cpu: 272%/60%   3         6         6          3h18m
+NAME          CPU(cores)   CPU%   MEMORY(bytes)   MEMORY%   
+k8s-worker1   875m         43%    1196Mi          31%       
+k8s-worker2   894m         44%    1323Mi          34%       
+k8s-worker3   1129m        56%    1349Mi          35%       
+master        194m         9%     2090Mi          54%       
+POD                                    NAME       CPU(cores)   MEMORY(bytes)   
+backend-deployment-6f54f569f-hwqlq     backend    278m         60Mi            
+backend-deployment-6f54f569f-jnk24     backend    277m         58Mi            
+backend-deployment-6f54f569f-l6sjg     backend    301m         60Mi            
+backend-deployment-6f54f569f-l8r7b     backend    277m         58Mi            
+backend-deployment-6f54f569f-n844p     backend    264m         57Mi            
+backend-deployment-6f54f569f-tq2pk     backend    299m         60Mi            
+frontend-deployment-74d59d98d8-2zc5r   frontend   123m         10Mi            
+frontend-deployment-74d59d98d8-gcmcb   frontend   124m         10Mi            
+frontend-deployment-74d59d98d8-sggfz   frontend   125m         9Mi             
+postgres-deployment-8598bbc8dd-9bqfj   postgres   309m         115Mi           
+redis-deployment-588df8f94f-td58m      redis      14m          32Mi            
+NAME                                   READY   RESTARTS   PHASE     NODE
+backend-deployment-6f54f569f-hwqlq     true    0          Running   k8s-worker1
+backend-deployment-6f54f569f-jnk24     true    0          Running   k8s-worker1
+backend-deployment-6f54f569f-l6sjg     true    0          Running   k8s-worker3
+backend-deployment-6f54f569f-l8r7b     true    0          Running   k8s-worker3
+backend-deployment-6f54f569f-n844p     true    0          Running   k8s-worker2
+backend-deployment-6f54f569f-tq2pk     true    0          Running   k8s-worker2
+frontend-deployment-74d59d98d8-2zc5r   true    0          Running   k8s-worker1
+frontend-deployment-74d59d98d8-gcmcb   true    0          Running   k8s-worker2
+frontend-deployment-74d59d98d8-sggfz   true    0          Running   k8s-worker3
+postgres-deployment-8598bbc8dd-9bqfj   true    0          Running   k8s-worker3
+redis-deployment-588df8f94f-td58m      true    1          Running   k8s-worker2
+
+===== 2026-10-03T20:29:24+00:00 elapsed=95s =====
+NAME          REFERENCE                       TARGETS         MINPODS   MAXPODS   REPLICAS   AGE
+backend-hpa   Deployment/backend-deployment   cpu: 272%/60%   3         6         6          3h18m
+NAME          CPU(cores)   CPU%   MEMORY(bytes)   MEMORY%   
+k8s-worker1   901m         45%    1196Mi          31%       
+k8s-worker2   911m         45%    1324Mi          34%       
+k8s-worker3   1249m        62%    1353Mi          35%       
+master        200m         10%    2087Mi          54%       
+POD                                    NAME       CPU(cores)   MEMORY(bytes)   
+backend-deployment-6f54f569f-hwqlq     backend    299m         61Mi            
+backend-deployment-6f54f569f-jnk24     backend    283m         58Mi            
+backend-deployment-6f54f569f-l6sjg     backend    225m         61Mi            
+backend-deployment-6f54f569f-l8r7b     backend    286m         58Mi            
+backend-deployment-6f54f569f-n844p     backend    284m         57Mi            
+backend-deployment-6f54f569f-tq2pk     backend    271m         61Mi            
+frontend-deployment-74d59d98d8-2zc5r   frontend   144m         9Mi             
+frontend-deployment-74d59d98d8-gcmcb   frontend   148m         9Mi             
+frontend-deployment-74d59d98d8-sggfz   frontend   144m         8Mi             
+postgres-deployment-8598bbc8dd-9bqfj   postgres   352m         120Mi           
+redis-deployment-588df8f94f-td58m      redis      14m          32Mi            
+NAME                                   READY   RESTARTS   PHASE     NODE
+backend-deployment-6f54f569f-hwqlq     true    0          Running   k8s-worker1
+backend-deployment-6f54f569f-jnk24     true    0          Running   k8s-worker1
+backend-deployment-6f54f569f-l6sjg     true    0          Running   k8s-worker3
+backend-deployment-6f54f569f-l8r7b     true    0          Running   k8s-worker3
+backend-deployment-6f54f569f-n844p     true    0          Running   k8s-worker2
+backend-deployment-6f54f569f-tq2pk     true    0          Running   k8s-worker2
+frontend-deployment-74d59d98d8-2zc5r   true    0          Running   k8s-worker1
+frontend-deployment-74d59d98d8-gcmcb   true    0          Running   k8s-worker2
+frontend-deployment-74d59d98d8-sggfz   true    0          Running   k8s-worker3
+postgres-deployment-8598bbc8dd-9bqfj   true    0          Running   k8s-worker3
+redis-deployment-588df8f94f-td58m      true    1          Running   k8s-worker2
+
+===== 2026-10-03T20:29:29+00:00 elapsed=100s =====
+NAME          REFERENCE                       TARGETS         MINPODS   MAXPODS   REPLICAS   AGE
+backend-hpa   Deployment/backend-deployment   cpu: 288%/60%   3         6         6          3h18m
+NAME          CPU(cores)   CPU%   MEMORY(bytes)   MEMORY%   
+k8s-worker1   901m         45%    1196Mi          31%       
+k8s-worker2   911m         45%    1324Mi          34%       
+k8s-worker3   1249m        62%    1353Mi          35%       
+master        200m         10%    2087Mi          54%       
+POD                                    NAME       CPU(cores)   MEMORY(bytes)   
+backend-deployment-6f54f569f-hwqlq     backend    299m         61Mi            
+backend-deployment-6f54f569f-jnk24     backend    283m         58Mi            
+backend-deployment-6f54f569f-l6sjg     backend    225m         61Mi            
+backend-deployment-6f54f569f-l8r7b     backend    286m         58Mi            
+backend-deployment-6f54f569f-n844p     backend    284m         57Mi            
+backend-deployment-6f54f569f-tq2pk     backend    271m         61Mi            
+frontend-deployment-74d59d98d8-2zc5r   frontend   144m         9Mi             
+frontend-deployment-74d59d98d8-gcmcb   frontend   148m         9Mi             
+frontend-deployment-74d59d98d8-sggfz   frontend   144m         8Mi             
+postgres-deployment-8598bbc8dd-9bqfj   postgres   352m         120Mi           
+redis-deployment-588df8f94f-td58m      redis      14m          32Mi            
+NAME                                   READY   RESTARTS   PHASE     NODE
+backend-deployment-6f54f569f-hwqlq     true    0          Running   k8s-worker1
+backend-deployment-6f54f569f-jnk24     true    0          Running   k8s-worker1
+backend-deployment-6f54f569f-l6sjg     true    0          Running   k8s-worker3
+backend-deployment-6f54f569f-l8r7b     true    0          Running   k8s-worker3
+backend-deployment-6f54f569f-n844p     true    0          Running   k8s-worker2
+backend-deployment-6f54f569f-tq2pk     true    0          Running   k8s-worker2
+frontend-deployment-74d59d98d8-2zc5r   true    0          Running   k8s-worker1
+frontend-deployment-74d59d98d8-gcmcb   true    0          Running   k8s-worker2
+frontend-deployment-74d59d98d8-sggfz   true    0          Running   k8s-worker3
+postgres-deployment-8598bbc8dd-9bqfj   true    0          Running   k8s-worker3
+redis-deployment-588df8f94f-td58m      true    1          Running   k8s-worker2

@@ -15,6 +15,41 @@ Cette application remplace le backend echo-server et la page Nginx par defaut. E
 
 Le paiement et l'envoi de billets par e-mail ne sont pas implementes. Ce projet est une base d'apprentissage, pas une billetterie exploitable en production. Pour une mise en ligne, activer HTTPS (`COOKIE_SECURE=true`), utiliser des secrets robustes, des sauvegardes PostgreSQL, et une strategie de haute disponibilite pour Redis et PostgreSQL.
 
+## Acces stable et resilience
+
+Le host PC distribue le trafic via HAProxy sur `192.168.122.1:8080`, adresse stable de sa passerelle libvirt. Le navigateur sur le host utilise `http://192.168.122.1:8080`; l'URL est limitee au reseau des VM et n'est pas publiee sur le LAN. HAProxy sonde `/health` sur les NodePort `.11/.12/.13:30080` et retire automatiquement un worker indisponible.
+
+Installer/mettre a jour HAProxy sur Ubuntu depuis la racine du depot, apres installation du paquet `haproxy` :
+
+```bash
+sudo install -D -m 0644 ops/haproxy/reservation-app.cfg /etc/haproxy/haproxy.cfg
+sudo install -D -m 0644 ops/haproxy/haproxy.service.d/override.conf /etc/systemd/system/haproxy.service.d/override.conf
+sudo haproxy -c -f /etc/haproxy/haproxy.cfg
+sudo systemctl daemon-reload
+sudo systemctl enable --now haproxy
+sudo systemctl restart haproxy
+curl --fail http://192.168.122.1:8080/health
+```
+
+Frontend/backend ont trois replicas initiaux repartis entre workers; l'HPA du backend conserve un minimum de 3 et peut monter a 9. Le backend demande 100m CPU avec une limite a 400m; les timeouts des probes sont a 3s pour tolerer les pointes, sans redemarrer sur un retard bref. Seuls ces Deployments sans etat tolerent `not-ready`/`unreachable` pendant 30 secondes. PostgreSQL garde le delai Kubernetes par defaut: ne pas accelerer son eviction, car un worker partitionne qui revient pourrait avoir un processus PostgreSQL utilisant le meme PGDATA NFS.
+
+En cas de perte de PostgreSQL, si le backend a deja charge le catalogue, `/api/events` sert son dernier instantane en lecture seule et le frontend affiche un bandeau. Authentification, panier et commandes requierent toujours Redis/PostgreSQL; aucune reservation n'est confirmee depuis le cache.
+
+Charge et collecte les indicateurs depuis le host (Node.js 20+). Le script sauvegarde la sortie du generateur, HPA, CPU/memoire des noeuds/pods, redemarrages, evenements et logs dans `/tmp/reservation-load-*` :
+
+```bash
+bash scripts/run-load-test.sh
+# Reglages possibles: CONCURRENCY=300 DURATION_SECONDS=90 bash scripts/run-load-test.sh
+```
+
+Simulation prudente d'une perte frontend: le script cordonne worker1, supprime un seul pod frontend, attend son remplacement ailleurs, puis remet le worker schedulable. Il ne coupe pas une VM et ne touche jamais PostgreSQL :
+
+```bash
+bash scripts/simulate-frontend-failure.sh k8s-worker1
+```
+
+Le NodePort route sur chaque IP worker vers les endpoints du Service; HAProxy fournit ici l'IP stable cote host. Une adresse virtuelle annoncee sur le LAN necessiterait MetalLB ou un load balancer du LAN, non configure ici.
+
 ## Autoscaling du backend
 
 Le cluster doit fournir Metrics Server pour que l'API `metrics.k8s.io` soit disponible. Pour Kubernetes 1.31, installe une version Metrics Server 0.8.x, puis verifie `kubectl top nodes`. La compatibilite officielle indique que Metrics Server 0.8.x supporte Kubernetes 1.31+.
@@ -43,15 +78,7 @@ kubectl apply -f ~/reservation-app/k8s/backend-hpa.yaml
 kubectl get hpa -n app-reservation -w
 ```
 
-Pour generer un trafic de demonstration dans le cluster, demarre un Pod de charge puis surveille les replicas et leur CPU :
-
-```bash
-kubectl run loadgen -n app-reservation --image=busybox:1.36 --restart=Never --command -- sh -c 'while true; do wget -q -O /dev/null http://backend-service:8080/events & wget -q -O /dev/null http://backend-service:8080/events & wget -q -O /dev/null http://backend-service:8080/events & wget -q -O /dev/null http://backend-service:8080/events & wget -q -O /dev/null http://backend-service:8080/events & wget -q -O /dev/null http://backend-service:8080/events & wget -q -O /dev/null http://backend-service:8080/events & wget -q -O /dev/null http://backend-service:8080/events & wait; done'
-kubectl top pods -n app-reservation
-kubectl get deployment backend-deployment -n app-reservation -w
-```
-
-Arrete le generateur avec `kubectl delete pod loadgen -n app-reservation`. Le HPA devrait ensuite reduire progressivement les replicas, jusqu'au minimum de deux.
+Verifie `kubectl top pods -n app-reservation`, les replicas du Deployment et les evenements HPA. Apres l'arret du generateur, la fenetre de stabilisation de 120 secondes limite les reductions trop rapides.
 
 ## Construction des images sans Docker
 
@@ -78,15 +105,15 @@ Puis, sur le control plane :
 
 ```bash
 cd ~/reservation-app
-podman build --platform linux/amd64 -t localhost/reservation-backend:2.0 ./backend
-podman build --platform linux/amd64 -t localhost/reservation-frontend:2.0 ./frontend
-podman tag localhost/reservation-backend:2.0 192.168.122.10:5000/reservation-backend:2.0
-podman tag localhost/reservation-frontend:2.0 192.168.122.10:5000/reservation-frontend:2.0
-podman push --tls-verify=false 192.168.122.10:5000/reservation-backend:2.0
-podman push --tls-verify=false 192.168.122.10:5000/reservation-frontend:2.0
+podman build --platform linux/amd64 -t localhost/reservation-backend:2.2 ./backend
+podman build --platform linux/amd64 -t localhost/reservation-frontend:2.2 ./frontend
+podman tag localhost/reservation-backend:2.2 192.168.122.10:5000/reservation-backend:2.2
+podman tag localhost/reservation-frontend:2.2 192.168.122.10:5000/reservation-frontend:2.2
+podman push --tls-verify=false 192.168.122.10:5000/reservation-backend:2.2
+podman push --tls-verify=false 192.168.122.10:5000/reservation-frontend:2.2
 ```
 
-Apres avoir change les tags dans `k8s/backend.yaml` et `k8s/frontend.yaml`, applique le deploiement :
+Les manifests versionnes referencent les images `2.2`. Applique le deploiement :
 
 ```bash
 kubectl apply -f k8s/backend.yaml -f k8s/frontend.yaml
@@ -148,7 +175,7 @@ kubectl rollout status deployment/redis-deployment -n app-reservation
 kubectl get pods,svc -n app-reservation -o wide
 ```
 
-Ouvre ensuite `http://192.168.122.11:30080` (ou `.12:30080` / `.13:30080`). Le frontend contacte l'API via le Service Kubernetes `backend-service`; les navigateurs n'ont pas besoin d'acceder directement aux IP des Pods.
+Ouvre `http://192.168.122.1:8080`. Le frontend contacte l'API via le Service Kubernetes `backend-service`; les navigateurs n'accedent pas directement aux IP des Pods.
 
 ## Donnees PostgreSQL
 

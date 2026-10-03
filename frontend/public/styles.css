@@ -71,6 +71,7 @@ h1 { margin: 0; font-size: 58px; line-height: 1.07; font-weight: 700; }
 .filter:hover { border-color: #9caeb3; }
 .filter.active { border-color: var(--ink); background: var(--ink); color: #fff; }
 .status-line { min-height: 20px; margin: 0 0 12px; color: var(--muted); font-size: 12px; }
+.service-notice { margin: 0 0 16px; padding: 11px 14px; border-left: 3px solid #b86b26; background: #fff1dc; color: #663e1a; font-size: 12px; line-height: 1.5; }
 .event-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
 .event-card { --tone: #b7d9d3; --tone-dark: #1f615f; min-width: 0; padding: 21px 22px 18px; border: 1px solid var(--line); border-top: 3px solid var(--tone-dark); border-radius: 4px; background: #fff; }
 .event-card.theme-1 { --tone: #efc990; --tone-dark: #a9622c; }

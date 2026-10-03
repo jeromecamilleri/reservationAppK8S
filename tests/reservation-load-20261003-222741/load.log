@@ -1,0 +1,22 @@
+Charge GET http://192.168.122.1:8080/api/events: 500 clients pendant 100s
+5s | 2358 OK, 0 erreurs / 5s | p95 1422ms | en vol 500
+10s | 2486 OK, 0 erreurs / 5s | p95 1498ms | en vol 500
+15s | 3202 OK, 0 erreurs / 5s | p95 1266ms | en vol 500
+20s | 1849 OK, 0 erreurs / 5s | p95 2202ms | en vol 500
+25s | 1650 OK, 0 erreurs / 5s | p95 2492ms | en vol 500
+30s | 2318 OK, 0 erreurs / 5s | p95 1581ms | en vol 500
+35s | 1904 OK, 0 erreurs / 5s | p95 2143ms | en vol 500
+40s | 3570 OK, 0 erreurs / 5s | p95 1114ms | en vol 500
+45s | 3898 OK, 0 erreurs / 5s | p95 1538ms | en vol 500
+50s | 3661 OK, 0 erreurs / 5s | p95 3197ms | en vol 500
+55s | 3658 OK, 0 erreurs / 5s | p95 3207ms | en vol 500
+60s | 4123 OK, 0 erreurs / 5s | p95 1784ms | en vol 500
+65s | 4332 OK, 0 erreurs / 5s | p95 2002ms | en vol 500
+70s | 5139 OK, 0 erreurs / 5s | p95 1351ms | en vol 500
+75s | 4877 OK, 0 erreurs / 5s | p95 2318ms | en vol 500
+80s | 5495 OK, 0 erreurs / 5s | p95 2319ms | en vol 500
+85s | 5792 OK, 0 erreurs / 5s | p95 1160ms | en vol 500
+90s | 5702 OK, 0 erreurs / 5s | p95 1192ms | en vol 500
+95s | 5660 OK, 0 erreurs / 5s | p95 1773ms | en vol 500
+100s | 5193 OK, 0 erreurs / 5s | p95 2190ms | en vol 500
+Terminé: 77367 requêtes en 102.2s, 77367 OK, 0 erreurs, 757.3 req/s, latence moyenne 651ms, p95 2181ms.
