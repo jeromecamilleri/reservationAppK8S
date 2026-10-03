@@ -1,0 +1,38 @@
+>il faudrait ajouter un phase de login pour un panier reel pour l'instant pas de connexion et l'utilisation de redis que proposes-tu sur ce sujet  
+
+Je vais bâtir la proposition autour du code déjà en place : les réservations et le stock sont actuellement gérés dans PostgreSQL, tandis que Redis n’intervient pas encore. Pour un panier et une connexion fiables, le point important sera de décider quelles données restent temporaires dans Redis et lesquelles doivent rester durables dans PostgreSQL.
+```
+• Browsing the web
+• Searched the web for site:cheatsheetseries.owasp.org Authentication Cheat Sheet Password Storage Argon2id Session Management HttpOnly SameSite CSRF, site:redis.io/docs/latest/develop/data…
+```
+Je te propose de séparer clairement **session**, **panier** et **réservation**. C’est particulièrement utile maintenant que le backend tourne en plusieurs Pods : n’importe quel Pod doit pouvoir retrouver l’utilisateur et son panier.
+
+```
+This Mermaid diagram uses features the terminal renderer doesn't support.
+flowchart LR
+  B[Navigateur] -->|cookie de session| F[Frontend / Nginx]
+  F --> A[API backend, replicas HPA]
+  A -->|sessions et paniers temporaires| R[(Redis)]
+  A -->|comptes, stock, commandes| P[(PostgreSQL)]
+```
+
+**1\. Comptes et connexion**
+
+- Ajouter une table `users` dans PostgreSQL : e-mail normalisé et unique, hash du mot de passe, dates de création.
+- Hasher les mots de passe avec **Argon2id**, jamais les stocker en clair. [OWASP](<https://cheatsheetseries.owasp.org/cheatsheets/Password_Storage_Cheat_Sheet.html>)
+- Après connexion, créer une session côté serveur dans Redis. Le navigateur reçoit seulement un identifiant opaque dans un cookie `HttpOnly`, `SameSite`; `Secure` dès que le site passe en HTTPS. Ajouter une protection CSRF pour les actions qui modifient des données. Redis documente ce modèle de sessions avec expiration TTL. [Redis](<https://redis.io/docs/latest/develop/use-cases/session-store/>), [OWASP](<https://cheatsheetseries.owasp.org/cheatsheets/Session_Management_Cheat_Sheet.html>)
+- Éviter de placer les jetons d’authentification dans `localStorage`. Et comme ton accès actuel est en HTTP via NodePort, n’utilise pas de vrais mots de passe tant que tu n’as pas configuré HTTPS.
+
+**2\. Panier temporaire dans Redis**
+
+Stocker un panier par utilisateur, par exemple `cart:<userId>`, avec les identifiants d’événements et les quantités, et une expiration après 24 heures. Ajouter un article au panier **ne réserve pas encore les places**. Le prix et le stock affichés par le navigateur ne sont jamais considérés comme faisant autorité.
+
+**3\. Validation et réservation dans PostgreSQL**
+
+Au passage en caisse, le backend relit les prix et le stock depuis PostgreSQL et crée la commande dans une transaction. Pour simuler un vrai parcours, on peut créer une réservation `pending` qui bloque les places pendant 10 minutes, puis la confirmer avec un paiement simulé. L’expiration des réservations temporaires doit être enregistrée dans PostgreSQL et traitée côté serveur : Redis peut expirer le panier, mais ne doit pas être la seule source de vérité du stock.
+
+**4\. Côté Kubernetes**
+
+Redis est actuellement un seul Pod sans volume. Une panne ou un redémarrage peut donc faire perdre sessions et paniers : au minimum, les utilisateurs seront déconnectés. On pourra ensuite configurer l’authentification Redis, ses sondes et limites de ressources. Un PVC/AOF peut aider à conserver son état, mais ne remplace pas la sauvegarde PostgreSQL et ne rend pas Redis hautement disponible.
+
+Je partirais sur cette première version : **inscription / connexion / déconnexion, sessions Redis avec TTL, panier Redis avec TTL, puis validation transactionnelle dans PostgreSQL**. Ça donne un parcours réaliste sans confier à Redis les réservations confirmées.

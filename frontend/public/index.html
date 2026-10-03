@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#101e2b">
+  <title>Billetterie | Sortir</title>
+  <link rel="stylesheet" href="/styles.css">
+  <script src="/app.js" defer></script>
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="#accueil" aria-label="Sortir, accueil"><span class="brand-mark">S</span><span>sortir<span class="brand-dot">.</span></span></a>
+    <nav aria-label="Navigation principale">
+      <a href="#evenements">Événements</a>
+      <a href="#mes-reservations">Mes réservations</a>
+    </nav>
+    <a class="header-link" href="#evenements">Trouver une sortie <span aria-hidden="true">↗</span></a>
+  </header>
+
+  <main id="accueil">
+    <section class="intro" aria-labelledby="page-title">
+      <div class="intro-copy">
+        <p class="eyebrow"><span class="live-dot"></span> Vos prochaines sorties commencent ici</p>
+        <h1 id="page-title">Faites de la place<br>aux bons moments.</h1>
+        <p class="intro-text">Concerts, sport, théâtre : trouvez votre prochain rendez-vous et réservez en quelques instants.</p>
+        <a class="primary-link" href="#evenements">Explorer les événements <span aria-hidden="true">↓</span></a>
+      </div>
+      <div class="intro-art" aria-hidden="true">
+        <div class="art-ticket"><span class="art-label">PROCHAINEMENT</span><span class="art-title">Un soir<br>qui compte.</span><span class="art-rule"></span><span class="art-foot">MUSIQUE · SPORT · CULTURE</span><span class="art-stamp">S.</span></div>
+        <span class="art-ring ring-one"></span><span class="art-ring ring-two"></span>
+        <span class="art-spark">✳</span>
+      </div>
+    </section>
+
+    <section class="events-section" id="evenements" aria-labelledby="events-title">
+      <div class="section-head">
+        <div><p class="eyebrow">À l'affiche</p><h2 id="events-title">Les prochains rendez-vous</h2></div>
+        <label class="search-box"><span class="sr-only">Rechercher un événement ou une ville</span><span aria-hidden="true">⌕</span><input id="search" type="search" placeholder="Événement, ville…" autocomplete="off"></label>
+      </div>
+      <div class="filters" role="group" aria-label="Filtrer par catégorie">
+        <button class="filter active" type="button" data-category="all" aria-pressed="true">Tout voir</button>
+        <button class="filter" type="button" data-category="Musique" aria-pressed="false">Musique</button>
+        <button class="filter" type="button" data-category="Sport" aria-pressed="false">Sport</button>
+        <button class="filter" type="button" data-category="Théâtre" aria-pressed="false">Théâtre</button>
+        <button class="filter" type="button" data-category="Festival" aria-pressed="false">Festival</button>
+      </div>
+      <p class="status-line" id="event-status" role="status">Chargement des événements…</p>
+      <div class="event-grid" id="event-list"></div>
+    </section>
+
+    <section class="manage-section" id="mes-reservations" aria-labelledby="manage-title">
+      <div class="manage-copy"><p class="eyebrow">Votre espace</p><h2 id="manage-title">Retrouvez votre réservation.</h2><p>Munissez-vous de votre référence et de l'adresse e-mail utilisée lors de la réservation.</p></div>
+      <form class="lookup-form" id="lookup-form">
+        <label>Référence<input name="code" required minlength="10" maxlength="10" placeholder="Ex. 4F8A2C19D3" autocomplete="off"></label>
+        <label>Adresse e-mail<input name="email" type="email" required placeholder="vous@exemple.fr" autocomplete="email"></label>
+        <button class="button button-dark" type="submit">Retrouver</button>
+        <p class="form-message" id="lookup-message" role="status"></p>
+      </form>
+      <div class="reservation-result" id="reservation-result" aria-live="polite"></div>
+    </section>
+  </main>
+
+  <footer><a class="brand footer-brand" href="#accueil"><span class="brand-mark">S</span><span>sortir<span class="brand-dot">.</span></span></a><span>Les bons moments, en bonne compagnie.</span><span>Billetterie de démonstration</span></footer>
+
+  <dialog id="booking-dialog" aria-labelledby="booking-title">
+    <form class="booking-form" id="booking-form">
+      <button class="dialog-close" type="button" id="close-dialog" aria-label="Fermer">×</button>
+      <p class="eyebrow">Réservation</p>
+      <h2 id="booking-title">Choisissez vos places</h2>
+      <p class="selected-event" id="selected-event"></p>
+      <input type="hidden" name="eventId">
+      <label>Nom complet<input name="name" required minlength="2" maxlength="100" autocomplete="name" placeholder="Camille Dupont"></label>
+      <label>Adresse e-mail<input name="email" type="email" required autocomplete="email" placeholder="vous@exemple.fr"></label>
+      <label>Nombre de places<select name="seats" required><option value="1">1 place</option><option value="2">2 places</option><option value="3">3 places</option><option value="4">4 places</option><option value="5">5 places</option><option value="6">6 places</option><option value="7">7 places</option><option value="8">8 places</option></select></label>
+      <p class="form-message" id="booking-message" role="status"></p>
+      <button class="button button-accent" type="submit">Confirmer la réservation</button>
+      <p class="fine-print">Le paiement n'est pas activé dans cette démonstration.</p>
+    </form>
+  </dialog>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+</body>
+</html>
