@@ -124,7 +124,11 @@ async function loadOrder(code, userId) {
 }
 
 async function initializeDatabase() {
-  await pool.query(`
+  const client = await pool.connect();
+  try {
+    await client.query('BEGIN');
+    await client.query('SELECT pg_advisory_xact_lock(73910244)');
+    await client.query(`
     CREATE TABLE IF NOT EXISTS events (
       id TEXT PRIMARY KEY,
       title TEXT NOT NULL,
@@ -179,14 +183,21 @@ async function initializeDatabase() {
       unit_price_cents INTEGER NOT NULL CHECK (unit_price_cents >= 0),
       UNIQUE (order_id, event_id)
     );
-  `);
+    `);
 
-  for (const event of initialEvents) {
-    await pool.query(
-      `INSERT INTO events (id, title, category, venue, city, starts_at, price_cents, total_seats, available_seats, description)
-       VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$8,$9) ON CONFLICT (id) DO NOTHING`,
-      event,
-    );
+    for (const event of initialEvents) {
+      await client.query(
+        `INSERT INTO events (id, title, category, venue, city, starts_at, price_cents, total_seats, available_seats, description)
+         VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$8,$9) ON CONFLICT (id) DO NOTHING`,
+        event,
+      );
+    }
+    await client.query('COMMIT');
+  } catch (error) {
+    await client.query('ROLLBACK').catch(() => {});
+    throw error;
+  } finally {
+    client.release();
   }
 }
 
@@ -399,7 +410,7 @@ app.post('/checkout', requireUser, async (req, res, next) => {
     for (let attempt = 0; attempt < 3; attempt += 1) {
       const code = crypto.randomBytes(6).toString('hex').toUpperCase();
       const inserted = await client.query(
-        `INSERT INTO orders (code, user_id, checkout_key, total_cents)
+      `INSERT INTO orders (code, user_id, checkout_key, total_cents)
          VALUES ($1,$2,$3,$4) ON CONFLICT (code) DO NOTHING RETURNING id, code`,
         [code, user.id, checkoutKey, totalCents],
       );

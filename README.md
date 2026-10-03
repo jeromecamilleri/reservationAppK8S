@@ -5,13 +5,15 @@ Cette application remplace le backend echo-server et la page Nginx par defaut. E
 ## Fonctions
 
 - Catalogue d'evenements avec filtre par categorie et recherche par ville ou nom.
-- Reservation de 1 a 8 places, reference de confirmation et consultation par reference + e-mail.
-- Annulation avec restitution des places.
-- PostgreSQL cree les tables et les evenements de demonstration au demarrage de l'API.
-- Les places sont decrementees dans une transaction PostgreSQL; deux requetes concurrentes ne peuvent pas confirmer les dernieres places en trop.
-- Les sondes Kubernetes distinguent processus actif et connexion prete a la base.
+- Inscription, connexion et deconnexion; mots de passe hashes avec Argon2id, sessions Redis et cookie HTTP-only.
+- Jeton CSRF requis sur les mutations; limitation des tentatives de connexion et d'inscription.
+- Panier par compte stocke dans Redis avec expiration de 24 h. Session expire apres 30 minutes d'inactivite.
+- Validation de commande et decrementation atomique du stock dans PostgreSQL; Redis ne contient jamais les commandes confirmees.
+- Historique et annulation des commandes par leur proprietaire, avec restitution transactionnelle des places.
+- Les donnees du catalogue, comptes, commandes et stock sont geres dans PostgreSQL. Redis sert aux sessions et paniers temporaires.
+- Les sondes Kubernetes distinguent processus actif et connexions pretes aux dependances.
 
-Le paiement, la connexion utilisateur et l'envoi de billets par e-mail ne sont pas implementes. Ce projet est une base d'apprentissage, pas une billetterie exploitable en production.
+Le paiement et l'envoi de billets par e-mail ne sont pas implementes. Ce projet est une base d'apprentissage, pas une billetterie exploitable en production. Pour une mise en ligne, activer HTTPS (`COOKIE_SECURE=true`), utiliser des secrets robustes, des sauvegardes PostgreSQL, et une strategie de haute disponibilite pour Redis et PostgreSQL.
 
 ## Autoscaling du backend
 
@@ -63,18 +65,18 @@ sudo apt install podman
 Depuis le dossier qui contient `reservation-app`, construis les images. Podman lit les Dockerfiles sans Docker Engine :
 
 ```bash
-podman build --platform linux/amd64 -t localhost/reservation-backend:1.0 ./reservation-app/backend
-podman build --platform linux/amd64 -t localhost/reservation-frontend:1.0 ./reservation-app/frontend
-podman save --format docker-archive -o /tmp/reservation-backend-v1.tar localhost/reservation-backend:1.0
-podman save --format docker-archive -o /tmp/reservation-frontend-v1.tar localhost/reservation-frontend:1.0
+podman build --platform linux/amd64 -t localhost/reservation-backend:2.0 ./reservation-app/backend
+podman build --platform linux/amd64 -t localhost/reservation-frontend:2.0 ./reservation-app/frontend
+podman save --format docker-archive -o /tmp/reservation-backend-v2.tar localhost/reservation-backend:2.0
+podman save --format docker-archive -o /tmp/reservation-frontend-v2.tar localhost/reservation-frontend:2.0
 ```
 
 Transfere les deux archives sur chaque worker et importe-les dans le namespace `k8s.io` de containerd. Cela n'installe aucun moteur Docker et ne change pas le runtime Kubernetes :
 
 ```bash
 for node in 192.168.122.11 192.168.122.12 192.168.122.13; do
-  scp /tmp/reservation-backend-v1.tar /tmp/reservation-frontend-v1.tar camillej@$node:/tmp/
-  ssh -t camillej@$node 'sudo ctr -n k8s.io images import /tmp/reservation-backend-v1.tar && sudo ctr -n k8s.io images import /tmp/reservation-frontend-v1.tar && sudo ctr -n k8s.io images list | grep reservation'
+  scp /tmp/reservation-backend-v2.tar /tmp/reservation-frontend-v2.tar camillej@$node:/tmp/
+  ssh -t camillej@$node 'sudo ctr -n k8s.io images import /tmp/reservation-backend-v2.tar && sudo ctr -n k8s.io images import /tmp/reservation-frontend-v2.tar && sudo ctr -n k8s.io images list | grep reservation'
 done
 ```
 
@@ -88,16 +90,27 @@ Pour les reconstructions suivantes, incrémente le tag dans les commandes et dan
 
 ## Deploiement
 
-Le Secret ci-dessous reprend les identifiants de ton manifeste PostgreSQL actuel (`reservation_db`, utilisateur `admin`, mot de passe `admin123`). Il s'agit d'identifiants de formation; change-les si tu exposes ce cluster au-dela de ton reseau local et aligne les valeurs avec PostgreSQL.
+Le mot de passe PostgreSQL existant reste dans ton Secret `reservation-db-credentials`. Cree un Secret distinct pour Redis et la signature des sessions. La commande genere des valeurs aleatoires; conserver le Secret dans Kubernetes, pas dans Git. Le remplacer invalidera les sessions et paniers actuellement stockes dans Redis.
 
-Depuis `~/reservation-app` sur le control plane :
+Depuis `~/reservation-app` sur le control plane (une premiere fois) :
 
 ```bash
-kubectl apply -f k8s/database-secret.yaml
+kubectl get secret reservation-app-secrets -n app-reservation >/dev/null 2>&1 || kubectl create secret generic reservation-app-secrets -n app-reservation \
+  --from-literal=redis-password="$(openssl rand -hex 24)" \
+  --from-literal=session-secret="$(openssl rand -hex 32)"
+```
+
+Pour appliquer sans erreur si le Secret existe deja, ne regenere pas les valeurs a l'aveugle. Pour mettre a jour ses valeurs, faire une sauvegarde des paniers a zero incident acceptable (les paniers sont temporaires), puis recreer la ressource via `kubectl create ... --dry-run=client -o yaml | kubectl apply -f -`.
+
+Deploie ensuite Redis, puis les services applicatifs :
+
+```bash
+kubectl apply -f k8s/redis.yaml
 kubectl apply -f k8s/backend.yaml
 kubectl apply -f k8s/frontend.yaml
 kubectl rollout status deployment/backend-deployment -n app-reservation
 kubectl rollout status deployment/frontend-deployment -n app-reservation
+kubectl rollout status deployment/redis-deployment -n app-reservation
 kubectl get pods,svc -n app-reservation -o wide
 ```
 
@@ -111,6 +124,6 @@ Les tables `events` et `reservations` sont creees par l'API. Le manifeste Postgr
 kubectl get storageclass
 ```
 
-Le Redis existant n'est pas utilise dans cette premiere version. La reservation des places s'appuie sur PostgreSQL afin que le stock reste coherent entre les replicas du backend.
+Redis est un Pod unique sans stockage persistant: une panne peut effacer les sessions et paniers, ce qui est acceptable pour ces donnees temporaires. Les commandes confirmees et le stock sont exclusivement dans PostgreSQL. Ce manifeste Redis n'active pas la haute disponibilite; Redis Sentinel/Cluster et une strategie de persistance peuvent etre etudies ensuite.
 
 Un PVC seul ne stocke rien tant qu'aucune `StorageClass` ou aucun `PersistentVolume` ne peut le fournir. Pour un premier exercice, un provisioner local (par exemple local-path) conservera les fichiers lors du remplacement du Pod, mais le volume restera lie a un noeud : ce n'est pas une protection contre la panne de ce worker. Avant de monter un volume sur la base deja utilisee, faire un `pg_dump` et planifier la migration; un volume neuf demarre une base vide. Une vraie tolerance a la panne d'un worker demande du stockage replique (par exemple Longhorn) ou une base externe, ainsi que des sauvegardes testees.

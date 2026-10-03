@@ -13,6 +13,7 @@
 }
 
 * { box-sizing: border-box; }
+[hidden] { display: none !important; }
 html { scroll-behavior: smooth; }
 body { margin: 0; background: var(--paper); color: var(--ink); }
 button, input, select { font: inherit; }
@@ -29,6 +30,10 @@ a { color: inherit; text-decoration: none; }
 .topbar nav a { color: #53616c; }
 .topbar nav a:hover, .header-link:hover { color: var(--coral); }
 .header-link { display: inline-flex; gap: 10px; align-items: center; }
+.header-actions { display: flex; align-items: center; gap: 12px; }
+.account-button { min-height: 38px; padding: 0 13px; border: 1px solid var(--ink); border-radius: 3px; background: var(--ink); color: white; cursor: pointer; font-size: 12px; font-weight: 700; }
+.icon-button { position: relative; width: 40px; height: 40px; border: 1px solid var(--line); border-radius: 3px; background: white; color: var(--ink); cursor: pointer; font-size: 21px; }
+.icon-button span { position: absolute; top: -6px; right: -6px; min-width: 17px; height: 17px; padding: 0 4px; border-radius: 9px; background: var(--coral); color: white; font-size: 10px; line-height: 17px; }
 
 .intro { min-height: 468px; display: grid; grid-template-columns: 1.04fr .96fr; align-items: center; padding: 48px max(8vw, 24px) 62px; background: #132633; color: #fff; overflow: hidden; }
 .intro-copy { max-width: 610px; position: relative; z-index: 1; }
@@ -86,7 +91,7 @@ h1 { margin: 0; font-size: 58px; line-height: 1.07; font-weight: 700; }
 .reserve-button:hover:not(:disabled) { background: var(--teal); border-color: var(--teal); }
 .reserve-button:disabled { border-color: #c9d1d2; background: #e8ebeb; color: #69767c; cursor: not-allowed; }
 
-.manage-section { display: grid; grid-template-columns: 1fr 1fr; gap: 26px 60px; padding: 54px max(8vw, 24px) 62px; background: #e8efec; }
+.manage-section { display: grid; grid-template-columns: minmax(240px, .8fr) minmax(0, 1.2fr); gap: 26px 60px; padding: 54px max(8vw, 24px) 62px; background: #e8efec; }
 .manage-copy { align-self: center; max-width: 470px; }
 .manage-copy p:last-child { margin: 12px 0 0; color: #52636a; font-size: 13px; line-height: 1.7; }
 .lookup-form { display: grid; grid-template-columns: 1fr 1fr; align-content: center; gap: 12px; }
@@ -100,6 +105,7 @@ h1 { margin: 0; font-size: 58px; line-height: 1.07; font-weight: 700; }
 .button:disabled { opacity: .65; cursor: wait; }
 .form-message { grid-column: 1 / -1; min-height: 16px; margin: 0; color: #a14434; font-size: 11px; }
 .reservation-result { grid-column: 1 / -1; }
+.orders-panel { display: grid; gap: 12px; }
 .reservation-ticket { max-width: 680px; padding: 20px; border-left: 3px solid var(--teal); background: #fff; }
 .reservation-ticket.cancelled { border-color: #849194; opacity: .8; }
 .reservation-ticket .eyebrow { margin-bottom: 7px; }
@@ -110,14 +116,27 @@ h1 { margin: 0; font-size: 58px; line-height: 1.07; font-weight: 700; }
 
 footer { min-height: 80px; padding: 18px max(5vw, 24px); display: flex; align-items: center; justify-content: space-between; gap: 16px; background: #132633; color: #cad3d5; font-size: 10px; }
 .footer-brand { color: #fff; font-size: 17px; }.footer-brand .brand-mark { width: 25px; height: 25px; font-size: 13px; }
-dialog { width: min(440px, calc(100vw - 28px)); max-height: min(90vh, 760px); padding: 0; border: 0; border-radius: 5px; box-shadow: 0 18px 70px #0b1a2780; }
+dialog { width: min(480px, calc(100vw - 28px)); max-height: min(90vh, 760px); padding: 0; border: 0; border-radius: 5px; box-shadow: 0 18px 70px #0b1a2780; overflow-y: auto; }
 dialog::backdrop { background: #10232caa; }
-.booking-form { position: relative; display: grid; gap: 14px; padding: 33px; }
-.booking-form .eyebrow { margin: 0; }
-.booking-form h2 { margin: -7px 0 0; font-size: 25px; }
-.selected-event { margin: -7px 0 4px; color: #59686e; font-size: 12px; }
-.booking-form label { gap: 6px; }
-.booking-form .form-message { margin-top: -6px; }
+.dialog-form { position: relative; display: grid; gap: 14px; padding: 33px; }
+.dialog-form .eyebrow { margin: 0; }
+.dialog-form h2 { margin: -7px 0 0; font-size: 25px; }
+.dialog-form label { display: grid; gap: 6px; color: #334750; font-size: 11px; font-weight: 700; }
+.dialog-form input, .dialog-form select { min-width: 0; height: 41px; padding: 0 11px; border: 1px solid #cbd6d5; border-radius: 3px; outline: none; background: #fff; color: var(--ink); font-size: 12px; }
+.dialog-form input:focus, .dialog-form select:focus { border-color: var(--teal); box-shadow: 0 0 0 2px #137b781c; }
+.auth-tabs { display: grid; grid-template-columns: 1fr 1fr; border-bottom: 1px solid var(--line); }
+.auth-tab { padding: 10px 4px; border: 0; border-bottom: 2px solid transparent; background: transparent; color: var(--muted); cursor: pointer; font-size: 12px; font-weight: 700; }
+.auth-tab.active { border-color: var(--teal); color: var(--teal); }
+.dialog-form .form-message { min-height: 16px; margin: -5px 0; }
+.cart-items { display: grid; gap: 12px; }
+.cart-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 12px 0; border-bottom: 1px solid var(--line); }
+.cart-row > div:first-child { display: grid; gap: 4px; min-width: 0; }
+.cart-row strong { font-size: 12px; }
+.cart-row span { color: var(--muted); font-size: 10px; }
+.cart-actions { display: flex; align-items: center; gap: 10px; }
+.cart-actions select { width: 58px; height: 34px; }
+.cart-actions .text-button { margin: 0; }
+.cart-total { display: flex; justify-content: space-between; padding-top: 4px; font-size: 14px; }
 .fine-print { margin: -4px 0 0; color: var(--muted); font-size: 10px; text-align: center; }
 .dialog-close { position: absolute; top: 11px; right: 13px; width: 32px; height: 32px; border: 0; border-radius: 50%; background: transparent; color: #56656d; cursor: pointer; font-size: 25px; line-height: 1; }
 .dialog-close:hover { background: #eef2f1; }
@@ -131,6 +150,9 @@ dialog::backdrop { background: #10232caa; }
   .topbar nav { gap: 15px; margin-left: 0; }
   .topbar nav a { font-size: 11px; }
   .header-link { display: none; }
+  .header-actions { gap: 7px; }
+  .account-button { min-height: 35px; padding: 0 9px; font-size: 11px; }
+  .icon-button { width: 35px; height: 35px; }
   .intro { grid-template-columns: 1fr; min-height: unset; padding: 55px 24px 28px; }
   h1 { font-size: 46px; }
   .intro-text { max-width: 500px; }
@@ -158,5 +180,5 @@ dialog::backdrop { background: #10232caa; }
   h1 { font-size: 41px; }
   .section-head h2, .manage-copy h2 { font-size: 25px; }
   .event-card { padding: 18px 16px; }
-  .booking-form { padding: 28px 22px; }
+  .dialog-form { padding: 28px 22px; }
 }

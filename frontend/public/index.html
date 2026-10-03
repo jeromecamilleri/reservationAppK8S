@@ -13,9 +13,12 @@
     <a class="brand" href="#accueil" aria-label="Sortir, accueil"><span class="brand-mark">S</span><span>sortir<span class="brand-dot">.</span></span></a>
     <nav aria-label="Navigation principale">
       <a href="#evenements">Événements</a>
-      <a href="#mes-reservations">Mes réservations</a>
+      <a href="#mes-reservations">Mes commandes</a>
     </nav>
-    <a class="header-link" href="#evenements">Trouver une sortie <span aria-hidden="true">↗</span></a>
+    <div class="header-actions">
+      <button class="icon-button" id="cart-open" type="button" aria-label="Ouvrir le panier" title="Panier">♧<span id="cart-count">0</span></button>
+      <button class="account-button" id="account-open" type="button">Connexion</button>
+    </div>
   </header>
 
   <main id="accueil">
@@ -50,33 +53,37 @@
     </section>
 
     <section class="manage-section" id="mes-reservations" aria-labelledby="manage-title">
-      <div class="manage-copy"><p class="eyebrow">Votre espace</p><h2 id="manage-title">Retrouvez votre réservation.</h2><p>Munissez-vous de votre référence et de l'adresse e-mail utilisée lors de la réservation.</p></div>
-      <form class="lookup-form" id="lookup-form">
-        <label>Référence<input name="code" required minlength="10" maxlength="10" placeholder="Ex. 4F8A2C19D3" autocomplete="off"></label>
-        <label>Adresse e-mail<input name="email" type="email" required placeholder="vous@exemple.fr" autocomplete="email"></label>
-        <button class="button button-dark" type="submit">Retrouver</button>
-        <p class="form-message" id="lookup-message" role="status"></p>
-      </form>
-      <div class="reservation-result" id="reservation-result" aria-live="polite"></div>
+      <div class="manage-copy"><p class="eyebrow">Votre espace</p><h2 id="manage-title">Vos commandes.</h2><p id="account-summary">Connectez-vous pour retrouver vos billets et gérer vos commandes.</p></div>
+      <div class="orders-panel" id="orders-list" aria-live="polite"><p class="status-line">Connectez-vous pour afficher vos commandes.</p></div>
     </section>
   </main>
 
   <footer><a class="brand footer-brand" href="#accueil"><span class="brand-mark">S</span><span>sortir<span class="brand-dot">.</span></span></a><span>Les bons moments, en bonne compagnie.</span><span>Billetterie de démonstration</span></footer>
 
-  <dialog id="booking-dialog" aria-labelledby="booking-title">
-    <form class="booking-form" id="booking-form">
-      <button class="dialog-close" type="button" id="close-dialog" aria-label="Fermer">×</button>
-      <p class="eyebrow">Réservation</p>
-      <h2 id="booking-title">Choisissez vos places</h2>
-      <p class="selected-event" id="selected-event"></p>
-      <input type="hidden" name="eventId">
-      <label>Nom complet<input name="name" required minlength="2" maxlength="100" autocomplete="name" placeholder="Camille Dupont"></label>
-      <label>Adresse e-mail<input name="email" type="email" required autocomplete="email" placeholder="vous@exemple.fr"></label>
-      <label>Nombre de places<select name="seats" required><option value="1">1 place</option><option value="2">2 places</option><option value="3">3 places</option><option value="4">4 places</option><option value="5">5 places</option><option value="6">6 places</option><option value="7">7 places</option><option value="8">8 places</option></select></label>
-      <p class="form-message" id="booking-message" role="status"></p>
-      <button class="button button-accent" type="submit">Confirmer la réservation</button>
-      <p class="fine-print">Le paiement n'est pas activé dans cette démonstration.</p>
+  <dialog id="auth-dialog" aria-labelledby="auth-title">
+    <form class="dialog-form" id="auth-form">
+      <button class="dialog-close" type="button" data-close="auth-dialog" aria-label="Fermer">×</button>
+      <p class="eyebrow">Votre espace</p><h2 id="auth-title">Connexion</h2>
+      <div class="auth-tabs" role="group" aria-label="Type de compte"><button type="button" class="auth-tab active" data-mode="login">Connexion</button><button type="button" class="auth-tab" data-mode="register">Créer un compte</button></div>
+      <label id="name-field" hidden>Nom complet<input name="name" minlength="2" maxlength="100" autocomplete="name"></label>
+      <label>Adresse e-mail<input name="email" type="email" required autocomplete="email"></label>
+      <label>Mot de passe<input name="password" type="password" required minlength="12" maxlength="128" autocomplete="current-password"></label>
+      <p class="form-message" id="auth-message" role="status"></p>
+      <button class="button button-accent" type="submit">Se connecter</button>
+      <p class="fine-print" id="password-note" hidden>12 caractères minimum. Choisissez un mot de passe unique.</p>
     </form>
+  </dialog>
+
+  <dialog id="cart-dialog" aria-labelledby="cart-title">
+    <div class="dialog-form cart-form">
+      <button class="dialog-close" type="button" data-close="cart-dialog" aria-label="Fermer">×</button>
+      <p class="eyebrow">Votre sélection</p><h2 id="cart-title">Panier</h2>
+      <div id="cart-items" class="cart-items" aria-live="polite"></div>
+      <div class="cart-total"><span>Total</span><strong id="cart-total">0,00 €</strong></div>
+      <p class="form-message" id="cart-message" role="status"></p>
+      <button class="button button-accent" type="button" id="checkout-button">Valider la commande</button>
+      <p class="fine-print">Paiement désactivé dans cette démonstration.</p>
+    </div>
   </dialog>
 
   <div class="toast" id="toast" role="status" aria-live="polite"></div>

@@ -1,0 +1,8 @@
+backend/node_modules/
+**/.env
+**/.env.*
+!**/.env.example
+k8s/database-secret.yaml
+*.tar
+*.dump
+*.sql.gz

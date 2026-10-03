@@ -1,0 +1,24 @@
+Suivi des demandes Codex - application reservation
+===================================================
+
+03/10/2026 - Contexte et travaux Kubernetes precedents
+- L'application tourne dans le namespace app-reservation sur un cluster local Kubernetes: control plane 192.168.122.10, workers 192.168.122.11, .12 et .13.
+- Services backend, frontend, PostgreSQL et Redis deja deployes. Le frontend est publie en NodePort 30080.
+- Images construites avec Podman, puis chargees dans containerd sur les workers; Docker n'est pas necessaire.
+- Metrics Server installe pour Kubernetes 1.31. Un contournement TLS kubelet (--kubelet-insecure-tls) a ete utilise uniquement pour ce cluster de laboratoire.
+- HPA du backend configure entre 2 et 6 replicas, cible CPU 60%; une generation de charge a confirme le scale-up.
+- La persistance PostgreSQL via PVC reste a planifier apres choix/installation d'un StorageClass et sauvegarde de la base existante.
+
+03/10/2026 - Demande: parcours de reservation plus realiste
+- Choix valide: inscription, connexion, deconnexion, sessions Redis avec TTL, panier Redis avec TTL, puis validation transactionnelle des billets dans PostgreSQL.
+- Redis reste temporaire: commandes confirmees et stock ne sont jamais conserves uniquement dans Redis.
+- L'utilisateur demande que les sources et fichiers de construction restent dans reservation-app sur le PC host pour conserver l'historique Git.
+- L'utilisateur demande le maintien de ce journal date.
+
+03/10/2026 - Implementation
+- Backend Node/Express: comptes, hachage Argon2id, sessions Redis (30 min), paniers Redis (24 h), cookie HTTP-only, protection CSRF et limitation des tentatives d'authentification.
+- PostgreSQL: tables utilisateurs, commandes et lignes de commande; decrement atomique du stock dans une transaction; cle d'idempotence du checkout; historique et annulation avec restitution du stock.
+- Frontend: formulaire de connexion/inscription, bouton de deconnexion, ajout et edition des quantites du panier, validation et historique des commandes.
+- Kubernetes: Redis protege par mot de passe, backend relie aux secrets, tags d'images 2.0; le Secret PostgreSQL existant n'est pas remplace.
+- Secrets applicatifs generes dans Kubernetes et exclus de Git. Aucun PVC PostgreSQL n'est applique pendant cette evolution afin de ne pas risquer une migration destructive de la base existante.
+- Les commandes de build/deploiement et limites connues sont documentees dans README.md.
