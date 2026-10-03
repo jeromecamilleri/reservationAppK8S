@@ -88,9 +88,13 @@ scp -r reservation-app camillej@192.168.122.10:~/
 
 Pour les reconstructions suivantes, incrémente le tag dans les commandes et dans les deux manifests, ou configure un registre local. L'import d'archives est simple pour commencer; un registre évite de recopier l'image sur chaque worker à chaque mise à jour.
 
+Les images ne sont normalement pas stockees dans Git: elles sont volumineuses, binaires et leur historique n'est pas pratique a gerer comme du code. Git conserve les Dockerfiles, `package-lock.json`, les manifests et scripts; les images sont publiees dans un registre OCI (Harbor, GitLab Container Registry, GHCR ou un registre prive local). Utilise un tag versionne puis, pour une version figee, reference aussi le digest `sha256` dans les manifests. Dans ce cluster sans registre, les archives `docker-archive` placees dans `/tmp` sur les workers sont un transfert temporaire; conserve une copie de sauvegarde hors du depot si tu veux archiver ces binaires. Git LFS peut depanner pour quelques grosses archives, mais un registre OCI reste le bon outil pour les images.
+
 ## Deploiement
 
 Le mot de passe PostgreSQL existant reste dans ton Secret `reservation-db-credentials`. Cree un Secret distinct pour Redis et la signature des sessions. La commande genere des valeurs aleatoires; conserver le Secret dans Kubernetes, pas dans Git. Le remplacer invalidera les sessions et paniers actuellement stockes dans Redis.
+
+Les quatre manifests originaux recuperes de `~/backend.yaml`, `~/frontend.yaml`, `~/postgres.yaml` et `~/redis.yaml` sont archives dans `k8s/archive/control-plane-initial/`. Ce sont des snapshots historiques, pas les manifests a appliquer. Le snapshot PostgreSQL a ete assaini pour ne pas inclure le mot de passe en clair.
 
 Depuis `~/reservation-app` sur le control plane (une premiere fois) :
 

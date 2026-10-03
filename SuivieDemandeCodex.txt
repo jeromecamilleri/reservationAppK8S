@@ -24,5 +24,8 @@ Suivi des demandes Codex - application reservation
 - Les commandes de build/deploiement et limites connues sont documentees dans README.md.
 - Dependances verrouillees dans package-lock.json; node_modules exclus du depot et le manifeste de secret PostgreSQL retire du suivi Git (son ancienne version reste dans l'historique Git initial).
 - Images backend/frontend 2.0 construites avec Podman sur le control plane; archives copiees vers /tmp sur les trois workers. Validation Kubernetes --dry-run=server reussie et Secret reservation-app-secrets cree.
-- Le rollout applicatif n'a pas ete lance: l'import containerd demande sudo sur chaque worker et le compte SSH n'a pas sudo sans mot de passe. Le cluster reste donc sur l'application precedente jusqu'a l'import manuel puis kubectl apply.
+- Apres autorisation d'utiliser le mot de passe sudo fourni par l'utilisateur, images 2.0 importees dans containerd sur les trois workers et manifests Redis/backend/frontend appliques. PostgreSQL n'a pas ete redemarre ni remplace.
+- Verifications apres deploiement: backend 2/2, frontend 2/2, Redis 1/1 Ready; `/api/auth/csrf` retourne HTTP 200. Les commandes de smoke test ne creent pas de compte ni de commande de test.
 - Commit Git sur le host: c406f19 (Add Redis-backed accounts and transactional checkout). Le journal est conserve dans SuivieDemandeCodex.txt.
+- Les quatre YAML initiaux du repertoire personnel du control plane sont archives dans `k8s/archive/control-plane-initial/`; la reference de secret PostgreSQL a remplace le mot de passe en clair.
+- Les images binaires ne sont pas commitees dans Git. README explique l'usage d'un registre OCI pour les conserver et partager; les archives temporaires de build ne sont pas dans le depot.
