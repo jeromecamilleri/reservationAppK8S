@@ -66,18 +66,18 @@ Le registre du labo tourne sur le control plane via les fichiers Quadlet `k8s/re
 
 Sur ce cluster containerd 2.2.1, le `config_path` genere contient deux chemins separes par `:`; le pull CRI ignore alors le `hosts.toml`. Il faut utiliser uniquement `/etc/containerd/certs.d` dans `[plugins.'io.containerd.cri.v1.images'.registry]`, puis redemarrer containerd sur les workers un par un et verifier un pull CRI. Le snapshot complet recupere du worker1 est archive en `k8s/registry/containerd-worker-config.toml`; ne le copie pas aveuglement sur des noeuds dont la configuration aurait diverge. Le changement de `hosts.toml` seul ne requiert pas de redemarrage. Voir la [documentation containerd](https://github.com/containerd/containerd/blob/main/docs/hosts.md) et le [cas containerd 2.2](https://github.com/containerd/containerd/issues/12636).
 
-Pour reconstruire et publier, depuis la racine du projet (par exemple `cd ~/reservation-app-v2` sur le control plane), choisis un nouveau tag a chaque version :
+Pour reconstruire et publier, depuis la racine du projet (`cd ~/reservation-app` sur le control plane), choisis un nouveau tag a chaque version :
 
 ```bash
 # Sur le host, synchronise les sources vers la machine qui a Podman.
 rsync -av --exclude=.git --exclude=node_modules --exclude=k8s/database-secret.yaml \
-  /dataSSD/K8S/reservation-app/ camillej@192.168.122.10:reservation-app-v2/
+  /dataSSD/K8S/reservation-app/ camillej@192.168.122.10:reservation-app/
 ```
 
 Puis, sur le control plane :
 
 ```bash
-cd ~/reservation-app-v2
+cd ~/reservation-app
 podman build --platform linux/amd64 -t localhost/reservation-backend:2.0 ./backend
 podman build --platform linux/amd64 -t localhost/reservation-frontend:2.0 ./frontend
 podman tag localhost/reservation-backend:2.0 192.168.122.10:5000/reservation-backend:2.0
@@ -104,7 +104,7 @@ systemctl --user start reservation-registry.service
 
 Une copie de la premiere sauvegarde est gardee hors Git sur le host dans `/dataSSD/K8S/registry-backups/`.
 
-Installation initiale du registre sur le control plane (une seule fois), depuis `~/reservation-app-v2` :
+Installation initiale du registre sur le control plane (une seule fois), depuis `~/reservation-app` :
 
 ```bash
 mkdir -p ~/.config/containers/systemd
@@ -134,9 +134,11 @@ kubectl get secret reservation-app-secrets -n app-reservation >/dev/null 2>&1 ||
 
 Pour appliquer sans erreur si le Secret existe deja, ne regenere pas les valeurs a l'aveugle. Pour mettre a jour ses valeurs, faire une sauvegarde des paniers a zero incident acceptable (les paniers sont temporaires), puis recreer la ressource via `kubectl create ... --dry-run=client -o yaml | kubectl apply -f -`.
 
-Deploie ensuite Redis, puis les services applicatifs :
+Deploie le stockage et PostgreSQL, puis Redis et les services applicatifs :
 
 ```bash
+kubectl apply -f k8s/nfs-storage.yaml -f k8s/postgres.yaml
+kubectl rollout status deployment/postgres-deployment -n app-reservation
 kubectl apply -f k8s/redis.yaml
 kubectl apply -f k8s/backend.yaml
 kubectl apply -f k8s/frontend.yaml
@@ -150,12 +152,10 @@ Ouvre ensuite `http://192.168.122.11:30080` (ou `.12:30080` / `.13:30080`). Le f
 
 ## Donnees PostgreSQL
 
-Les tables `events` et `reservations` sont creees par l'API. Le manifeste PostgreSQL fourni ne monte aucun volume : les donnees peuvent disparaitre si le Pod PostgreSQL est recree. Verifie la presence d'un stockage dynamique avant de configurer un PVC :
+PostgreSQL utilise le PVC statique `postgres-pvc`, lie au PV NFS `postgres-pv-nfs` (serveur `192.168.122.1`, export `/dataSSD/K8S/nfs-postgres`). Le PV/PVC est en `ReadWriteMany`, mais PostgreSQL reste strictement a une seule instance : le Deployment utilise `replicas: 1` et la strategie `Recreate`, qui evite le chevauchement de deux processus PostgreSQL lors d'une mise a jour. Ne monte pas ce meme repertoire sur une autre instance PostgreSQL et ne monte pas le nombre de replicas. Le repertoire partage doit appartenir a UID/GID `70:70` avec le mode `0700`, comme configure pour `postgres:15-alpine`.
 
-```bash
-kubectl get storageclass
-```
+Le stockage NFS permet au Pod d'etre reprogramme sur un autre worker, mais le serveur NFS unique reste un point de panne et une sauvegarde independante reste indispensable. L'export du laboratoire est configure en `no_root_squash`; garde le reseau isole et privilegie `root_squash` pour un usage plus strict, apres validation des permissions. Les fichiers de donnees PostgreSQL sont sur NFS pour ce laboratoire; pour la production, prefere un stockage officiellement supporte par PostgreSQL, teste en performance et en recuperation. Applique les manifests versionnes avec `kubectl apply -f k8s/nfs-storage.yaml -f k8s/postgres.yaml` et verifie `kubectl get pvc,pv -n app-reservation` ainsi que `kubectl rollout status deployment/postgres-deployment -n app-reservation`.
 
-Redis est un Pod unique sans stockage persistant: une panne peut effacer les sessions et paniers, ce qui est acceptable pour ces donnees temporaires. Les commandes confirmees et le stock sont exclusivement dans PostgreSQL. Ce manifeste Redis n'active pas la haute disponibilite; Redis Sentinel/Cluster et une strategie de persistance peuvent etre etudies ensuite.
+Avant une migration de donnees, sauvegarde la base avec `pg_dump` et conserve la sauvegarde hors du volume de donnees. Dans ce deploiement, le PVC NFS a ete monte apres export logique puis restauration; le fichier de sauvegarde utilise est conserve sur le control plane, hors de Git.
 
-Un PVC seul ne stocke rien tant qu'aucune `StorageClass` ou aucun `PersistentVolume` ne peut le fournir. Pour un premier exercice, un provisioner local (par exemple local-path) conservera les fichiers lors du remplacement du Pod, mais le volume restera lie a un noeud : ce n'est pas une protection contre la panne de ce worker. Avant de monter un volume sur la base deja utilisee, faire un `pg_dump` et planifier la migration; un volume neuf demarre une base vide. Une vraie tolerance a la panne d'un worker demande du stockage replique (par exemple Longhorn) ou une base externe, ainsi que des sauvegardes testees.
+Redis reste un Pod unique sans stockage persistant: une panne peut effacer les sessions et paniers, ce qui est acceptable pour ces donnees temporaires. Les commandes confirmees et le stock sont exclusivement dans PostgreSQL. Ce manifeste Redis n'active pas la haute disponibilite; Redis Sentinel/Cluster et une strategie de persistance peuvent etre etudies ensuite.

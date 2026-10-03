@@ -40,3 +40,21 @@ Suivi des demandes Codex - application reservation
 - Configuration du registre et du client containerd documentee/versionnee sous `k8s/registry/`; instructions de build, push, deploiement et sauvegarde ajoutees au README.
 - Les manifests ont d'abord rencontre `ErrImagePull` via le CRI; diagnostic confirme du config_path a deux chemins, correction et rollout final 2/2 reussi pour frontend/backend.
 - Volume du registre exporte a l'arret puis importe en sauvegarde hors Git: `/dataSSD/K8S/registry-backups/reservation-registry-data-2026-10-03.tar` (86 MiB, SHA-256 `c48a8e4c89d38207e0f340578d70c8bc978b0a3f320f43f4431f62e8f09e0e12`). Registre redemarre et catalogue toujours disponible.
+
+03/10/2026 - PostgreSQL sur NFS
+- Le control plane a un PV NFS `postgres-pv-nfs` de 5Gi (serveur 192.168.122.1, export /dataSSD/K8S/nfs-postgres), lie au PVC `postgres-pvc` en ReadWriteMany. Le nom observe dans Kubernetes est `postgres-pv-nfs` (pas `nfs-storage`).
+- Le Deployment PostgreSQL initial etait sans PVC, avec une strategie RollingUpdate et des identifiants en clair; un Secret `reservation-db-credentials` existe et ses identifiants ont ete verifies identiques aux valeurs actives sans les afficher.
+- Avant migration, dump custom PostgreSQL valide, conserve hors Git sur le control plane: `~/reservation-db-before-nfs-20261003.dump`. La migration arrete momentanement le HPA/backend pour figer les ecritures, puis restaure les donnees sur le PVC NFS.
+- Nouveau `k8s/postgres.yaml`: PVC monte sur PGDATA, une seule replique, strategie Recreate pour eviter deux instances partageant le meme repertoire, sondes PostgreSQL, ressources bornees, identifiants fournis par Secret. Le Service PostgreSQL est conserve.
+- Dossier exporte vide avant migration, permissions definies en UID/GID 70:70 mode 0700; un Pod de test non-root a valide ecriture/suppression via le PVC. L'export NFS du laboratoire est `no_root_squash`, a garder sur reseau isole.
+- Backend et HPA suspendus pendant l'export final/restauration puis remis en service. PostgreSQL Ready sur le PVC, cinq tables restaurees, quatre evenements presents; backend 2/2 et `/health/ready` retourne 200.
+- Test de reprise: worker3 cordonne, Pod PostgreSQL supprime proprement puis reprogramme sur worker1 via le meme PVC NFS; quatre evenements encore presents. Worker3 remis schedulable. Pendant le bref arret DB, les Pods backend ont redemarre sur connexion refusee puis sont redevenus Ready apres retour PostgreSQL.
+- Les YAML autonomes obsoletes `~/backend.yaml`, `~/frontend.yaml`, `~/postgres.yaml` et `~/redis.yaml` etaient identiques aux snapshots archives sauf le PostgreSQL assaini; ils ont ete supprimes du control plane. Dump de secours conserve hors Git sous `~/reservation-db-before-nfs-20261003.dump`.
+- Limites: NFS permet la reprogrammation sur un autre worker, mais le serveur NFS reste un point de panne; RWX n'autorise pas plusieurs serveurs PostgreSQL concurrents sur le meme PGDATA.
+
+03/10/2026 - Consolidation des sources host/control plane
+- Le depot Git faisant autorite reste `/dataSSD/K8S/reservation-app` sur le host; les deux dossiers du control plane n'etaient pas des clones Git.
+- `~/reservation-app-v2` contenait les sources applicatives actuelles identiques au depot, mais n'avait pas les derniers manifests PostgreSQL/NFS et l'archive; `~/reservation-app` etait une copie applicative plus ancienne.
+- Synchronisation du depot host vers `~/reservation-app` (exclusions: `.git`, secrets Kubernetes, fichiers `.env`, node_modules, sauvegardes); comparaison rsync sans difference apres transfert.
+- Suppression de `~/reservation-app-v2` et de l'ancien `~/reservation-app/k8s/database-secret.yaml` ignore par Git. Il ne reste qu'un dossier clair sur le control plane: `~/reservation-app`, miroir de travail du depot host.
+- README corrige pour que les commandes de build, push et deploiement utilisent uniquement `~/reservation-app`. Le depot Git du host garde seul l'historique; le repertoire distant n'est pas un clone Git.
