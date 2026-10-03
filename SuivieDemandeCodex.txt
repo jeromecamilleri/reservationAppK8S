@@ -22,3 +22,7 @@ Suivi des demandes Codex - application reservation
 - Kubernetes: Redis protege par mot de passe, backend relie aux secrets, tags d'images 2.0; le Secret PostgreSQL existant n'est pas remplace.
 - Secrets applicatifs generes dans Kubernetes et exclus de Git. Aucun PVC PostgreSQL n'est applique pendant cette evolution afin de ne pas risquer une migration destructive de la base existante.
 - Les commandes de build/deploiement et limites connues sont documentees dans README.md.
+- Dependances verrouillees dans package-lock.json; node_modules exclus du depot et le manifeste de secret PostgreSQL retire du suivi Git (son ancienne version reste dans l'historique Git initial).
+- Images backend/frontend 2.0 construites avec Podman sur le control plane; archives copiees vers /tmp sur les trois workers. Validation Kubernetes --dry-run=server reussie et Secret reservation-app-secrets cree.
+- Le rollout applicatif n'a pas ete lance: l'import containerd demande sudo sur chaque worker et le compte SSH n'a pas sudo sans mot de passe. Le cluster reste donc sur l'application precedente jusqu'a l'import manuel puis kubectl apply.
+- Commit Git sur le host: c406f19 (Add Redis-backed accounts and transactional checkout). Le journal est conserve dans SuivieDemandeCodex.txt.
