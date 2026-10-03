@@ -27,7 +27,7 @@ spec:
                     app: backend-api
       containers:
         - name: backend
-          image: localhost/reservation-backend:2.0
+          image: 192.168.122.10:5000/reservation-backend:2.0
           imagePullPolicy: IfNotPresent
           ports:
             - name: http

@@ -24,7 +24,7 @@ spec:
                     app: frontend-web
       containers:
         - name: frontend
-          image: localhost/reservation-frontend:2.0
+          image: 192.168.122.10:5000/reservation-frontend:2.0
           imagePullPolicy: IfNotPresent
           ports:
             - name: http

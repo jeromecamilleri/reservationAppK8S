@@ -29,3 +29,14 @@ Suivi des demandes Codex - application reservation
 - Commit Git sur le host: c406f19 (Add Redis-backed accounts and transactional checkout). Le journal est conserve dans SuivieDemandeCodex.txt.
 - Les quatre YAML initiaux du repertoire personnel du control plane sont archives dans `k8s/archive/control-plane-initial/`; la reference de secret PostgreSQL a remplace le mot de passe en clair.
 - Les images binaires ne sont pas commitees dans Git. README explique l'usage d'un registre OCI pour les conserver et partager; les archives temporaires de build ne sont pas dans le depot.
+
+03/10/2026 - Registre OCI local
+- Registre Docker Distribution lance sur le control plane par une unite Podman Quadlet; demarrage au boot active avec linger utilisateur.
+- Contenu du registre persiste dans le volume Podman `reservation-registry-data` (hors depot Git), accessible a `192.168.122.10:5000`.
+- Images `reservation-backend:2.0` et `reservation-frontend:2.0` poussees dans le registre; manifests Kubernetes references maintenant ces noms.
+- Acces local en HTTP sans authentification, limite au bind sur l'IP 192.168.122.10. Usage reserve au reseau de laboratoire; ne pas exposer tel quel a un reseau non fiable.
+- Premier rollout a revele que containerd 2.2.1 ignorait les chemins `config_path` separes par deux-points pour les pulls CRI. Config corrigee vers `/etc/containerd/certs.d`, containerd redemarre sequentiellement sur les trois workers, avec verification `crictl pull` reussie. Le control plane est reste Ready et PostgreSQL/Redis sont restes Running.
+- Rollout termine: backend 2/2, frontend 2/2; nodes Ready. `/api/health/ready` et `/api/auth/csrf` repondent HTTP 200.
+- Configuration du registre et du client containerd documentee/versionnee sous `k8s/registry/`; instructions de build, push, deploiement et sauvegarde ajoutees au README.
+- Les manifests ont d'abord rencontre `ErrImagePull` via le CRI; diagnostic confirme du config_path a deux chemins, correction et rollout final 2/2 reussi pour frontend/backend.
+- Volume du registre exporte a l'arret puis importe en sauvegarde hors Git: `/dataSSD/K8S/registry-backups/reservation-registry-data-2026-10-03.tar` (86 MiB, SHA-256 `c48a8e4c89d38207e0f340578d70c8bc978b0a3f320f43f4431f62e8f09e0e12`). Registre redemarre et catalogue toujours disponible.

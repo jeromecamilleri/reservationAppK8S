@@ -62,33 +62,61 @@ sudo apt update
 sudo apt install podman
 ```
 
-Depuis le dossier qui contient `reservation-app`, construis les images. Podman lit les Dockerfiles sans Docker Engine :
+Le registre du labo tourne sur le control plane via les fichiers Quadlet `k8s/registry/`. Son stockage est un volume Podman persistant, hors du depot Git. L'unite est liee a l'adresse de labo `192.168.122.10:5000`; elle est en HTTP sans authentification, donc ne pas l'exposer hors du reseau isole. Les workers lisent `k8s/registry/containerd-hosts.toml` depuis `/etc/containerd/certs.d/192.168.122.10:5000/hosts.toml`.
+
+Sur ce cluster containerd 2.2.1, le `config_path` genere contient deux chemins separes par `:`; le pull CRI ignore alors le `hosts.toml`. Il faut utiliser uniquement `/etc/containerd/certs.d` dans `[plugins.'io.containerd.cri.v1.images'.registry]`, puis redemarrer containerd sur les workers un par un et verifier un pull CRI. Le snapshot complet recupere du worker1 est archive en `k8s/registry/containerd-worker-config.toml`; ne le copie pas aveuglement sur des noeuds dont la configuration aurait diverge. Le changement de `hosts.toml` seul ne requiert pas de redemarrage. Voir la [documentation containerd](https://github.com/containerd/containerd/blob/main/docs/hosts.md) et le [cas containerd 2.2](https://github.com/containerd/containerd/issues/12636).
+
+Pour reconstruire et publier, depuis la racine du projet (par exemple `cd ~/reservation-app-v2` sur le control plane), choisis un nouveau tag a chaque version :
 
 ```bash
-podman build --platform linux/amd64 -t localhost/reservation-backend:2.0 ./reservation-app/backend
-podman build --platform linux/amd64 -t localhost/reservation-frontend:2.0 ./reservation-app/frontend
-podman save --format docker-archive -o /tmp/reservation-backend-v2.tar localhost/reservation-backend:2.0
-podman save --format docker-archive -o /tmp/reservation-frontend-v2.tar localhost/reservation-frontend:2.0
+# Sur le host, synchronise les sources vers la machine qui a Podman.
+rsync -av --exclude=.git --exclude=node_modules --exclude=k8s/database-secret.yaml \
+  /dataSSD/K8S/reservation-app/ camillej@192.168.122.10:reservation-app-v2/
 ```
 
-Transfere les deux archives sur chaque worker et importe-les dans le namespace `k8s.io` de containerd. Cela n'installe aucun moteur Docker et ne change pas le runtime Kubernetes :
+Puis, sur le control plane :
 
 ```bash
-for node in 192.168.122.11 192.168.122.12 192.168.122.13; do
-  scp /tmp/reservation-backend-v2.tar /tmp/reservation-frontend-v2.tar camillej@$node:/tmp/
-  ssh -t camillej@$node 'sudo ctr -n k8s.io images import /tmp/reservation-backend-v2.tar && sudo ctr -n k8s.io images import /tmp/reservation-frontend-v2.tar && sudo ctr -n k8s.io images list | grep reservation'
-done
+cd ~/reservation-app-v2
+podman build --platform linux/amd64 -t localhost/reservation-backend:2.0 ./backend
+podman build --platform linux/amd64 -t localhost/reservation-frontend:2.0 ./frontend
+podman tag localhost/reservation-backend:2.0 192.168.122.10:5000/reservation-backend:2.0
+podman tag localhost/reservation-frontend:2.0 192.168.122.10:5000/reservation-frontend:2.0
+podman push --tls-verify=false 192.168.122.10:5000/reservation-backend:2.0
+podman push --tls-verify=false 192.168.122.10:5000/reservation-frontend:2.0
 ```
 
-Copie ensuite le projet sur le control plane pour y appliquer les manifests :
+Apres avoir change les tags dans `k8s/backend.yaml` et `k8s/frontend.yaml`, applique le deploiement :
 
 ```bash
-scp -r reservation-app camillej@192.168.122.10:~/
+kubectl apply -f k8s/backend.yaml -f k8s/frontend.yaml
+kubectl rollout status deployment/backend-deployment -n app-reservation
+kubectl rollout status deployment/frontend-deployment -n app-reservation
 ```
 
-Pour les reconstructions suivantes, incrémente le tag dans les commandes et dans les deux manifests, ou configure un registre local. L'import d'archives est simple pour commencer; un registre évite de recopier l'image sur chaque worker à chaque mise à jour.
+Les images ne sont pas stockees dans Git: le depot conserve le code, les Dockerfiles, le lockfile et les manifests; le registre conserve les artefacts OCI. Ne reutilise pas un tag existant: incremente-le ou utilise le commit Git comme tag. Pour une publication figee, un digest `sha256` peut remplacer le tag dans le YAML. Sauvegarde le volume Podman du registre separement du depot. Pour une sauvegarde coherente, arrete le registre le temps de l'export, puis redemarre-le :
 
-Les images ne sont normalement pas stockees dans Git: elles sont volumineuses, binaires et leur historique n'est pas pratique a gerer comme du code. Git conserve les Dockerfiles, `package-lock.json`, les manifests et scripts; les images sont publiees dans un registre OCI (Harbor, GitLab Container Registry, GHCR ou un registre prive local). Utilise un tag versionne puis, pour une version figee, reference aussi le digest `sha256` dans les manifests. Dans ce cluster sans registre, les archives `docker-archive` placees dans `/tmp` sur les workers sont un transfert temporaire; conserve une copie de sauvegarde hors du depot si tu veux archiver ces binaires. Git LFS peut depanner pour quelques grosses archives, mais un registre OCI reste le bon outil pour les images.
+```bash
+systemctl --user stop reservation-registry.service
+podman volume export reservation-registry-data -o ~/reservation-registry-data-backup.tar
+systemctl --user start reservation-registry.service
+```
+
+Une copie de la premiere sauvegarde est gardee hors Git sur le host dans `/dataSSD/K8S/registry-backups/`.
+
+Installation initiale du registre sur le control plane (une seule fois), depuis `~/reservation-app-v2` :
+
+```bash
+mkdir -p ~/.config/containers/systemd
+install -m 0644 k8s/registry/reservation-registry.container ~/.config/containers/systemd/
+install -m 0644 k8s/registry/reservation-registry-data.volume ~/.config/containers/systemd/
+sudo loginctl enable-linger camillej
+systemctl --user daemon-reload
+systemctl --user start reservation-registry.service
+curl http://192.168.122.10:5000/v2/
+```
+
+Sur chacun des workers, copier `k8s/registry/containerd-hosts.toml` vers `/etc/containerd/certs.d/192.168.122.10:5000/hosts.toml`. Si `config_path` dans `/etc/containerd/config.toml` n'est pas exactement `/etc/containerd/certs.d`, sauvegarder le fichier, modifier uniquement cette valeur, puis redemarrer containerd un worker a la fois. Cordonner le worker avant l'operation, attendre son retour a `Ready`, puis le remettre schedulable. Ne pas remplacer aveuglement le fichier complet par le snapshot versionne: il peut contenir des reglages specifiques au noeud.
 
 ## Deploiement
 
