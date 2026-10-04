@@ -14,6 +14,10 @@ const port = Number(process.env.PORT || 8080);
 const sessionCookie = 'reservation.sid';
 const sessionTtlSeconds = 30 * 60;
 const cartTtlSeconds = 24 * 60 * 60;
+const authRateLimit = Number(process.env.AUTH_RATE_LIMIT || 10);
+if (!Number.isInteger(authRateLimit) || authRateLimit < 1 || authRateLimit > 1000) {
+  throw new Error('AUTH_RATE_LIMIT must be an integer between 1 and 1000');
+}
 const shutdownController = new AbortController();
 let eventCatalogCache = null;
 let databaseInitialized = false;
@@ -72,7 +76,7 @@ app.use(session({
 const { csrfSynchronisedProtection, generateToken } = csrfSync();
 const loginLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
-  limit: 10,
+  limit: authRateLimit,
   standardHeaders: true,
   legacyHeaders: false,
   message: { error: 'too_many_login_attempts' },
@@ -135,6 +139,19 @@ async function initializeDatabase() {
   try {
     await client.query('BEGIN');
     await client.query('SELECT pg_advisory_xact_lock(73910244)');
+    const schema = await client.query(`
+      SELECT to_regclass('public.events') IS NOT NULL AS events,
+             to_regclass('public.reservations') IS NOT NULL AS reservations,
+             to_regclass('public.users') IS NOT NULL AS users,
+             to_regclass('public.orders') IS NOT NULL AS orders,
+             to_regclass('public.order_items') IS NOT NULL AS order_items
+    `);
+    if (Object.values(schema.rows[0]).every(Boolean)) {
+      await client.query('COMMIT');
+      await refreshEventCatalog();
+      databaseInitialized = true;
+      return;
+    }
     await client.query(`
     CREATE TABLE IF NOT EXISTS events (
       id TEXT PRIMARY KEY,
@@ -451,11 +468,17 @@ app.post('/checkout', requireUser, async (req, res, next) => {
       );
     }
     await client.query('COMMIT');
+    client.release();
+    client = undefined;
     const result = await loadOrder(order.code, user.id);
     await redis.del(key);
     res.status(201).json(result);
   } catch (error) {
-    if (client) await client.query('ROLLBACK').catch(() => {});
+    if (client) {
+      await client.query('ROLLBACK').catch(() => {});
+      client.release();
+      client = undefined;
+    }
     if (error.constraint === 'orders_user_checkout_key') {
       try {
         const existing = await pool.query(
@@ -558,7 +581,10 @@ app.post('/reservations', (_req, res) => res.status(410).json({ error: 'use_cart
 app.use((error, _req, res, _next) => {
   if (error.code === 'EBADCSRFTOKEN') return res.status(403).json({ error: 'invalid_csrf_token' });
   if (error.code === '23505') return res.status(409).json({ error: 'conflict' });
-  if (['ECONNREFUSED', 'ETIMEDOUT', 'ECONNRESET', '57P01', '08006', 'NR_CLOSED'].includes(error.code)) {
+  if (
+    ['ECONNREFUSED', 'ETIMEDOUT', 'ECONNRESET', '57P01', '08006', 'NR_CLOSED', '40P01', '40001'].includes(error.code)
+    || error.message === 'timeout exceeded when trying to connect'
+  ) {
     res.set('Retry-After', '3');
     return res.status(503).json({ error: 'service_temporarily_unavailable' });
   }

@@ -43,7 +43,7 @@ spec:
                     app: backend-api
       containers:
         - name: backend
-          image: 192.168.122.10:5000/reservation-backend:2.2
+          image: 192.168.122.10:5000/reservation-backend:2.5
           imagePullPolicy: IfNotPresent
           ports:
             - name: http
@@ -83,6 +83,8 @@ spec:
                   key: session-secret
             - name: COOKIE_SECURE
               value: "false"
+            - name: AUTH_RATE_LIMIT
+              value: "10"
           resources:
             requests:
               memory: 64Mi

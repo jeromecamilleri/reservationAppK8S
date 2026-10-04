@@ -1,0 +1,180 @@
+ARCHITECTURE - APPLICATION DE RESERVATION
+========================================
+
+Vue d'ensemble
+--------------
+
+Host du cluster / services externes
+192.168.122.1
+  +-- Navigateur utilisateur
+  |     |
+  |     +-- HTTP :8080
+  |           v
+  +-- HAProxy (entree stable du labo)
+  |     +-- repartit vers les NodePort des workers :30080
+  |
+  +-- Serveur NFS
+        +-- export /dataSSD/K8S/nfs-postgres
+            utilise par le volume PostgreSQL
+
+Control plane Kubernetes                         Workers Kubernetes
+192.168.122.10                                   192.168.122.11 / .12 / .13
+master                                           k8s-worker1 / 2 / 3
+  +-- kube-apiserver                               +-- kubelet
+  +-- etcd (etat du cluster)                       +-- containerd (runtime CRI)
+  +-- scheduler                                    +-- plugin reseau CNI
+  +-- controller-manager                           +-- cache local d'images
+  +-- kubectl                                       +-- Pods applicatifs
+  |
+  +-- Service registre prive Podman :5000
+        +-- volume Podman persistant
+        +-- images publiees par podman push
+
+Le control plane orchestre Kubernetes: l'API conserve l'etat souhaite, le
+scheduler choisit le worker des Pods et les controllers rapprochent l'etat reel
+de cet etat souhaite. Le trafic applicatif ne passe pas par l'API Kubernetes.
+Le control plane et les workers sont des machines distinctes; le registre est
+un service Podman heberge sur le control plane, pas un objet Kubernetes.
+
+Objets Kubernetes dans le namespace app-reservation
+---------------------------------------------------
+
+                         +---------------------------+
+                         | Namespace app-reservation |
+                         +---------------------------+
+
+HAProxy :8080
+    |
+    +--> NodeIP:30080 (NodePort)
+             |
+             v
+       Service frontend-service
+       type NodePort, port 80, selector app=frontend-web
+             |
+             +--> Deployment frontend-deployment
+                    +--> ReplicaSet (gere par Deployment)
+                           +--> 3 Pods frontend (port 80)
+                                Nginx sert l'interface web
+                                et relaie /api/* vers backend-service:8080
+
+Dans le navigateur, le parcours API utilise la meme origine que l'interface.
+Le reverse proxy Nginx du frontend envoie les requetes /api au Service backend;
+le navigateur ne contacte pas directement les adresses IP des Pods backend.
+
+Service backend-service
+type ClusterIP, port 8080, selector app=backend-api
+    |
+    +--> Deployment backend-deployment
+           +--> ReplicaSet (gere par Deployment)
+                  +--> 3 Pods backend minimum, port 8080
+                       replicas pilotees par backend-hpa
+                       HPA CPU: cible 60%, minimum 3, maximum 9
+                       le backend traite API, sessions, paniers et commandes
+                       |                                  |
+                       | PostgreSQL :5432                | Redis :6379
+                       v                                  v
+                Service postgres-service          Service redis-service
+                type ClusterIP                    type ClusterIP
+                selector app=postgres              selector app=redis
+                       |                                  |
+                       v                                  v
+                Deployment postgres-deployment    Deployment redis-deployment
+                1 replica, strategy Recreate      1 replica, strategy Recreate
+                       |                                  |
+                       v                                  +--> Pod Redis
+                Pod PostgreSQL :5432                    sessions et paniers
+                       |                                temporaires avec TTL
+                       v                                (pas de PVC)
+                PVC postgres-pvc (namespace)
+                       |
+                       v
+                PV postgres-pv-nfs (cluster)
+                       |
+                       +--> NFS 192.168.122.1:/dataSSD/K8S/nfs-postgres
+                            monte dans /var/lib/postgresql/data
+
+Les Services ClusterIP fournissent des noms DNS stables dans le cluster:
+backend-service, postgres-service et redis-service. Le Service selectionne les
+Pods par labels (selector); il ne cible pas un nom de Deployment directement.
+Le Deployment cree et remplace ses Pods avec les labels correspondants.
+
+PostgreSQL n'a qu'un seul Pod pour ne jamais ouvrir simultanement le meme
+repertoire PGDATA depuis plusieurs serveurs PostgreSQL. Le PVC reste lie a un PV
+NFS; le PV expose le stockage partage mais ne rend pas PostgreSQL multi-replica.
+Redis est egalement un seul Pod, mais son contenu applicatif (sessions/paniers)
+est temporaire et expire via TTL. Redis n'est pas le stockage des commandes
+confirmees: celles-ci sont ecrites dans PostgreSQL.
+
+Placements observes le 04/10/2026
+--------------------------------
+
+Les Pods sont planifies sur les workers et peuvent etre replaces par Kubernetes.
+Le placement ci-dessous est une photographie, pas une contrainte fixe:
+
+  k8s-worker1 (.11): 1 backend, 2 frontend
+  k8s-worker2 (.12): 1 backend, 1 frontend, 1 Redis
+  k8s-worker3 (.13): 1 backend, 1 PostgreSQL
+
+Backend et frontend ont des contraintes de repartition entre noeuds, mais le
+placement peut changer selon les pannes, ressources disponibles et replicas HPA.
+PostgreSQL/Redis ont chacun un replica; leur placement peut lui aussi changer.
+
+Images applicatives: du build au Pod
+------------------------------------
+
+  Sources + Containerfile/Dockerfile sur le host
+       |
+       +-- rsync des sources vers le control plane
+              |
+              +-- podman build
+                     v
+              stockage local Podman (control plane)
+                     |
+                     +-- podman push HTTP
+                            v
+              Registre Podman : 192.168.122.10:5000
+                     ^
+                     | pull si l'image/tag manque sur le worker
+                     |
+Worker: kubelet --CRI--> containerd --+--> cache local d'images
+                                      |
+                                      +--> registre du control plane
+
+Les Deployments referencent les images par leur adresse complete, par exemple:
+  192.168.122.10:5000/reservation-backend:2.5
+  192.168.122.10:5000/reservation-frontend:2.2
+
+Chaque worker a sa configuration containerd sous:
+  /etc/containerd/certs.d/192.168.122.10:5000/hosts.toml
+
+Ce fichier associe l'autorite 192.168.122.10:5000 au registre HTTP et permet
+pull/resolve. Le worker n'accede pas au stockage local Podman du control plane.
+Il telecharge les couches depuis le registre et les garde dans son propre cache
+containerd (namespace k8s.io). crictl images affiche ce cache local, pas le
+contenu distant du registre. Aucun Podman n'est necessaire sur les workers.
+
+Secrets et configuration
+------------------------
+
+  Secret reservation-db-credentials
+      +--> POSTGRES_USER / POSTGRES_PASSWORD (Pod PostgreSQL)
+      +--> DB_USER / DB_PASSWORD (Pods backend)
+
+  Secret reservation-app-secrets
+      +--> redis-password (Pod Redis et Pods backend)
+      +--> session-secret (Pods backend)
+
+Les Secrets sont dans Kubernetes et ne doivent pas etre versionnes avec les
+valeurs sensibles dans Git. Les manifests definissent les references aux cles.
+
+Fichiers de reference dans ce depot
+-----------------------------------
+
+  k8s/frontend.yaml       Deployment frontend + Service NodePort
+  k8s/backend.yaml        Deployment backend + Service ClusterIP
+  k8s/backend-hpa.yaml    HPA du backend
+  k8s/postgres.yaml       Deployment/Service PostgreSQL et claim postgres-pvc
+  k8s/redis.yaml          Deployment/Service Redis
+  k8s/nfs-storage.yaml   PV postgres-pv-nfs et PVC postgres-pvc
+  k8s/registry/           Quadlet Podman et configuration containerd
+

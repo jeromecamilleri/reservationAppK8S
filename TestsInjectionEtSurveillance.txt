@@ -34,6 +34,62 @@ Valeurs configurables:
     CONTROL_PLANE=camillej@192.168.122.10 LOAD_URL=http://192.168.122.1:8080 \
       LOAD_RESULTS_DIR=/tmp/test-charge bash scripts/run-load-test.sh
 
+Scenario de parcours reservation
+--------------------------------
+Le scenario par defaut `catalog` ne fait que `GET /api/events`. Pour tester une
+vraie transaction sans creer de nouveaux comptes a chaque execution, `booking`
+utilise des identifiants fixes `k8s-loadtest-01@reservation.invalid` a
+`k8s-loadtest-500@reservation.invalid`. Le pool supporte jusqu'a 500 utilisateurs;
+chaque utilisateur s'authentifie une fois et conserve sa session Redis pendant
+toute l'injection. `CONCURRENCY` doit etre inferieur ou egal a `USER_POOL_SIZE`.
+
+Premiere execution: le lanceur genere un mot de passe aleatoire et le conserve
+dans `${XDG_CONFIG_HOME:-$HOME/.config}/reservation-app/loadtest-password` avec
+permissions utilisateur uniquement; le fichier reste hors du depot Git. Les
+comptes restent ensuite en base et le meme secret est reutilise.
+
+    SCENARIO=booking USER_POOL_SIZE=500 CONCURRENCY=500 DURATION_SECONDS=100 \
+      AUTH_CONCURRENCY=3 LOADTEST_BOOTSTRAP=1 \
+      bash scripts/run-load-test.sh
+
+Executions suivantes: meme pool, sans `LOADTEST_BOOTSTRAP`.
+
+    SCENARIO=booking USER_POOL_SIZE=500 CONCURRENCY=500 DURATION_SECONDS=100 \
+      bash scripts/run-load-test.sh
+
+Chaque virtual user fait une connexion au debut, puis chaque parcours enchaine
+GET catalogue, ajout d'un billet au panier, lecture du panier, checkout
+transactionnel PostgreSQL, annulation et controle de l'etat des commandes. Le
+cookie de session et le compte sont reutilises pendant toute l'injection. Une
+pause de 1000 ms est appliquee entre les parcours par utilisateur; regler
+`THINK_TIME_MS=0` pour une charge maximale ou augmenter le delai pour un profil
+plus proche d'une navigation humaine. Chaque
+virtual user annule ses propres commandes avant la fin du parcours; un rattrapage
+tente aussi d'annuler une commande confirmee si une etape intermediaire echoue.
+Les journaux donnent le nombre de parcours/s, latence de bout en bout p95 et
+detail des erreurs par etape. Le backend versionne utilise `AUTH_RATE_LIMIT=10`
+par defaut. Pour un pool superieur a 10, le lanceur lit la valeur actuelle,
+applique temporairement 1000, attend le rollout et restaure ensuite l'ancienne
+valeur (normalement 10), y compris a l'interruption du script. Le provisionnement
+et les connexions sont limites a trois en parallele par defaut (`AUTH_CONCURRENCY`)
+pour ne pas saturer la memoire Argon2; cette preparation est hors des 100 secondes
+chronometrees.
+
+Apres l'injection, le lanceur remet d'abord en stock les places de toute commande
+de test encore confirmee, la marque annulee, puis efface uniquement l'historique
+des commandes annulees des utilisateurs `k8s-loadtest-*@reservation.invalid`.
+Les comptes de test restent reutilisables; aucune autre commande ou aucun autre
+compte n'est touche. Le nettoyage SQL est dans `cleanup.log`. Pour garder
+les commandes annulees a des fins d'inspection, lancer avec
+`LOADTEST_CLEANUP_CANCELLED=0`.
+
+Les parcours consomment temporairement une place par utilisateur, puis la
+restituent a l'annulation. Ce test touche PostgreSQL et Redis, contrairement au
+scenario catalogue. Ne pas le lancer sur une base de production. La charge de
+500 utilisateurs peut saturer backend, Redis, PostgreSQL ou les noeuds;
+la pause `THINK_TIME_MS=1000` borne le nombre de transactions. Les comptes de test
+restent en base. Ce scenario touche aux donnees et ne doit jamais viser la production.
+
 Pour un essai graduel, commencer par 60 ou 100 clients, puis monter a 300 et 500.
 La limite du generateur est 500 clients. Le retour non nul signifie qu'au moins
 une requete a eu un statut non-2xx ou une erreur reseau; le log donne les statuts
@@ -101,5 +157,45 @@ Diagnostic et limites actuelles
 - PostgreSQL est reste a un replica et son PVC NFS n'a pas ete modifie pendant ces
   tests. Le trafic ne fait que lire le catalogue.
 
-Les sorties brutes des trois campagnes sont sous /tmp/reservation-load-20261003-*.
-Elles ne sont pas ajoutees au depot Git; ce fichier conserve la procedure et le resume.
+Resultat du parcours reservation, 03/10/2026
+-------------------------------------------
+Commande executee depuis le host avec le pool deja cree:
+
+    SCENARIO=booking USER_POOL_SIZE=500 CONCURRENCY=500 DURATION_SECONDS=100 \
+      AUTH_CONCURRENCY=3 bash scripts/run-load-test.sh
+
+Le lanceur a authentifie les 500 comptes existants, eleve temporairement
+`AUTH_RATE_LIMIT` de 10 a 1000, puis a restaure 10. Le chronometrage du trafic
+commence apres cette phase d'authentification. Chaque VU a execute les parcours
+complets catalogue, panier, checkout PostgreSQL, annulation et verification.
+
+Premier passage sur backend 2.4: 1 931 parcours termines, 2 429 echecs en 111 s,
+moyenne 10,96 s, p95 19,52 s. Les erreurs etaient 1 110 checkout 503, 345 lecture
+panier 503, 230 ajout panier 503, 172 annulation 503, 177 verification 503 et
+395 timeouts client. Le pool PostgreSQL comptait 91 connexions (90 idle); aucun
+nouveau deadlock n'a ete observe (compteur historique reste a 10). L'inspection du
+code a trouve que checkout gardait un client emprunte pendant la requete SQL
+supplementaire `loadOrder()`, epuisant les pools des replicas sous concurrence.
+
+Correction et second passage sur backend 2.5: le client PostgreSQL est libere juste
+apres COMMIT, avant `loadOrder()`. Resultat: 10 127 parcours termines, 0 erreur
+HTTP/reseau en 103,3 s, 98,08 parcours/s, latence moyenne 4,03 s et p95 7,55 s.
+Le HPA est monte de 3 a 9 replicas (maximum configure); CPU HPA maximum observe
+358% pour cible 60%. Les workers ont atteint au plus 92% CPU (worker3) et 40%
+memoire; aucun restart backend pendant la charge. PostgreSQL a atteint 985m CPU et
+235Mi, Redis 140m et 34Mi. A la capture, PostgreSQL avait 91 connexions et un
+deadlock historique de 10, sans augmentation pendant ce passage; Redis n'a eu ni
+connexion rejetee ni eviction. Le nettoyage a supprime les 10 127 commandes de test
+annulees; `stranded_test_orders_cancelled=0`, les 500 comptes sont conserves et
+aucune commande de test ne reste.
+
+Le test 2.4 avait laisse 13 commandes confirmees apres erreurs; le nettoyage les a
+annulees en restituant leur stock puis a supprime ces commandes. Aucune donnee
+client hors du pool de test n'a ete modifiee. Le test 2.5 valide le parcours de
+bout en bout, mais pousse fortement les CPU (worker3 a 92%) et la latence reste
+de plusieurs secondes: ne pas extrapoler directement ces chiffres a une charge
+Internet reelle. Resultats bruts hors Git:
+`/tmp/reservation-load-20261003-234625` (diagnostic 2.4),
+`/tmp/reservation-load-20261003-235117` (validation 2.5) et les essais catalogue
+`/tmp/reservation-load-20261003-222741`, `/tmp/reservation-load-20261003-223223`,
+`/tmp/reservation-load-20261003-223655`.
